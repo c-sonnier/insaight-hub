@@ -1,0 +1,105 @@
+<div class="container mx-auto px-4 py-8" data-controller="live-updates">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">Reports</h1>
+    <% if authenticated? %>
+      <%= link_to "New Report", new_report_path, class: "btn btn-primary" %>
+    <% end %>
+  </div>
+
+  <div class="flex flex-wrap gap-4 mb-6 items-center">
+    <div class="flex gap-2 items-center">
+      <span class="text-sm text-base-content/70">Audience:</span>
+      <%= link_to "All", reports_path(sort: params[:sort]), class: "btn btn-sm #{params[:audience].blank? ? 'btn-primary' : 'btn-ghost'}" %>
+      <%= link_to "Developer", reports_path(audience: "developer", sort: params[:sort]), class: "btn btn-sm #{params[:audience] == 'developer' ? 'btn-primary' : 'btn-ghost'}" %>
+      <%= link_to "Stakeholder", reports_path(audience: "stakeholder", sort: params[:sort]), class: "btn btn-sm #{params[:audience] == 'stakeholder' ? 'btn-primary' : 'btn-ghost'}" %>
+      <%= link_to "End User", reports_path(audience: "end_user", sort: params[:sort]), class: "btn btn-sm #{params[:audience] == 'end_user' ? 'btn-primary' : 'btn-ghost'}" %>
+    </div>
+
+    <div class="flex gap-2 items-center">
+      <span class="text-sm text-base-content/70">Sort:</span>
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-sm btn-ghost">
+          <%= case params[:sort]
+              when "oldest" then "Oldest First"
+              when "updated" then "Recently Updated"
+              else "Newest First"
+              end %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48">
+          <li><%= link_to "Newest First", reports_path(audience: params[:audience], q: params[:q], tag: params[:tag]) %></li>
+          <li><%= link_to "Oldest First", reports_path(audience: params[:audience], q: params[:q], tag: params[:tag], sort: "oldest") %></li>
+          <li><%= link_to "Recently Updated", reports_path(audience: params[:audience], q: params[:q], tag: params[:tag], sort: "updated") %></li>
+        </ul>
+      </div>
+    </div>
+
+    <%= form_with url: reports_path, method: :get, class: "flex gap-2 ml-auto", data: { turbo_frame: "_top" } do |form| %>
+      <%= form.hidden_field :audience, value: params[:audience] %>
+      <%= form.hidden_field :sort, value: params[:sort] %>
+      <%= form.text_field :q, value: params[:q], placeholder: "Search reports...", class: "input input-bordered input-sm w-64" %>
+      <%= form.submit "Search", class: "btn btn-sm btn-ghost" %>
+    <% end %>
+  </div>
+
+  <% if params[:tag].present? %>
+    <div class="mb-4">
+      <span class="text-sm text-base-content/70">Filtered by tag:</span>
+      <span class="badge badge-primary"><%= params[:tag] %></span>
+      <%= link_to "Clear", reports_path(audience: params[:audience], q: params[:q]), class: "text-sm link link-hover" %>
+    </div>
+  <% end %>
+
+  <% if @reports.empty? %>
+    <div class="text-center py-12">
+      <p class="text-base-content/60 text-lg">No reports found.</p>
+      <% if authenticated? %>
+        <p class="mt-2">
+          <%= link_to "Create your first report", new_report_path, class: "link link-primary" %>
+        </p>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-live-updates-target="list">
+      <% @reports.each do |report| %>
+        <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
+          <div class="card-body">
+            <h2 class="card-title">
+              <%= link_to report.title, report, class: "link link-hover" %>
+            </h2>
+            <p class="text-base-content/70 line-clamp-2"><%= report.description %></p>
+
+            <div class="mt-2 space-y-2">
+              <div>
+                <span class="badge badge-outline gap-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  <%= report.audience.humanize %>
+                </span>
+              </div>
+              <% if report.tags.any? %>
+                <div class="flex flex-wrap gap-1">
+                  <% report.tags.each do |tag| %>
+                    <%= link_to tag, reports_path(tag: tag), class: "badge badge-ghost hover:badge-primary" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+
+            <div class="card-actions justify-between items-center mt-4">
+              <span class="text-sm text-base-content/60">
+                by <%= report.user.name %> &middot; <%= time_ago_in_words(report.published_at) %> ago
+              </span>
+              <%= link_to "View", report, class: "btn btn-primary btn-sm" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="flex justify-center mt-8">
+      <%== pagy_nav(@pagy) if @pagy.pages > 1 %>
+    </div>
+  <% end %>
+</div>

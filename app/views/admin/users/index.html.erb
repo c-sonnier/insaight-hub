@@ -1,0 +1,46 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Users</h1>
+    <%= link_to "New User", new_admin_user_path, class: "btn btn-primary" %>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="table table-zebra w-full">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Admin</th>
+          <th>Reports</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <tr>
+            <td><%= user.name %></td>
+            <td><%= user.email_address %></td>
+            <td>
+              <% if user.admin? %>
+                <span class="badge badge-primary">Admin</span>
+              <% else %>
+                <span class="badge badge-ghost">User</span>
+              <% end %>
+            </td>
+            <td><%= user.reports.count %></td>
+            <td><%= user.created_at.strftime("%b %d, %Y") %></td>
+            <td class="space-x-2">
+              <%= link_to "Edit", edit_admin_user_path(user), class: "btn btn-sm btn-ghost" %>
+              <% unless user == Current.user %>
+                <%= button_to "Delete", admin_user_path(user), method: :delete,
+                    class: "btn btn-sm btn-error btn-outline",
+                    form: { data: { turbo_confirm: "Are you sure you want to delete #{user.name}? This will also delete all their reports." } } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

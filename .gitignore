@@ -1,0 +1,131 @@
+# See https://help.github.com/articles/ignoring-files for more about ignoring files.
+
+# === Rails ===
+# Ignore bundler config.
+/.bundle
+
+# Ignore all environment files (except templates).
+/.env*
+!/.env*.erb
+
+# Ignore all logfiles and tempfiles.
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+
+# Ignore pidfiles, but keep the directory.
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+
+# Ignore storage (except for active storage sample files or .keep).
+/storage/*
+!/storage/.keep
+
+# Ignore public uploads
+/public/uploads
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+/config/credentials/*.key
+
+# === Database ===
+# Ignore SQLite database files
+/db/*.sqlite3
+/db/*.sqlite3-*
+
+# === Node / JavaScript ===
+/node_modules/
+/package-lock.json
+
+# Yarn
+.yarn-integrity
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+# === IDE / Editors ===
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains IDEs
+.idea/
+*.iml
+
+# Cursor
+.cursor/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+\#*\#
+.\#*
+
+# === AI Tools ===
+.claude/
+.clavix/
+.opencode/
+
+# === macOS ===
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Thumbnails
+Thumbs.db
+ehthumbs.db
+
+# === Testing ===
+/coverage/
+.rspec_status
+
+# === Assets ===
+# Ignore precompiled assets (if using asset pipeline)
+/public/assets
+.byebug_history
+
+# === Deployment ===
+# Kamal deployment secrets
+/.kamal/secrets
+
+# Docker
+.docker/
+
+# === Misc ===
+# Ignore Spring files.
+/spring/*.pid
+
+# Bootsnap cache
+/tmp/cache/bootsnap*
+
+# Ruby LSP
+.ruby-lsp/
+
+# AI Tools
+.clavix/
+.opencode/
+.claude/
+AGENTS.md
+CLAUDE.md
+
+# Special Rake Task Files
+/monorepo-migration/
+/parser-testable/
+/lib/tasks/demo_reports.rake
+
+# PRD Files
+/docs/PRD.md

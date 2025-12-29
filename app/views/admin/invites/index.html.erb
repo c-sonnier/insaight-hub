@@ -1,0 +1,63 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Invites</h1>
+    <%= link_to "New Invite", new_admin_invite_path, class: "btn btn-primary" %>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="table table-zebra w-full">
+      <thead>
+        <tr>
+          <th>Token</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Created By</th>
+          <th>Expires</th>
+          <th>Used By</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @invites.each do |invite| %>
+          <tr>
+            <td>
+              <code class="text-xs"><%= invite.token.first(8) %>...</code>
+            </td>
+            <td><%= invite.email || "-" %></td>
+            <td>
+              <% if invite.used_at.present? %>
+                <span class="badge badge-success">Used</span>
+              <% elsif invite.expires_at < Time.current %>
+                <span class="badge badge-error">Expired</span>
+              <% else %>
+                <span class="badge badge-info">Available</span>
+              <% end %>
+            </td>
+            <td><%= invite.created_by.name %></td>
+            <td><%= invite.expires_at.strftime("%b %d, %Y %H:%M") %></td>
+            <td><%= invite.used_by&.name || "-" %></td>
+            <td>
+              <% if invite.used_at.nil? %>
+                <% if invite.expires_at >= Time.current %>
+                  <button class="btn btn-sm btn-ghost" onclick="navigator.clipboard.writeText('<%= register_url(token: invite.token) %>'); this.textContent='Copied!'">
+                    Copy Link
+                  </button>
+                <% end %>
+                <%= button_to "Revoke", admin_invite_path(invite), method: :delete,
+                    class: "btn btn-sm btn-error btn-outline",
+                    form: { data: { turbo_confirm: "Are you sure you want to revoke this invite?" } } %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @invites.empty? %>
+    <div class="text-center py-12">
+      <p class="text-base-content/50 mb-4">No invites yet</p>
+      <%= link_to "Create your first invite", new_admin_invite_path, class: "btn btn-primary" %>
+    </div>
+  <% end %>
+</div>

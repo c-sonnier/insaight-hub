@@ -1,0 +1,160 @@
+<%= form_with model: report, class: "space-y-6", data: { controller: "report-form" } do |form| %>
+  <% if report.errors.any? %>
+    <div class="alert alert-error">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <h3 class="font-bold">Please fix the following errors:</h3>
+        <ul class="list-disc list-inside">
+          <% report.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-control">
+    <%= form.label :title, class: "label" do %>
+      <span class="label-text font-semibold">Title</span>
+    <% end %>
+    <%= form.text_field :title, class: "input input-bordered w-full", placeholder: "Enter report title" %>
+  </div>
+
+  <div class="form-control">
+    <%= form.label :description, class: "label" do %>
+      <span class="label-text font-semibold">Description</span>
+    <% end %>
+    <%= form.text_area :description, class: "textarea textarea-bordered w-full h-24", placeholder: "Brief description of this report" %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="form-control">
+      <%= form.label :audience, class: "label" do %>
+        <span class="label-text font-semibold">Audience</span>
+      <% end %>
+      <%= form.select :audience, Report.audiences.keys.map { |a| [a.humanize, a] }, {}, class: "select select-bordered w-full" %>
+    </div>
+
+    <div class="form-control">
+      <%= form.label :tags, class: "label" do %>
+        <span class="label-text font-semibold">Tags</span>
+      <% end %>
+      <%= form.text_field :tags, value: report.tags.join(", "), class: "input input-bordered w-full", placeholder: "Comma-separated tags" %>
+      <label class="label">
+        <span class="label-text-alt">Separate multiple tags with commas</span>
+      </label>
+    </div>
+  </div>
+
+  <div class="divider">Files</div>
+
+  <div data-report-form-target="filesContainer">
+    <%= form.fields_for :report_files do |file_form| %>
+      <div class="card bg-base-200 mb-4" data-report-form-target="fileEntry">
+        <div class="card-body">
+          <div class="flex justify-between items-start">
+            <h3 class="card-title text-base">File</h3>
+            <% unless file_form.object.new_record? && report.report_files.size == 1 %>
+              <button type="button" class="btn btn-ghost btn-sm text-error" data-action="report-form#removeFile">
+                Remove
+              </button>
+            <% end %>
+          </div>
+
+          <%= file_form.hidden_field :id %>
+          <%= file_form.hidden_field :_destroy, data: { report_form_target: "destroyField" } %>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-control">
+              <%= file_form.label :filename, class: "label" do %>
+                <span class="label-text">Filename</span>
+              <% end %>
+              <%= file_form.text_field :filename, class: "input input-bordered w-full input-sm", placeholder: "e.g., index.html" %>
+            </div>
+
+            <div class="form-control">
+              <%= file_form.label :content_type, class: "label" do %>
+                <span class="label-text">Content Type</span>
+              <% end %>
+              <%= file_form.select :content_type, [
+                ["HTML", "text/html"],
+                ["CSS", "text/css"],
+                ["JavaScript", "text/javascript"]
+              ], {}, class: "select select-bordered w-full select-sm" %>
+            </div>
+          </div>
+
+          <div class="form-control mt-2">
+            <%= file_form.label :content, class: "label" do %>
+              <span class="label-text">Content</span>
+            <% end %>
+            <%= file_form.text_area :content, class: "textarea textarea-bordered w-full font-mono text-sm", rows: 12, placeholder: "Paste your HTML, CSS, or JavaScript content here..." %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <template data-report-form-target="fileTemplate">
+    <div class="card bg-base-200 mb-4" data-report-form-target="fileEntry">
+      <div class="card-body">
+        <div class="flex justify-between items-start">
+          <h3 class="card-title text-base">File</h3>
+          <button type="button" class="btn btn-ghost btn-sm text-error" data-action="report-form#removeFile">
+            Remove
+          </button>
+        </div>
+
+        <input type="hidden" name="report[report_files_attributes][NEW_INDEX][_destroy]" value="false" data-report-form-target="destroyField">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Filename</span>
+            </label>
+            <input type="text" name="report[report_files_attributes][NEW_INDEX][filename]" class="input input-bordered w-full input-sm" placeholder="e.g., styles.css">
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">Content Type</span>
+            </label>
+            <select name="report[report_files_attributes][NEW_INDEX][content_type]" class="select select-bordered w-full select-sm">
+              <option value="text/html">HTML</option>
+              <option value="text/css">CSS</option>
+              <option value="text/javascript">JavaScript</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-control mt-2">
+          <label class="label">
+            <span class="label-text">Content</span>
+          </label>
+          <textarea name="report[report_files_attributes][NEW_INDEX][content]" class="textarea textarea-bordered w-full font-mono text-sm" rows="12" placeholder="Paste your HTML, CSS, or JavaScript content here..."></textarea>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <button type="button" class="btn btn-ghost btn-block" data-action="report-form#addFile">
+    + Add Another File
+  </button>
+
+  <div class="form-control">
+    <%= form.label :entry_file, class: "label" do %>
+      <span class="label-text font-semibold">Entry File</span>
+    <% end %>
+    <%= form.text_field :entry_file, class: "input input-bordered w-full", placeholder: "index.html" %>
+    <label class="label">
+      <span class="label-text-alt">The file to display first when viewing this report</span>
+    </label>
+  </div>
+
+  <div class="flex gap-4 pt-4">
+    <%= form.submit report.persisted? ? "Update Report" : "Create Report", class: "btn btn-primary" %>
+    <%= link_to "Cancel", report.persisted? ? report : reports_path, class: "btn btn-ghost" %>
+  </div>
+<% end %>

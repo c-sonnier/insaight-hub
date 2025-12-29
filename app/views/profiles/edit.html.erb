@@ -1,0 +1,77 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <h1 class="text-3xl font-bold mb-6">Edit Profile</h1>
+
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <%= form_with model: @user, url: profile_path, method: :patch, class: "space-y-4" do |form| %>
+        <% if @user.errors.any? %>
+          <div class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <h3 class="font-bold">Please fix the following errors:</h3>
+              <ul class="list-disc list-inside">
+                <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-control">
+          <%= form.label :name, class: "label" do %>
+            <span class="label-text font-semibold">Name</span>
+          <% end %>
+          <%= form.text_field :name, class: "input input-bordered w-full" %>
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-semibold">Email</span>
+          </label>
+          <input type="email" value="<%= @user.email_address %>" class="input input-bordered w-full" disabled>
+          <label class="label">
+            <span class="label-text-alt">Email cannot be changed</span>
+          </label>
+        </div>
+
+        <div class="form-control">
+          <%= form.label :theme, class: "label" do %>
+            <span class="label-text font-semibold">Theme Preference</span>
+          <% end %>
+          <%
+            themes = %w[light dark cupcake bumblebee emerald corporate synthwave retro cyberpunk valentine halloween garden forest aqua lofi pastel fantasy wireframe black luxury dracula cmyk autumn business acid lemonade night coffee winter dim nord sunset caramellatte abyss silk]
+          %>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-64 overflow-y-auto p-2 border border-base-300 rounded-lg bg-base-200">
+            <% themes.each do |theme| %>
+              <label class="cursor-pointer">
+                <%= form.radio_button :theme, theme, class: "hidden peer" %>
+                <div class="p-2 rounded-lg border-2 border-transparent peer-checked:border-primary peer-checked:bg-base-100 hover:bg-base-100 transition-all" data-theme="<%= theme %>">
+                  <div class="flex items-center gap-2">
+                    <div data-theme="<%= theme %>" class="bg-base-100 grid shrink-0 grid-cols-2 gap-0.5 rounded-md p-1 shadow-sm">
+                      <div class="bg-base-content size-1.5 rounded-full"></div>
+                      <div class="bg-primary size-1.5 rounded-full"></div>
+                      <div class="bg-secondary size-1.5 rounded-full"></div>
+                      <div class="bg-accent size-1.5 rounded-full"></div>
+                    </div>
+                    <span class="text-sm truncate"><%= theme %></span>
+                  </div>
+                </div>
+              </label>
+            <% end %>
+          </div>
+          <label class="label">
+            <span class="label-text-alt">Choose your preferred color scheme</span>
+          </label>
+        </div>
+
+        <div class="flex gap-4 pt-4">
+          <%= form.submit "Save Changes", class: "btn btn-primary" %>
+          <%= link_to "Cancel", profile_path, class: "btn btn-ghost" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

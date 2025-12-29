@@ -1,0 +1,63 @@
+<div class="hero min-h-[calc(100vh-6rem)] bg-base-200 px-4 py-12">
+  <div class="hero-content flex-col lg:flex-row gap-12 w-full max-w-6xl">
+    <div class="lg:w-1/2 space-y-6 text-center lg:text-left">
+      <span class="badge badge-outline badge-primary uppercase tracking-wide">Digest Hub</span>
+      <h1 class="text-4xl font-bold leading-tight text-base-content">Welcome back to your digest HQ</h1>
+      <p class="text-base text-base-content/80">
+        Stay aligned with the latest progress reports, share updates with stakeholders, and keep every initiative moving forward with clarity and confidence.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+        <div class="p-4 rounded-2xl bg-base-100 shadow-sm border border-base-200">
+          <p class="text-sm font-medium text-base-content/70">Report health</p>
+          <p class="text-2xl font-semibold text-base-content">Live</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-base-100 shadow-sm border border-base-200">
+          <p class="text-sm font-medium text-base-content/70">Teams aligned</p>
+          <p class="text-2xl font-semibold text-base-content">24</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card lg:w-5/12 w-full max-w-md bg-base-100 shadow-2xl">
+      <div class="card-body space-y-6">
+        <div class="space-y-2">
+          <h2 class="text-2xl font-semibold text-base-content">Sign in</h2>
+          <p class="text-sm text-base-content/70">Access your digests with your Digest Hub credentials.</p>
+        </div>
+
+        <% if alert = flash[:alert] %>
+          <div class="alert alert-error">
+            <span><%= alert %></span>
+          </div>
+        <% end %>
+
+        <% if notice = flash[:notice] %>
+          <div class="alert alert-success">
+            <span><%= notice %></span>
+          </div>
+        <% end %>
+
+        <%= form_with url: session_url, class: "space-y-5" do |form| %>
+          <div class="form-control">
+            <label class="label" for="email_address">
+              <span class="label-text">Email address</span>
+            </label>
+            <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@company.com", value: params[:email_address], class: "input input-bordered w-full" %>
+          </div>
+
+          <div class="form-control">
+            <label class="label" for="password">
+              <span class="label-text">Password</span>
+              <%= link_to "Forgot password?", new_password_path, class: "link link-primary text-sm" %>
+            </label>
+            <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "••••••••", maxlength: 72, class: "input input-bordered w-full" %>
+          </div>
+
+          <div class="form-control">
+            <%= form.submit "Sign in", class: "btn btn-primary w-full" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

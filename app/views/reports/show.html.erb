@@ -1,0 +1,114 @@
+<div class="flex flex-col h-[100dvh]">
+  <div class="bg-base-200 border-b border-base-300 px-4 py-2">
+    <div class="flex items-center">
+      <%# Left side: Back button %>
+      <div class="flex-none">
+        <%= link_to reports_path, class: "btn btn-ghost btn-sm gap-1" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Back
+        <% end %>
+      </div>
+
+      <%# Center: Title with dropdown menu %>
+      <div class="flex-1 flex justify-center items-center gap-2">
+        <h1 class="text-lg font-bold"><%= @report.title %></h1>
+        <% if @report.draft? %>
+          <span class="badge badge-sm badge-warning">Draft</span>
+        <% end %>
+        <% if authenticated? && (@report.user == Current.user || Current.user&.admin?) %>
+          <div class="dropdown dropdown-end">
+            <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+              </svg>
+            </label>
+            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
+              <li><%= link_to "Edit", edit_report_path(@report) %></li>
+              <% if @report.draft? %>
+                <li><%= button_to "Publish", publish_report_path(@report), method: :post, class: "text-success" %></li>
+              <% else %>
+                <li><%= button_to "Unpublish", unpublish_report_path(@report), method: :post, class: "text-warning" %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+      </div>
+
+      <%# Right side: Author and audience %>
+      <div class="flex-none flex items-center gap-2 text-sm text-base-content/70">
+        <span>by <%= @report.user.name %></span>
+        <span class="badge badge-sm badge-outline"><%= @report.audience.humanize %></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-1 overflow-hidden relative" data-controller="sidebar-toggle">
+    <% unless @report.single_file? %>
+      <%# Collapsible sidebar with toggle button %>
+      <div class="flex-none flex" data-sidebar-toggle-target="sidebarWrapper">
+        <div class="w-64 bg-base-200 border-r border-base-300 overflow-y-auto p-4" data-sidebar-toggle-target="sidebar">
+          <h3 class="font-semibold mb-3">Files</h3>
+          <ul class="menu menu-sm bg-base-100 rounded-lg">
+            <% @report_files.each do |file| %>
+              <li>
+                <%= link_to file.filename, report_path(@report, file: file.filename),
+                    class: "#{file == @current_file ? 'active' : ''}" %>
+              </li>
+            <% end %>
+          </ul>
+
+          <% if @report.description.present? %>
+            <div class="mt-6">
+              <h3 class="font-semibold mb-2">Description</h3>
+              <p class="text-sm text-base-content/70"><%= @report.description %></p>
+            </div>
+          <% end %>
+
+          <% if @report.tags.any? %>
+            <div class="mt-4">
+              <h3 class="font-semibold mb-2">Tags</h3>
+              <div class="flex flex-wrap gap-1">
+                <% @report.tags.each do |tag| %>
+                  <%= link_to tag, reports_path(tag: tag), class: "badge badge-ghost badge-sm hover:badge-primary" %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <%# Toggle button attached to sidebar edge %>
+        <button
+          type="button"
+          class="self-center -ml-px bg-base-200 hover:bg-base-300 border border-base-300 border-l-0 rounded-r-lg p-1 transition-all"
+          data-action="sidebar-toggle#toggle"
+          title="Toggle sidebar"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-sidebar-toggle-target="toggleIcon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+      </div>
+    <% end %>
+
+    <div class="flex-1 bg-white relative" data-controller="report-view fullscreen" data-fullscreen-target="container">
+      <% if @current_file %>
+        <button type="button" class="absolute top-2 right-2 z-10 btn btn-ghost btn-sm btn-circle bg-base-100/80 hover:bg-base-100" data-action="fullscreen#toggle" title="Toggle fullscreen">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+          </svg>
+        </button>
+        <iframe
+          src="<%= report_file_path(@report, @current_file.filename) %>"
+          class="w-full h-full border-0"
+          data-report-view-target="iframe"
+        ></iframe>
+      <% else %>
+        <div class="flex items-center justify-center h-full text-base-content/60">
+          <p>No files in this report.</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
