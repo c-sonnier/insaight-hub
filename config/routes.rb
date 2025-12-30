@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   get "health", to: proc { [ 200, {}, [ "OK" ] ] }
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # MCP (Model Context Protocol) endpoint
+  post "mcp", to: "mcp#handle"
+
   # Authentication (Rails 8 generated)
   resource :session
   resources :passwords, param: :token
