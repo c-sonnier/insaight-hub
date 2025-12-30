@@ -9,6 +9,12 @@ fi
 # If running the rails server then create or migrate existing database
 if [ "${@: -2:1}" == "./bin/rails" ] && [ "${@: -1:1}" == "server" ]; then
   ./bin/rails db:prepare
+
+  # Seed the database only if no users exist (first-time setup)
+  if ./bin/rails runner "exit(User.exists? ? 1 : 0)" 2>/dev/null; then
+    echo "No users found. Running database seeds..."
+    ./bin/rails db:seed
+  fi
 fi
 
 exec "${@}"
