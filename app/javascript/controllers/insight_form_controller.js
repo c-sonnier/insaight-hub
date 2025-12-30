@@ -14,8 +14,8 @@ export default class extends Controller {
   }
 
   removeFile(event) {
-    const entry = event.target.closest("[data-report-form-target='fileEntry']")
-    const destroyField = entry.querySelector("[data-report-form-target='destroyField']")
+    const entry = event.target.closest("[data-insight-form-target='fileEntry']")
+    const destroyField = entry.querySelector("[data-insight-form-target='destroyField']")
 
     if (destroyField && destroyField.name.includes("[id]")) {
       // Existing record - mark for destruction

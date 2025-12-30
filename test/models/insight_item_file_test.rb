@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ReportFileTest < ActiveSupport::TestCase
+class InsightItemFileTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

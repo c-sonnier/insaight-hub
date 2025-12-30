@@ -2,7 +2,7 @@
   <div class="card bg-base-100 shadow-xl w-full max-w-md">
     <div class="card-body">
       <h2 class="card-title text-2xl font-bold text-center justify-center mb-4">Create Your Account</h2>
-      <p class="text-center text-base-content/70 mb-6">You've been invited to join Digest Hub</p>
+      <p class="text-center text-base-content/70 mb-6">You've been invited to join insAIght Hub</p>
 
       <%= form_with model: @user, url: register_path(token: @invite.token), class: "space-y-4" do |form| %>
         <% if @user.errors.any? %>

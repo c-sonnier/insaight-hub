@@ -1,15 +1,17 @@
-# DigestHub
+# insAIght Hub
 
-A report publishing and management platform built with Ruby on Rails 8. DigestHub enables teams to create, organize, and share reports with different audiences through a clean web interface and REST API.
+> Because understanding beats output.
+
+A platform for managing and sharing AI-generated insights, built with Ruby on Rails 8. insAIght Hub turns scattered AI output into shared understanding — structured, searchable, and easy to act on.
 
 ## Features
 
-- **Report Management**: Create, edit, and publish reports with multiple file attachments (HTML, CSS, JavaScript)
-- **Audience Targeting**: Tag reports for developers, stakeholders, or end users
+- **Insight Management**: Create, edit, and publish insights with multiple file attachments (HTML, CSS, JavaScript)
+- **Audience Targeting**: Tag insights for developers, stakeholders, or end users
 - **Invite-Only Registration**: Secure user onboarding via invite tokens
-- **REST API**: Full API access with token authentication for programmatic report management
-- **Real-time Updates**: ActionCable-powered live updates when new reports are published
-- **Search & Filtering**: Find reports by query, audience type, or tags
+- **REST API**: Full API access with token authentication for programmatic insight management
+- **Real-time Updates**: ActionCable-powered live updates when new insights are published
+- **Search & Filtering**: Find insights by query, audience type, or tags
 - **Theme Support**: Multiple DaisyUI themes (light, dark, corporate, etc.)
 - **Admin Panel**: Manage users and invites
 
@@ -85,11 +87,11 @@ cp .env.example .env
 
 ### Database
 
-DigestHub uses SQLite by default. Database configuration is in `config/database.yml`.
+insAIght Hub uses SQLite by default. Database configuration is in `config/database.yml`.
 
 ## API Documentation
 
-DigestHub provides a REST API at `/api/v1/` for programmatic access.
+insAIght Hub provides a REST API at `/api/v1/` for programmatic access.
 
 ### Authentication
 
@@ -114,14 +116,14 @@ Unauthenticated requests return:
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/v1/me` | Get current user info |
-| GET | `/api/v1/reports` | List reports |
-| GET | `/api/v1/reports/:id` | Get a specific report with files |
-| POST | `/api/v1/reports` | Create a new report |
-| PATCH | `/api/v1/reports/:id` | Update a report |
-| DELETE | `/api/v1/reports/:id` | Delete a report |
-| POST | `/api/v1/reports/:id/publish` | Publish a report |
-| POST | `/api/v1/reports/:id/unpublish` | Unpublish a report |
-| DELETE | `/api/v1/reports/:id/files/:filename` | Delete a file from a report |
+| GET | `/api/v1/insight_items` | List insights |
+| GET | `/api/v1/insight_items/:id` | Get a specific insight with files |
+| POST | `/api/v1/insight_items` | Create a new insight |
+| PATCH | `/api/v1/insight_items/:id` | Update an insight |
+| DELETE | `/api/v1/insight_items/:id` | Delete an insight |
+| POST | `/api/v1/insight_items/:id/publish` | Publish an insight |
+| POST | `/api/v1/insight_items/:id/unpublish` | Unpublish an insight |
+| DELETE | `/api/v1/insight_items/:id/files/:filename` | Delete a file from an insight |
 | GET | `/api/v1/tags` | List all available tags |
 
 ---
@@ -146,9 +148,9 @@ Returns current user information.
 
 ---
 
-### GET /api/v1/reports
+### GET /api/v1/insight_items
 
-List reports with optional filtering and pagination.
+List insights with optional filtering and pagination.
 
 **Query Parameters**:
 | Parameter | Description | Default |
@@ -163,7 +165,7 @@ List reports with optional filtering and pagination.
 **Response (200)**:
 ```json
 {
-  "reports": [
+  "insight_items": [
     {
       "id": 1,
       "title": "API Documentation",
@@ -181,7 +183,7 @@ List reports with optional filtering and pagination.
       "published_at": "2024-12-29T12:00:00Z",
       "created_at": "2024-12-29T11:00:00Z",
       "updated_at": "2024-12-29T12:00:00Z",
-      "url": "/reports/api-documentation"
+      "url": "/insight_items/api-documentation"
     }
   ],
   "meta": {
@@ -195,14 +197,14 @@ List reports with optional filtering and pagination.
 
 ---
 
-### GET /api/v1/reports/:id
+### GET /api/v1/insight_items/:id
 
-Get a single report with its files.
+Get a single insight with its files.
 
 **Response (200)**:
 ```json
 {
-  "report": {
+  "insight_item": {
     "id": 1,
     "title": "API Documentation",
     "slug": "api-documentation",
@@ -220,52 +222,48 @@ Get a single report with its files.
         "id": 1,
         "filename": "index.html",
         "content_type": "text/html",
-        "url": "/reports/api-documentation/files/index.html"
+        "url": "/insight_items/api-documentation/files/index.html"
       }
     ],
     "published_at": "2024-12-29T12:00:00Z",
     "created_at": "2024-12-29T11:00:00Z",
     "updated_at": "2024-12-29T12:00:00Z",
-    "url": "/reports/api-documentation"
+    "url": "/insight_items/api-documentation"
   }
 }
 ```
 
 ---
 
-### POST /api/v1/reports
+### POST /api/v1/insight_items
 
-Create a new report. Supports single-file or multi-file creation.
+Create a new insight. Supports single-file or multi-file creation.
 
 **Request Body (Single File)**:
 ```json
 {
-  "report": {
-    "title": "Sprint Summary",
-    "slug": "sprint-42-summary",
-    "description": "Key outcomes from sprint 42",
-    "audience": "stakeholder",
-    "tags": ["sprint", "summary"],
-    "content": "<!DOCTYPE html><html>...</html>"
-  }
+  "title": "Sprint Summary",
+  "slug": "sprint-42-summary",
+  "description": "Key outcomes from sprint 42",
+  "audience": "stakeholder",
+  "tags": ["sprint", "summary"],
+  "content": "<!DOCTYPE html><html>...</html>"
 }
 ```
 
 **Request Body (Multi-File)**:
 ```json
 {
-  "report": {
-    "title": "Test Mode Documentation",
-    "slug": "test-mode-docs",
-    "description": "Complete documentation for test mode feature",
-    "audience": "developer",
-    "tags": ["documentation", "testing"],
-    "entry_file": "index.html",
-    "files": [
-      {"filename": "index.html", "content": "<!DOCTYPE html>..."},
-      {"filename": "architecture.html", "content": "<!DOCTYPE html>..."}
-    ]
-  }
+  "title": "Test Mode Documentation",
+  "slug": "test-mode-docs",
+  "description": "Complete documentation for test mode feature",
+  "audience": "developer",
+  "tags": ["documentation", "testing"],
+  "entry_file": "index.html",
+  "files": [
+    {"filename": "index.html", "content": "<!DOCTYPE html>..."},
+    {"filename": "architecture.html", "content": "<!DOCTYPE html>..."}
+  ]
 }
 ```
 
@@ -274,9 +272,9 @@ Create a new report. Supports single-file or multi-file creation.
 - If `files` is provided (multi-file), files are created for each entry
 - `slug` is optional; auto-generated from title if not provided
 - `entry_file` defaults to "index.html"
-- New reports default to `status: draft`
+- New insights default to `status: draft`
 
-**Response (201)**: Returns the created report
+**Response (201)**: Returns the created insight
 
 **Response (422 - Validation Error)**:
 ```json
@@ -291,21 +289,19 @@ Create a new report. Supports single-file or multi-file creation.
 
 ---
 
-### PATCH /api/v1/reports/:id
+### PATCH /api/v1/insight_items/:id
 
-Update a report.
+Update an insight.
 
 **Request Body**:
 ```json
 {
-  "report": {
-    "title": "Updated Title",
-    "description": "Updated description",
-    "tags": ["new", "tags"],
-    "files": [
-      {"filename": "new-page.html", "content": "<!DOCTYPE html>..."}
-    ]
-  }
+  "title": "Updated Title",
+  "description": "Updated description",
+  "tags": ["new", "tags"],
+  "files": [
+    {"filename": "new-page.html", "content": "<!DOCTYPE html>..."}
+  ]
 }
 ```
 
@@ -313,26 +309,26 @@ Update a report.
 - Files are merged/upserted by filename
 - To delete a file, use the separate delete file endpoint
 
-**Response (200)**: Returns the updated report
+**Response (200)**: Returns the updated insight
 
 ---
 
-### DELETE /api/v1/reports/:id
+### DELETE /api/v1/insight_items/:id
 
-Delete a report and all its files.
+Delete an insight and all its files.
 
 **Response (204)**: No content
 
 ---
 
-### POST /api/v1/reports/:id/publish
+### POST /api/v1/insight_items/:id/publish
 
-Publish a draft report.
+Publish a draft insight.
 
 **Response (200)**:
 ```json
 {
-  "report": {
+  "insight_item": {
     "status": "published",
     "published_at": "2024-12-29T12:00:00Z"
   }
@@ -341,14 +337,14 @@ Publish a draft report.
 
 ---
 
-### POST /api/v1/reports/:id/unpublish
+### POST /api/v1/insight_items/:id/unpublish
 
-Unpublish a published report.
+Unpublish a published insight.
 
 **Response (200)**:
 ```json
 {
-  "report": {
+  "insight_item": {
     "status": "draft",
     "published_at": null
   }
@@ -357,9 +353,9 @@ Unpublish a published report.
 
 ---
 
-### DELETE /api/v1/reports/:id/files/:filename
+### DELETE /api/v1/insight_items/:id/files/:filename
 
-Delete a file from a report.
+Delete a file from an insight.
 
 **Response (204)**: No content
 
@@ -369,7 +365,7 @@ Delete a file from a report.
 
 ### GET /api/v1/tags
 
-List all unique tags used across reports.
+List all unique tags used across insights.
 
 **Response (200)**:
 ```json
@@ -380,25 +376,23 @@ List all unique tags used across reports.
 
 ---
 
-### Example: Create and Publish a Report
+### Example: Create and Publish an Insight
 
 ```bash
-# Create a report
-curl -X POST http://localhost:3000/api/v1/reports \
+# Create an insight
+curl -X POST http://localhost:3000/api/v1/insight_items \
   -H "Authorization: Bearer YOUR_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "report": {
-      "title": "Monthly Summary",
-      "description": "Overview of monthly metrics",
-      "audience": "stakeholder",
-      "tags": ["monthly", "metrics"],
-      "content": "<!DOCTYPE html><html><body><h1>Monthly Summary</h1></body></html>"
-    }
+    "title": "Monthly Summary",
+    "description": "Overview of monthly metrics",
+    "audience": "stakeholder",
+    "tags": ["monthly", "metrics"],
+    "content": "<!DOCTYPE html><html><body><h1>Monthly Summary</h1></body></html>"
   }'
 
-# Publish the report (replace :id with the report ID)
-curl -X POST http://localhost:3000/api/v1/reports/:id/publish \
+# Publish the insight (replace :id with the insight ID)
+curl -X POST http://localhost:3000/api/v1/insight_items/:id/publish \
   -H "Authorization: Bearer YOUR_API_TOKEN"
 ```
 
@@ -438,14 +432,14 @@ Build and run with Docker:
 
 ```bash
 # Build the image
-docker build -t digest_hub .
+docker build -t insaight_hub .
 
 # Run the container
 docker run -d -p 80:80 \
   -e RAILS_MASTER_KEY=<value from config/master.key> \
   -e SECRET_KEY_BASE=$(bin/rails secret) \
-  --name digest_hub \
-  digest_hub
+  --name insaight_hub \
+  insaight_hub
 ```
 
 ### Docker Compose
@@ -487,36 +481,36 @@ app/
 │   ├── application_cable/
 │   │   ├── channel.rb
 │   │   └── connection.rb
-│   └── reports_channel.rb      # Real-time report updates
+│   └── insight_items_channel.rb  # Real-time insight updates
 ├── controllers/
-│   ├── api/v1/                 # API controllers
+│   ├── api/v1/                   # API controllers
 │   │   ├── base_controller.rb
 │   │   ├── me_controller.rb
-│   │   ├── reports_controller.rb
+│   │   ├── insight_items_controller.rb
 │   │   └── tags_controller.rb
-│   ├── admin/                  # Admin panel controllers
+│   ├── admin/                    # Admin panel controllers
 │   │   ├── base_controller.rb
 │   │   ├── invites_controller.rb
 │   │   └── users_controller.rb
-│   ├── home_controller.rb      # Dashboard
-│   ├── profiles_controller.rb  # User profile
+│   ├── home_controller.rb        # Dashboard
+│   ├── profiles_controller.rb    # User profile
 │   ├── registrations_controller.rb
-│   ├── reports_controller.rb   # Report CRUD
-│   └── report_files_controller.rb
+│   ├── insight_items_controller.rb   # Insight CRUD
+│   └── insight_item_files_controller.rb
 ├── models/
-│   ├── user.rb                 # User authentication and API tokens
-│   ├── report.rb               # Core report model
-│   ├── report_file.rb          # File attachments for reports
-│   ├── invite.rb               # Invite token management
-│   └── session.rb              # Session management
-├── views/                      # ERB templates with DaisyUI
-├── javascript/controllers/     # Stimulus controllers
+│   ├── user.rb                   # User authentication and API tokens
+│   ├── insight_item.rb           # Core insight model
+│   ├── insight_item_file.rb      # File attachments for insights
+│   ├── invite.rb                 # Invite token management
+│   └── session.rb                # Session management
+├── views/                        # ERB templates with DaisyUI
+├── javascript/controllers/       # Stimulus controllers
 │   ├── theme_controller.js
-│   ├── report_form_controller.js
-│   ├── report_view_controller.js
+│   ├── insight_form_controller.js
+│   ├── insight_view_controller.js
 │   ├── live_updates_controller.js
 │   └── fullscreen_controller.js
-└── jobs/                       # Background jobs (Solid Queue)
+└── jobs/                         # Background jobs (Solid Queue)
 ```
 
 ## License

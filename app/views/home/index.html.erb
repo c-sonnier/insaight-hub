@@ -1,6 +1,6 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold mb-2">Welcome back, <%= Current.user.name %>!</h1>
-  <p class="text-base-content/70 mb-8">Here's what's happening in Digest Hub</p>
+  <p class="text-base-content/70 mb-8">Here's what's happening in insAIght Hub</p>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <div class="stats bg-base-100 shadow hover:shadow-lg transition-shadow">
@@ -10,9 +10,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
           </svg>
         </div>
-        <div class="stat-title">Total Reports</div>
-        <div class="stat-value text-primary"><%= @total_reports %></div>
-        <div class="stat-desc"><%= @published_reports %> published</div>
+        <div class="stat-title">Total Insights</div>
+        <div class="stat-value text-primary"><%= @total_insights %></div>
+        <div class="stat-desc"><%= @published_insights %> published</div>
       </div>
     </div>
 
@@ -23,8 +23,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
           </svg>
         </div>
-        <div class="stat-title">Your Reports</div>
-        <div class="stat-value text-secondary"><%= @user_reports %></div>
+        <div class="stat-title">Your Insights</div>
+        <div class="stat-value text-secondary"><%= @user_insights %></div>
         <div class="stat-desc"><%= @user_published %> published</div>
       </div>
     </div>
@@ -37,7 +37,7 @@
           </svg>
         </div>
         <div class="stat-title">Published</div>
-        <div class="stat-value text-accent"><%= @published_reports %></div>
+        <div class="stat-value text-accent"><%= @published_insights %></div>
         <div class="stat-desc">visible to everyone</div>
       </div>
     </div>
@@ -46,8 +46,8 @@
       <div class="card-body">
         <h2 class="card-title text-sm">Quick Actions</h2>
         <div class="flex flex-col gap-2">
-          <%= link_to "+ New Report", new_report_path, class: "btn btn-primary btn-sm" %>
-          <%= link_to "Browse All", reports_path, class: "btn btn-ghost btn-sm" %>
+          <%= link_to "+ New Insight", new_insight_item_path, class: "btn btn-primary btn-sm" %>
+          <%= link_to "Browse All", insight_items_path, class: "btn btn-ghost btn-sm" %>
         </div>
       </div>
     </div>
@@ -55,41 +55,41 @@
 
   <div class="mb-8">
     <div class="flex justify-between items-center mb-4">
-      <h2 class="text-2xl font-bold">Recent Reports</h2>
-      <%= link_to "View all", reports_path, class: "link link-primary" %>
+      <h2 class="text-2xl font-bold">Recent Insights</h2>
+      <%= link_to "View all", insight_items_path, class: "link link-primary" %>
     </div>
 
-    <% if @recent_reports.empty? %>
+    <% if @recent_insights.empty? %>
       <div class="card bg-base-100 shadow">
         <div class="card-body text-center">
-          <p class="text-base-content/50">No reports published yet. Create your first one!</p>
+          <p class="text-base-content/50">No insights published yet. Create your first one!</p>
           <div class="card-actions justify-center mt-4">
-            <%= link_to "Create Report", new_report_path, class: "btn btn-primary" %>
+            <%= link_to "Create Insight", new_insight_item_path, class: "btn btn-primary" %>
           </div>
         </div>
       </div>
     <% else %>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <% @recent_reports.each do |report| %>
+        <% @recent_insights.each do |insight| %>
           <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow">
             <div class="card-body">
               <h3 class="card-title text-base">
-                <%= link_to report.title, report, class: "link link-hover" %>
+                <%= link_to insight.title, insight, class: "link link-hover" %>
               </h3>
-              <p class="text-base-content/70 text-sm line-clamp-2"><%= report.description %></p>
+              <p class="text-base-content/70 text-sm line-clamp-2"><%= insight.description %></p>
 
               <div class="flex flex-wrap gap-1 mt-2">
-                <span class="badge badge-outline badge-sm"><%= report.audience.humanize %></span>
-                <% report.tags.first(2).each do |tag| %>
+                <span class="badge badge-outline badge-sm"><%= insight.audience.humanize %></span>
+                <% insight.tags.first(2).each do |tag| %>
                   <span class="badge badge-ghost badge-sm"><%= tag %></span>
                 <% end %>
               </div>
 
               <div class="card-actions justify-between items-center mt-2">
                 <span class="text-xs text-base-content/50">
-                  <%= report.user.name %> &middot; <%= time_ago_in_words(report.published_at) %> ago
+                  <%= insight.user.name %> &middot; <%= time_ago_in_words(insight.published_at) %> ago
                 </span>
-                <%= link_to "View", report, class: "btn btn-primary btn-xs" %>
+                <%= link_to "View", insight, class: "btn btn-primary btn-xs" %>
               </div>
             </div>
           </div>

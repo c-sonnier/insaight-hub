@@ -1,8 +1,8 @@
-class Report < ApplicationRecord
+class InsightItem < ApplicationRecord
   belongs_to :user
-  has_many :report_files, dependent: :destroy
+  has_many :insight_item_files, dependent: :destroy
 
-  accepts_nested_attributes_for :report_files, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :insight_item_files, allow_destroy: true, reject_if: :all_blank
 
   enum :audience, { developer: "developer", stakeholder: "stakeholder", end_user: "end_user" }
   enum :status, { draft: "draft", published: "published" }
@@ -39,19 +39,19 @@ class Report < ApplicationRecord
 
   def publish!
     update!(status: :published, published_at: Time.current)
-    ReportsChannel.broadcast_new_report(self)
+    InsightItemsChannel.broadcast_new_insight_item(self)
   end
 
   def unpublish!
     update!(status: :draft, published_at: nil)
   end
 
-  def entry_report_file
-    report_files.find_by(filename: entry_file) || report_files.first
+  def entry_insight_item_file
+    insight_item_files.find_by(filename: entry_file) || insight_item_files.first
   end
 
   def single_file?
-    report_files.count == 1
+    insight_item_files.count == 1
   end
 
   def to_param
@@ -64,7 +64,7 @@ class Report < ApplicationRecord
     base_slug = title.to_s.parameterize
     self.slug = base_slug
     counter = 1
-    while Report.exists?(slug: slug)
+    while InsightItem.exists?(slug: slug)
       self.slug = "#{base_slug}-#{counter}"
       counter += 1
     end

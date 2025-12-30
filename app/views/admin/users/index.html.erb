@@ -11,7 +11,7 @@
           <th>Name</th>
           <th>Email</th>
           <th>Admin</th>
-          <th>Reports</th>
+          <th>Insights</th>
           <th>Created</th>
           <th>Actions</th>
         </tr>
@@ -28,14 +28,14 @@
                 <span class="badge badge-ghost">User</span>
               <% end %>
             </td>
-            <td><%= user.reports.count %></td>
+            <td><%= user.insight_items.count %></td>
             <td><%= user.created_at.strftime("%b %d, %Y") %></td>
             <td class="space-x-2">
               <%= link_to "Edit", edit_admin_user_path(user), class: "btn btn-sm btn-ghost" %>
               <% unless user == Current.user %>
                 <%= button_to "Delete", admin_user_path(user), method: :delete,
                     class: "btn btn-sm btn-error btn-outline",
-                    form: { data: { turbo_confirm: "Are you sure you want to delete #{user.name}? This will also delete all their reports." } } %>
+                    form: { data: { turbo_confirm: "Are you sure you want to delete #{user.name}? This will also delete all their insights." } } %>
               <% end %>
             </td>
           </tr>

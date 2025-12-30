@@ -3,7 +3,7 @@
     <div class="flex items-center">
       <%# Left side: Back button %>
       <div class="flex-none">
-        <%= link_to reports_path, class: "btn btn-ghost btn-sm gap-1" do %>
+        <%= link_to insight_items_path, class: "btn btn-ghost btn-sm gap-1" do %>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
@@ -13,11 +13,11 @@
 
       <%# Center: Title with dropdown menu %>
       <div class="flex-1 flex justify-center items-center gap-2">
-        <h1 class="text-lg font-bold"><%= @report.title %></h1>
-        <% if @report.draft? %>
+        <h1 class="text-lg font-bold"><%= @insight_item.title %></h1>
+        <% if @insight_item.draft? %>
           <span class="badge badge-sm badge-warning">Draft</span>
         <% end %>
-        <% if authenticated? && (@report.user == Current.user || Current.user&.admin?) %>
+        <% if authenticated? && (@insight_item.user == Current.user || Current.user&.admin?) %>
           <div class="dropdown dropdown-end">
             <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -25,11 +25,11 @@
               </svg>
             </label>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
-              <li><%= link_to "Edit", edit_report_path(@report) %></li>
-              <% if @report.draft? %>
-                <li><%= button_to "Publish", publish_report_path(@report), method: :post, class: "text-success" %></li>
+              <li><%= link_to "Edit", edit_insight_item_path(@insight_item) %></li>
+              <% if @insight_item.draft? %>
+                <li><%= button_to "Publish", publish_insight_item_path(@insight_item), method: :post, class: "text-success" %></li>
               <% else %>
-                <li><%= button_to "Unpublish", unpublish_report_path(@report), method: :post, class: "text-warning" %></li>
+                <li><%= button_to "Unpublish", unpublish_insight_item_path(@insight_item), method: :post, class: "text-warning" %></li>
               <% end %>
             </ul>
           </div>
@@ -38,40 +38,40 @@
 
       <%# Right side: Author and audience %>
       <div class="flex-none flex items-center gap-2 text-sm text-base-content/70">
-        <span>by <%= @report.user.name %></span>
-        <span class="badge badge-sm badge-outline"><%= @report.audience.humanize %></span>
+        <span>by <%= @insight_item.user.name %></span>
+        <span class="badge badge-sm badge-outline"><%= @insight_item.audience.humanize %></span>
       </div>
     </div>
   </div>
 
   <div class="flex flex-1 overflow-hidden relative" data-controller="sidebar-toggle">
-    <% unless @report.single_file? %>
+    <% unless @insight_item.single_file? %>
       <%# Collapsible sidebar with toggle button %>
       <div class="flex-none flex" data-sidebar-toggle-target="sidebarWrapper">
         <div class="w-64 bg-base-200 border-r border-base-300 overflow-y-auto p-4" data-sidebar-toggle-target="sidebar">
           <h3 class="font-semibold mb-3">Files</h3>
           <ul class="menu menu-sm bg-base-100 rounded-lg">
-            <% @report_files.each do |file| %>
+            <% @insight_item_files.each do |file| %>
               <li>
-                <%= link_to file.filename, report_path(@report, file: file.filename),
+                <%= link_to file.filename, insight_item_path(@insight_item, file: file.filename),
                     class: "#{file == @current_file ? 'active' : ''}" %>
               </li>
             <% end %>
           </ul>
 
-          <% if @report.description.present? %>
+          <% if @insight_item.description.present? %>
             <div class="mt-6">
               <h3 class="font-semibold mb-2">Description</h3>
-              <p class="text-sm text-base-content/70"><%= @report.description %></p>
+              <p class="text-sm text-base-content/70"><%= @insight_item.description %></p>
             </div>
           <% end %>
 
-          <% if @report.tags.any? %>
+          <% if @insight_item.tags.any? %>
             <div class="mt-4">
               <h3 class="font-semibold mb-2">Tags</h3>
               <div class="flex flex-wrap gap-1">
-                <% @report.tags.each do |tag| %>
-                  <%= link_to tag, reports_path(tag: tag), class: "badge badge-ghost badge-sm hover:badge-primary" %>
+                <% @insight_item.tags.each do |tag| %>
+                  <%= link_to tag, insight_items_path(tag: tag), class: "badge badge-ghost badge-sm hover:badge-primary" %>
                 <% end %>
               </div>
             </div>
@@ -92,7 +92,7 @@
       </div>
     <% end %>
 
-    <div class="flex-1 bg-white relative" data-controller="report-view fullscreen" data-fullscreen-target="container">
+    <div class="flex-1 bg-white relative" data-controller="insight-view fullscreen" data-fullscreen-target="container">
       <% if @current_file %>
         <button type="button" class="absolute top-2 right-2 z-10 btn btn-ghost btn-sm btn-circle bg-base-100/80 hover:bg-base-100" data-action="fullscreen#toggle" title="Toggle fullscreen">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -100,13 +100,13 @@
           </svg>
         </button>
         <iframe
-          src="<%= report_file_path(@report, @current_file.filename) %>"
+          src="<%= insight_item_file_path(@insight_item, @current_file.filename) %>"
           class="w-full h-full border-0"
-          data-report-view-target="iframe"
+          data-insight-view-target="iframe"
         ></iframe>
       <% else %>
         <div class="flex items-center justify-center h-full text-base-content/60">
-          <p>No files in this report.</p>
+          <p>No files in this insight.</p>
         </div>
       <% end %>
     </div>

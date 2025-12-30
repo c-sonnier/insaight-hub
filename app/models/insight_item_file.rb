@@ -1,8 +1,8 @@
-class ReportFile < ApplicationRecord
-  belongs_to :report
+class InsightItemFile < ApplicationRecord
+  belongs_to :insight_item
 
   validates :filename, presence: true
-  validates :filename, uniqueness: { scope: :report_id, message: "already exists in this report" }
+  validates :filename, uniqueness: { scope: :insight_item_id, message: "already exists in this insight" }
   validates :content, presence: true
 
   scope :html_files, -> { where(content_type: "text/html") }

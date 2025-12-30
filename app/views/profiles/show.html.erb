@@ -56,12 +56,12 @@
           <dd><%= @user.created_at.strftime("%B %d, %Y") %></dd>
         </div>
         <div class="flex justify-between">
-          <dt class="text-base-content/70">Reports</dt>
-          <dd><%= @user.reports.count %></dd>
+          <dt class="text-base-content/70">Insights</dt>
+          <dd><%= @user.insight_items.count %></dd>
         </div>
         <div class="flex justify-between">
           <dt class="text-base-content/70">Published</dt>
-          <dd><%= @user.reports.published.count %></dd>
+          <dd><%= @user.insight_items.published.count %></dd>
         </div>
       </dl>
     </div>

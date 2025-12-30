@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
-  has_many :reports, dependent: :destroy
+  has_many :insight_items, dependent: :destroy
   has_many :created_invites, class_name: "Invite", foreign_key: "created_by_id"
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }

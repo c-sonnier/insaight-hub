@@ -3,14 +3,8 @@
   <aside class="flex flex-col min-h-full w-64 bg-base-100 border-r border-base-300 transition-all duration-200" data-nav-sidebar-target="sidebar">
     <!-- Logo / Brand -->
     <div class="flex items-center h-16 px-4 border-b border-base-300">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-6 text-primary shrink-0">
-        <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-        <polyline points="14 2 14 8 20 8"></polyline>
-        <line x1="16" y1="13" x2="8" y2="13"></line>
-        <line x1="16" y1="17" x2="8" y2="17"></line>
-        <line x1="10" y1="9" x2="8" y2="9"></line>
-      </svg>
-      <span class="ml-3 text-lg font-bold whitespace-nowrap overflow-hidden" data-nav-sidebar-target="label">Digest Hub</span>
+      <%= image_tag "logo_h_36.svg", class: "h-9 shrink-0", alt: "insAIght Hub" %>
+      <span class="ml-3 text-lg font-bold whitespace-nowrap overflow-hidden" data-nav-sidebar-target="label">insAIght Hub</span>
     </div>
 
     <!-- Main Navigation -->
@@ -27,7 +21,7 @@
         <% end %>
       </li>
       <li>
-        <%= link_to reports_path, class: "#{current_page?(reports_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "Browse Reports" } do %>
+        <%= link_to insight_items_path, class: "#{current_page?(insight_items_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "Browse Insights" } do %>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
             <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
             <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -35,28 +29,28 @@
             <path d="M16 13H8"></path>
             <path d="M16 17H8"></path>
           </svg>
-          <span data-nav-sidebar-target="label">Browse Reports</span>
+          <span data-nav-sidebar-target="label">Browse Insights</span>
         <% end %>
       </li>
       <li>
-        <%= link_to my_reports_path, class: "#{current_page?(my_reports_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "My Reports" } do %>
+        <%= link_to my_insights_path, class: "#{current_page?(my_insights_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "My Insights" } do %>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
             <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
-          <span data-nav-sidebar-target="label">My Reports</span>
+          <span data-nav-sidebar-target="label">My Insights</span>
         <% end %>
       </li>
 
       <li class="mt-2">
-        <%= link_to new_report_path, class: "btn btn-primary btn-sm justify-start tooltip tooltip-right", data: { tip: "New Report" } do %>
+        <%= link_to new_insight_item_path, class: "btn btn-primary btn-sm justify-start tooltip tooltip-right", data: { tip: "New Insight" } do %>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
             <path d="M12 5v14"></path>
             <path d="M5 12h14"></path>
           </svg>
-          <span data-nav-sidebar-target="label">New Report</span>
+          <span data-nav-sidebar-target="label">New Insight</span>
         <% end %>
       </li>
 
