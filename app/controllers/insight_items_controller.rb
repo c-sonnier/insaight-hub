@@ -1,7 +1,7 @@
 class InsightItemsController < ApplicationController
   allow_unauthenticated_access only: [:index, :show]
-  before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish]
-  before_action :authorize_owner, only: [:edit, :update, :destroy, :publish, :unpublish]
+  before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :export]
+  before_action :authorize_owner, only: [:edit, :update, :destroy, :publish, :unpublish, :export]
   before_action :authorize_published_or_owner, only: [:show]
 
   def index
@@ -76,7 +76,36 @@ class InsightItemsController < ApplicationController
     @insight_items = Current.user.insight_items.order(created_at: :desc)
   end
 
+  def export
+    if @insight_item.single_file?
+      file = @insight_item.entry_insight_item_file
+      send_data file.content,
+                filename: file.filename,
+                type: file.content_type,
+                disposition: "attachment"
+    else
+      zip_data = generate_insight_zip(@insight_item)
+      send_data zip_data,
+                filename: "#{@insight_item.slug}.zip",
+                type: "application/zip",
+                disposition: "attachment"
+    end
+  end
+
   private
+
+  def generate_insight_zip(insight_item)
+    require "zip"
+
+    stringio = Zip::OutputStream.write_buffer do |zio|
+      insight_item.insight_item_files.each do |file|
+        zio.put_next_entry(file.filename)
+        zio.write(file.content)
+      end
+    end
+    stringio.rewind
+    stringio.read
+  end
 
   def set_insight_item
     @insight_item = InsightItem.find_by!(slug: params[:id])
