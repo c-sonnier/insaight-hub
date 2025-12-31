@@ -86,9 +86,12 @@
               </div>
 
               <div class="card-actions justify-between items-center mt-2">
-                <span class="text-xs text-base-content/50">
-                  <%= insight.user.name %> &middot; <%= time_ago_in_words(insight.published_at) %> ago
-                </span>
+                <div class="flex items-center gap-2">
+                  <%= user_avatar_or_initials(insight.user, size: "w-5") %>
+                  <span class="text-xs text-base-content/50">
+                    <%= insight.user.name %> &middot; <%= time_ago_in_words(insight.published_at) %> ago
+                  </span>
+                </div>
                 <%= link_to "View", insight, class: "btn btn-primary btn-xs" %>
               </div>
             </div>

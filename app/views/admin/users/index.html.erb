@@ -19,7 +19,12 @@
       <tbody>
         <% @users.each do |user| %>
           <tr>
-            <td><%= user.name %></td>
+            <td>
+              <div class="flex items-center gap-2">
+                <%= user_avatar_or_initials(user, size: "w-8") %>
+                <%= user.name %>
+              </div>
+            </td>
             <td><%= user.email_address %></td>
             <td>
               <% if user.admin? %>

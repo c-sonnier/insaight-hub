@@ -38,6 +38,7 @@
 
       <%# Right side: Author and audience %>
       <div class="flex-none flex items-center gap-2 text-sm text-base-content/70">
+        <%= user_avatar_or_initials(@insight_item.user, size: "w-6") %>
         <span>by <%= @insight_item.user.name %></span>
         <span class="badge badge-sm badge-outline"><%= @insight_item.audience.humanize %></span>
       </div>
