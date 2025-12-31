@@ -7,11 +7,7 @@
   <div class="card bg-base-100 shadow-xl">
     <div class="card-body">
       <div class="flex items-center gap-4 mb-6">
-        <div class="avatar placeholder">
-          <div class="bg-neutral text-neutral-content rounded-full w-16">
-            <span class="text-xl"><%= @user.name.first.upcase %></span>
-          </div>
-        </div>
+        <%= user_avatar_or_initials(@user, size: "w-16") %>
         <div>
           <h2 class="text-xl font-bold"><%= @user.name %></h2>
           <p class="text-base-content/70"><%= @user.email_address %></p>

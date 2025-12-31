@@ -123,11 +123,7 @@
       <!-- Profile -->
       <div class="dropdown dropdown-top w-full">
         <div tabindex="0" role="button" class="btn btn-ghost btn-sm w-full justify-start tooltip tooltip-right" data-tip="<%= Current.user&.name %>">
-          <div class="avatar placeholder">
-            <div class="bg-neutral text-neutral-content rounded-full w-6">
-              <span class="text-xs"><%= Current.user&.name&.first&.upcase %></span>
-            </div>
-          </div>
+          <%= user_avatar_or_initials(Current.user, size: "w-6") %>
           <span class="truncate" data-nav-sidebar-target="label"><%= Current.user&.name %></span>
         </div>
         <ul tabindex="0" class="dropdown-content z-50 menu p-2 shadow-lg bg-base-100 rounded-box w-52 mb-2">
