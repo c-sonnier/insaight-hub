@@ -87,12 +87,38 @@
         </div>
 
         <div class="form-control">
-          <label class="label">
+          <%= form.label :email_address, class: "label" do %>
             <span class="label-text font-semibold">Email</span>
-          </label>
-          <input type="email" value="<%= @user.email_address %>" class="input input-bordered w-full" disabled>
+          <% end %>
+          <%= form.email_field :email_address, class: "input input-bordered w-full" %>
+        </div>
+
+        <div class="divider">Change Password</div>
+
+        <div class="form-control">
+          <%= form.label :current_password, class: "label" do %>
+            <span class="label-text font-semibold">Current Password</span>
+          <% end %>
+          <%= form.password_field :current_password, class: "input input-bordered w-full", autocomplete: "current-password" %>
           <label class="label">
-            <span class="label-text-alt">Email cannot be changed</span>
+            <span class="label-text-alt">Required only if changing password</span>
+          </label>
+        </div>
+
+        <div class="form-control">
+          <%= form.label :password, class: "label" do %>
+            <span class="label-text font-semibold">New Password</span>
+          <% end %>
+          <%= form.password_field :password, class: "input input-bordered w-full", autocomplete: "new-password" %>
+        </div>
+
+        <div class="form-control">
+          <%= form.label :password_confirmation, class: "label" do %>
+            <span class="label-text font-semibold">Confirm New Password</span>
+          <% end %>
+          <%= form.password_field :password_confirmation, class: "input input-bordered w-full", autocomplete: "new-password" %>
+          <label class="label">
+            <span class="label-text-alt">Leave password fields blank to keep current password</span>
           </label>
         </div>
 

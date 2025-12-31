@@ -17,7 +17,21 @@ class ProfilesController < ApplicationController
       @user.avatar.purge
     end
 
-    if @user.update(profile_params)
+    # Handle password change - require current password verification
+    if params[:user][:password].present?
+      unless @user.authenticate(params[:user][:current_password])
+        @user.errors.add(:current_password, "is incorrect")
+        return render :edit, status: :unprocessable_entity
+      end
+    end
+
+    update_params = profile_params.except(:current_password)
+    # Remove password fields if not changing password
+    if params[:user][:password].blank?
+      update_params = update_params.except(:password, :password_confirmation)
+    end
+
+    if @user.update(update_params)
       redirect_to profile_path, notice: "Profile updated successfully."
     else
       render :edit, status: :unprocessable_entity
@@ -62,6 +76,6 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:user).permit(:name, :theme, :avatar)
+    params.require(:user).permit(:name, :email_address, :theme, :avatar, :password, :password_confirmation, :current_password)
   end
 end
