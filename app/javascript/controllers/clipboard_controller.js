@@ -6,10 +6,43 @@ export default class extends Controller {
   async copy() {
     const text = this.sourceTarget.textContent
     try {
-      await navigator.clipboard.writeText(text)
-      this.showSuccess()
+      // Try modern Clipboard API first (requires secure context)
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(text)
+        this.showSuccess()
+      } else {
+        // Fallback to execCommand for non-secure contexts (e.g., HTTP in Docker)
+        this.fallbackCopyTextToClipboard(text)
+      }
     } catch (err) {
-      console.error("Failed to copy:", err)
+      // If Clipboard API fails, try fallback
+      try {
+        this.fallbackCopyTextToClipboard(text)
+      } catch (fallbackErr) {
+        console.error("Failed to copy:", fallbackErr)
+      }
+    }
+  }
+
+  fallbackCopyTextToClipboard(text) {
+    const textArea = document.createElement("textarea")
+    textArea.value = text
+    textArea.style.position = "fixed"
+    textArea.style.left = "-999999px"
+    textArea.style.top = "-999999px"
+    document.body.appendChild(textArea)
+    textArea.focus()
+    textArea.select()
+
+    try {
+      const successful = document.execCommand("copy")
+      if (successful) {
+        this.showSuccess()
+      } else {
+        throw new Error("execCommand copy failed")
+      }
+    } finally {
+      document.body.removeChild(textArea)
     }
   }
 

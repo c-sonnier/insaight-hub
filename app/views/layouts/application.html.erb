@@ -16,6 +16,45 @@
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <script>
+      // Fallback clipboard function for non-secure contexts (e.g., HTTP in Docker)
+      function copyToClipboard(text, buttonElement) {
+        // Try modern Clipboard API first (requires secure context)
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function() {
+            if (buttonElement) buttonElement.textContent = 'Copied!';
+          }).catch(function(err) {
+            // Fallback if Clipboard API fails
+            fallbackCopyTextToClipboard(text, buttonElement);
+          });
+        } else {
+          // Use fallback for non-secure contexts
+          fallbackCopyTextToClipboard(text, buttonElement);
+        }
+      }
+
+      function fallbackCopyTextToClipboard(text, buttonElement) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-999999px";
+        textArea.style.top = "-999999px";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          const successful = document.execCommand("copy");
+          if (successful && buttonElement) {
+            buttonElement.textContent = 'Copied!';
+          }
+        } catch (err) {
+          console.error("Failed to copy:", err);
+        } finally {
+          document.body.removeChild(textArea);
+        }
+      }
+    </script>
   </head>
 
   <body class="min-h-screen bg-base-200">

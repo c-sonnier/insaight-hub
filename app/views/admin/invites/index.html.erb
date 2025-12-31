@@ -39,7 +39,7 @@
             <td>
               <% if invite.used_at.nil? %>
                 <% if invite.expires_at >= Time.current %>
-                  <button class="btn btn-sm btn-ghost" onclick="navigator.clipboard.writeText('<%= register_url(token: invite.token) %>'); this.textContent='Copied!'">
+                  <button class="btn btn-sm btn-ghost" onclick="copyToClipboard('<%= register_url(token: invite.token) %>', this)">
                     Copy Link
                   </button>
                 <% end %>
