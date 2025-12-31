@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
 class McpController < ActionController::API
-  # Uncomment for production:
-  # before_action :authenticate_user
+  before_action :authenticate_user
 
   def handle
-    # For testing without auth, use first user
-    @current_user ||= User.first
     server = MCP::Server.new(
       name: "digest-hub",
       version: "1.0.0",
@@ -41,6 +38,7 @@ class McpController < ActionController::API
 
     if @current_user.nil?
       render json: { error: "Invalid API token" }, status: :unauthorized
+      nil
     end
   end
 end
