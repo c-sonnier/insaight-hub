@@ -25,7 +25,7 @@ module ApplicationHelper
         end
       else
         content_tag :div, class: "bg-neutral text-neutral-content #{size} rounded-full" do
-          content_tag :span, user.name.first.upcase
+          content_tag :span, user.name&.first&.upcase || ""
         end
       end
     end
