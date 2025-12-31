@@ -26,6 +26,7 @@
             </label>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
               <li><%= link_to "Edit", edit_insight_item_path(@insight_item) %></li>
+              <li><%= link_to "Export", export_insight_item_path(@insight_item) %></li>
               <% if @insight_item.draft? %>
                 <li><%= button_to "Publish", publish_insight_item_path(@insight_item), method: :post, class: "text-success" %></li>
               <% else %>
