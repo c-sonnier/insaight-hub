@@ -1,3 +1,5 @@
+require "zip"
+
 class ProfilesController < ApplicationController
   def show
     @user = Current.user
@@ -39,8 +41,6 @@ class ProfilesController < ApplicationController
   private
 
   def generate_all_insights_zip(insight_items)
-    require "zip"
-
     stringio = Zip::OutputStream.write_buffer do |zio|
       insight_items.each do |insight_item|
         folder_name = insight_item.slug

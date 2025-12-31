@@ -1,3 +1,5 @@
+require "zip"
+
 class InsightItemsController < ApplicationController
   allow_unauthenticated_access only: [:index, :show]
   before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :export]
@@ -95,8 +97,6 @@ class InsightItemsController < ApplicationController
   private
 
   def generate_insight_zip(insight_item)
-    require "zip"
-
     stringio = Zip::OutputStream.write_buffer do |zio|
       insight_item.insight_item_files.each do |file|
         zio.put_next_entry(file.filename)
