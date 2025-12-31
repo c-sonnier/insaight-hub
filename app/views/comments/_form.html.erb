@@ -1,0 +1,39 @@
+<%# Comment form for creating new comments %>
+<%= turbo_frame_tag(parent ? "reply_form_#{parent.id}_frame" : "new_comment_form") do %>
+  <%= form_with model: comment, url: insight_item_comments_path(insight_item), class: "space-y-3" do |f| %>
+    <% if comment.errors.any? %>
+      <div class="alert alert-error text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <span><%= comment.errors.full_messages.to_sentence %></span>
+      </div>
+    <% end %>
+
+    <% if parent %>
+      <%= f.hidden_field :parent_id, value: parent.id %>
+      <p class="text-xs text-base-content/50">Replying to <%= parent.user.name %></p>
+    <% end %>
+
+    <div class="form-control">
+      <%= f.text_area :body,
+          placeholder: parent ? "Write a reply..." : "Add a comment...",
+          class: "textarea textarea-bordered w-full min-h-[80px] text-sm",
+          rows: 3,
+          required: true %>
+    </div>
+
+    <div class="flex justify-end gap-2">
+      <% if parent %>
+        <button type="button"
+                class="btn btn-ghost btn-sm"
+                data-action="click->comments#hideReplyForm"
+                data-comment-id="<%= parent.id %>">
+          Cancel
+        </button>
+      <% end %>
+      <%= f.submit parent ? "Reply" : "Post Comment", class: "btn btn-primary btn-sm" %>
+    </div>
+  <% end %>
+<% end %>
+

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_31_000001) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_31_194310) do
   create_table "action_mcp_session_messages", force: :cascade do |t|
     t.string "session_id", null: false
     t.string "direction", default: "client", null: false
@@ -107,6 +107,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_31_000001) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "comments", force: :cascade do |t|
+    t.text "body", null: false
+    t.integer "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+  end
+
+  create_table "engagements", force: :cascade do |t|
+    t.integer "insight_item_id", null: false
+    t.integer "user_id", null: false
+    t.string "engageable_type", null: false
+    t.bigint "engageable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["engageable_type", "engageable_id"], name: "index_engagements_on_engageable"
+    t.index ["insight_item_id", "created_at"], name: "index_engagements_on_insight_and_time"
+    t.index ["insight_item_id"], name: "index_engagements_on_insight_item_id"
+    t.index ["user_id"], name: "index_engagements_on_user_id"
+  end
+
   create_table "insight_item_files", force: :cascade do |t|
     t.integer "insight_item_id", null: false
     t.string "filename", null: false
@@ -178,6 +199,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_31_000001) do
   add_foreign_key "action_mcp_sse_events", "action_mcp_sessions", column: "session_id"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comments", "comments", column: "parent_id"
+  add_foreign_key "engagements", "insight_items"
+  add_foreign_key "engagements", "users"
   add_foreign_key "insight_item_files", "insight_items"
   add_foreign_key "insight_items", "users"
   add_foreign_key "invites", "users", column: "created_by_id"

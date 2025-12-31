@@ -1,0 +1,8 @@
+<%# Remove the comment from the list %>
+<%= turbo_stream.remove dom_id(@engagement) %>
+
+<%# Update comment count badge if visible %>
+<%= turbo_stream.update "comments_count" do %>
+  <%= @insight_item.comments_count %>
+<% end %>
+
