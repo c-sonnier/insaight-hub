@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     member do
       post :publish
       post :unpublish
+      get :export
     end
     get "files/*id", to: "insight_item_files#show", as: :file, format: false
   end
@@ -30,6 +31,7 @@ Rails.application.routes.draw do
   # Profile
   resource :profile, only: [:show, :edit, :update] do
     post :regenerate_token
+    get :export_all_insights
   end
 
   # Admin
