@@ -9,6 +9,12 @@ class ProfilesController < ApplicationController
 
   def update
     @user = Current.user
+
+    # Handle avatar removal if requested
+    if params[:user][:remove_avatar] == "1"
+      @user.avatar.purge
+    end
+
     if @user.update(profile_params)
       redirect_to profile_path, notice: "Profile updated successfully."
     else
@@ -24,6 +30,6 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.require(:user).permit(:name, :theme)
+    params.require(:user).permit(:name, :theme, :avatar)
   end
 end
