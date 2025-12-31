@@ -2,6 +2,8 @@ class User < ApplicationRecord
   has_secure_password
   has_many :sessions, dependent: :destroy
   has_many :insight_items, dependent: :destroy
+  has_many :engagements, dependent: :destroy
+  has_many :comments, through: :engagements, source: :engageable, source_type: "Comment"
   has_many :created_invites, class_name: "Invite", foreign_key: "created_by_id"
   has_one_attached :avatar
 

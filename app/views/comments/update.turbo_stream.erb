@@ -1,0 +1,5 @@
+<%# Replace the comment with updated content %>
+<%= turbo_stream.replace dom_id(@comment.engagement) do %>
+  <%= render "comments/comment", comment: @comment, engagement: @comment.engagement %>
+<% end %>
+

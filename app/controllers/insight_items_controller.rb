@@ -31,6 +31,12 @@ class InsightItemsController < ApplicationController
     else
       @insight_item.entry_insight_item_file
     end
+    # Only load root comments (no parent_id) - replies are loaded via association in the view
+    @comments = @insight_item.engagements.comments
+      .joins("INNER JOIN comments ON comments.id = engagements.engageable_id")
+      .where(comments: { parent_id: nil })
+      .includes(:user, engageable: :replies)
+      .recent
   end
 
   def new
