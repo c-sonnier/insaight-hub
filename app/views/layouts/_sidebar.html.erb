@@ -43,6 +43,16 @@
           <span data-nav-sidebar-target="label">My Insights</span>
         <% end %>
       </li>
+      <li>
+        <%= link_to how_to_path, class: "#{current_page?(how_to_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "How To" } do %>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <path d="M12 17h.01"></path>
+          </svg>
+          <span data-nav-sidebar-target="label">How To</span>
+        <% end %>
+      </li>
 
       <li class="mt-2">
         <%= link_to new_insight_item_path, class: "btn btn-primary btn-sm justify-start tooltip tooltip-right", data: { tip: "New Insight" } do %>

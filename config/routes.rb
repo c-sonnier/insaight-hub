@@ -21,6 +21,9 @@ Rails.application.routes.draw do
   # Dashboard
   root "home#index"
 
+  # How To / Documentation
+  get "how-to", to: "home#how_to", as: :how_to
+
   # Insights
   resources :insight_items, param: :id do
     member do
