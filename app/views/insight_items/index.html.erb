@@ -51,13 +51,27 @@
   <% end %>
 
   <% if @insight_items.empty? %>
-    <div class="text-center py-12">
-      <p class="text-base-content/60 text-lg">No insights found.</p>
-      <% if authenticated? %>
-        <p class="mt-2">
-          <%= link_to "Create your first insight", new_insight_item_path, class: "link link-primary" %>
-        </p>
-      <% end %>
+    <div class="card bg-base-100 shadow">
+      <div class="card-body text-center py-12">
+        <% if @has_filters %>
+          <p class="text-base-content/70">No insights match your filters.</p>
+          <div class="card-actions justify-center mt-4">
+            <%= link_to "Clear Filters", insight_items_path, class: "btn btn-ghost" %>
+          </div>
+        <% elsif @user_drafts > 0 %>
+          <p class="text-base-content/70">You have <%= pluralize(@user_drafts, "draft") %> ready to share.</p>
+          <div class="card-actions justify-center mt-4">
+            <%= link_to "View My Insights", my_insights_path, class: "btn btn-primary" %>
+          </div>
+        <% elsif authenticated? %>
+          <p class="text-base-content/70">No insights yet. Start by creating one.</p>
+          <div class="card-actions justify-center mt-4">
+            <%= link_to "Create Insight", new_insight_item_path, class: "btn btn-primary" %>
+          </div>
+        <% else %>
+          <p class="text-base-content/70">No insights published yet.</p>
+        <% end %>
+      </div>
     </div>
   <% else %>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-live-updates-target="list">

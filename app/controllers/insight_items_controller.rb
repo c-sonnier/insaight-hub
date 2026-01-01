@@ -22,6 +22,9 @@ class InsightItemsController < ApplicationController
     end
 
     @pagy, @insight_items = pagy(@insight_items, items: 12)
+
+    @has_filters = params[:audience].present? || params[:tag].present? || params[:q].present?
+    @user_drafts = Current.user&.insight_items&.draft&.count || 0
   end
 
   def show
