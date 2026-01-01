@@ -130,3 +130,4 @@ CLAUDE.md
 # PRD Files
 /docs/PRD.md
 /.mcp.json
+/.playwright-mcp
