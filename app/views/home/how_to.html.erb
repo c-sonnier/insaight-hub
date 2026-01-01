@@ -1,0 +1,177 @@
+<div class="container mx-auto px-4 py-8 max-w-4xl">
+  <h1 class="text-3xl font-bold mb-2">How To Use Insaight Hub with AI Tools</h1>
+  <p class="text-base-content/70 mb-8">Learn how to create and manage insights using AI assistants like Cursor or Claude Code through the Model Context Protocol (MCP).</p>
+
+  <!-- Quick Setup Reference -->
+  <div class="alert alert-info mb-8">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    <div>
+      <p class="font-semibold">First time setup?</p>
+      <p>Visit your <%= link_to "Profile", profile_path, class: "link link-primary" %> to get your personalized MCP configuration snippet.</p>
+    </div>
+  </div>
+
+  <!-- Available Tools -->
+  <div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+      <h2 class="card-title text-xl">Available MCP Tools</h2>
+      <p class="text-base-content/70 mb-4">Once connected, your AI assistant will have access to these tools:</p>
+
+      <div class="overflow-x-auto">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Tool</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="font-mono text-sm">list_insights</td><td>List all your insights with optional filtering</td></tr>
+            <tr><td class="font-mono text-sm">get_insight</td><td>Get details of a specific insight by slug</td></tr>
+            <tr><td class="font-mono text-sm">create_insight</td><td>Create a new insight with content</td></tr>
+            <tr><td class="font-mono text-sm">update_insight</td><td>Update an existing insight's content or metadata</td></tr>
+            <tr><td class="font-mono text-sm">publish_insight</td><td>Publish a draft insight</td></tr>
+            <tr><td class="font-mono text-sm">unpublish_insight</td><td>Unpublish an insight back to draft</td></tr>
+            <tr><td class="font-mono text-sm">delete_insight</td><td>Delete an insight</td></tr>
+            <tr><td class="font-mono text-sm">get_tags</td><td>Get all available tags</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 1: Create and Publish -->
+  <div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+      <h2 class="card-title text-xl">
+        <span class="badge badge-primary badge-lg mr-2">Example 1</span>
+        Creating and Publishing an Insight
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        Ask your AI assistant to create a new insight. Here's an example prompt you can use:
+      </p>
+
+      <div class="mockup-code mb-4">
+        <pre data-prefix=">" class="text-success"><code>Create an insight titled "Docker Best Practices" for developers.</code></pre>
+        <pre data-prefix=">" class="text-success"><code>Include tips about multi-stage builds, layer caching, and security.</code></pre>
+        <pre data-prefix=">" class="text-success"><code>Tag it with "docker", "devops", and "containers".</code></pre>
+      </div>
+
+      <p class="text-base-content/70 mb-4">
+        The AI will use the <code class="bg-base-200 px-1 rounded">create_insight</code> tool with these parameters:
+      </p>
+
+      <ul class="list-disc list-inside space-y-1 text-sm mb-4 ml-4">
+        <li><strong>title</strong>: "Docker Best Practices"</li>
+        <li><strong>audience</strong>: "developer"</li>
+        <li><strong>tags</strong>: ["docker", "devops", "containers"]</li>
+        <li><strong>content</strong>: The generated HTML content</li>
+      </ul>
+
+      <div class="divider">Then publish it</div>
+
+      <div class="mockup-code mb-4">
+        <pre data-prefix=">" class="text-success"><code>Now publish the Docker Best Practices insight.</code></pre>
+      </div>
+
+      <p class="text-base-content/70">
+        The AI will use the <code class="bg-base-200 px-1 rounded">publish_insight</code> tool with the insight's slug to make it visible to everyone.
+      </p>
+    </div>
+  </div>
+
+  <!-- Example 2: Update an Insight -->
+  <div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+      <h2 class="card-title text-xl">
+        <span class="badge badge-secondary badge-lg mr-2">Example 2</span>
+        Updating an Existing Insight
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        You can ask your AI to modify existing insights. Here's an example:
+      </p>
+
+      <div class="mockup-code mb-4">
+        <pre data-prefix=">" class="text-success"><code>Update my "docker-best-practices" insight to add a section</code></pre>
+        <pre data-prefix=">" class="text-success"><code>about Docker Compose best practices. Also add the "docker-compose"</code></pre>
+        <pre data-prefix=">" class="text-success"><code>tag to it.</code></pre>
+      </div>
+
+      <p class="text-base-content/70 mb-4">
+        The AI will first use <code class="bg-base-200 px-1 rounded">get_insight</code> to fetch the current content, then use <code class="bg-base-200 px-1 rounded">update_insight</code> to modify it:
+      </p>
+
+      <ul class="list-disc list-inside space-y-1 text-sm mb-4 ml-4">
+        <li><strong>slug</strong>: "docker-best-practices"</li>
+        <li><strong>tags</strong>: ["docker", "devops", "containers", "docker-compose"]</li>
+        <li><strong>files</strong>: Updated content with the new section</li>
+      </ul>
+
+      <div class="alert mt-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span><strong>Tip:</strong> You can reference insights by their slug (the URL-friendly version of the title) or ask the AI to list your insights first.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 3: Multi-file Insight -->
+  <div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+      <h2 class="card-title text-xl">
+        <span class="badge badge-accent badge-lg mr-2">Example 3</span>
+        Creating a Multi-File Insight
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        For more complex insights, you can include multiple files like HTML, CSS, and JavaScript:
+      </p>
+
+      <div class="mockup-code mb-4">
+        <pre data-prefix=">" class="text-success"><code>Create an interactive insight called "CSS Grid Playground" for</code></pre>
+        <pre data-prefix=">" class="text-success"><code>developers. Include an HTML file with examples, a CSS file with</code></pre>
+        <pre data-prefix=">" class="text-success"><code>the grid styles, and a JavaScript file for interactivity.</code></pre>
+      </div>
+
+      <p class="text-base-content/70">
+        The AI will create the insight with multiple files, all bundled together and viewable as an interactive page.
+      </p>
+    </div>
+  </div>
+
+  <!-- Tips Section -->
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h2 class="card-title text-xl">Tips for Best Results</h2>
+
+      <ul class="space-y-3 mt-4">
+        <li class="flex gap-3">
+          <span class="text-primary font-bold">1.</span>
+          <div>
+            <strong>Be specific about your audience</strong>
+            <p class="text-sm text-base-content/70">Choose from: <code class="bg-base-200 px-1 rounded">developer</code>, <code class="bg-base-200 px-1 rounded">stakeholder</code>, or <code class="bg-base-200 px-1 rounded">end_user</code></p>
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="text-primary font-bold">2.</span>
+          <div>
+            <strong>Use descriptive tags</strong>
+            <p class="text-sm text-base-content/70">Tags help organize and find insights later. Use lowercase, hyphenated names.</p>
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="text-primary font-bold">3.</span>
+          <div>
+            <strong>Ask to list your insights first</strong>
+            <p class="text-sm text-base-content/70">If you're not sure of an insight's slug, ask the AI to list your insights.</p>
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="text-primary font-bold">4.</span>
+          <div>
+            <strong>Review before publishing</strong>
+            <p class="text-sm text-base-content/70">Insights are created as drafts by default. Review them before publishing.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -7,4 +7,7 @@ class HomeController < ApplicationController
     @user_published = Current.user.insight_items.published.count
     @user_drafts = @user_insights - @user_published
   end
+
+  def how_to
+  end
 end
