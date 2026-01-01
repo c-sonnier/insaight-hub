@@ -25,6 +25,9 @@ gem "bcrypt", "~> 3.1.7"
 # Pagination (pinned to 8.x for Backend/Frontend modules)
 gem "pagy", "~> 8.0"
 
+# Markdown rendering for insight item files
+gem "redcarpet"
+
 # MCP (Model Context Protocol) server for AI agent integration
 gem "mcp"
 
