@@ -1,7 +1,6 @@
 require "zip"
 
 class InsightItemsController < ApplicationController
-  allow_unauthenticated_access only: [:index, :show]
   before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :export]
   before_action :authorize_owner, only: [:edit, :update, :destroy, :publish, :unpublish, :export]
   before_action :authorize_published_or_owner, only: [:show]
