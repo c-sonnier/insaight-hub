@@ -1,6 +1,8 @@
 class InsightItem < ApplicationRecord
   belongs_to :user
   has_many :insight_item_files, dependent: :destroy
+  has_many :engagements, dependent: :destroy
+  has_many :comments, through: :engagements, source: :engageable, source_type: "Comment"
 
   accepts_nested_attributes_for :insight_item_files, allow_destroy: true, reject_if: :all_blank
 
@@ -52,6 +54,10 @@ class InsightItem < ApplicationRecord
 
   def single_file?
     insight_item_files.count == 1
+  end
+
+  def comments_count
+    engagements.comments.count
   end
 
   def to_param

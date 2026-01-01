@@ -1,0 +1,87 @@
+<%# Single comment display with threading support %>
+<% comment_user = engagement&.user || comment.user %>
+<% insight_item = local_assigns[:insight_item] || @insight_item || comment.insight_item %>
+<%= turbo_frame_tag dom_id(engagement) do %>
+  <div id="<%= dom_id(engagement) %>" class="<%= 'ml-8 border-l-2 border-base-300 pl-4' if comment.reply? %>">
+    <div class="flex gap-3 py-3">
+      <%# Avatar %>
+      <div class="flex-none">
+        <%= user_avatar_or_initials(comment_user, size: "w-8") %>
+      </div>
+
+      <%# Content %>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="font-semibold text-sm"><%= comment_user&.name || "Unknown" %></span>
+          <span class="text-xs text-base-content/50">
+            <%= time_ago_in_words(engagement.created_at) %> ago
+          </span>
+          <% if comment.updated_at > comment.created_at + 1.minute %>
+            <span class="text-xs text-base-content/40">(edited)</span>
+          <% end %>
+        </div>
+
+        <div class="prose prose-sm max-w-none">
+          <%= simple_format(comment.body, class: "text-sm text-base-content/80 whitespace-pre-wrap break-words") %>
+        </div>
+
+        <%# Actions %>
+        <div class="flex items-center gap-2 mt-2">
+          <% if authenticated? %>
+            <button type="button"
+                    class="btn btn-ghost btn-xs gap-1"
+                    data-action="click->comments#showReplyForm"
+                    data-comment-id="<%= comment.id %>">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" />
+              </svg>
+              Reply
+            </button>
+
+            <% if Current.user == comment_user || Current.user&.admin? %>
+              <button type="button"
+                      class="btn btn-ghost btn-xs gap-1"
+                      data-action="click->comments#showEditForm"
+                      data-comment-id="<%= comment.id %>">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Edit
+              </button>
+
+              <%= button_to insight_item_comment_path(insight_item, comment),
+                  method: :delete,
+                  class: "btn btn-ghost btn-xs gap-1 text-error",
+                  data: { turbo_confirm: "Delete this comment?" } do %>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Delete
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+
+        <%# Reply form placeholder %>
+        <div id="reply_form_<%= comment.id %>" class="hidden mt-3">
+          <%= render "comments/form", insight_item: insight_item, comment: Comment.new(parent_id: comment.id), parent: comment %>
+        </div>
+
+        <%# Edit form placeholder %>
+        <div id="edit_form_<%= comment.id %>" class="hidden mt-3">
+          <%= render "comments/edit_form", insight_item: insight_item, comment: comment %>
+        </div>
+      </div>
+    </div>
+
+    <%# Nested replies container - always present for turbo stream targeting %>
+    <% if comment.depth < 3 %>
+      <div id="replies_for_comment_<%= comment.id %>" class="replies">
+        <% comment.replies.oldest_first.each do |reply| %>
+          <%= render "comments/comment", comment: reply, engagement: reply.engagement %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
