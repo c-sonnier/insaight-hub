@@ -7,6 +7,17 @@
       <span class="ml-3 text-lg font-bold whitespace-nowrap overflow-hidden" data-nav-sidebar-target="label">insAIght Hub</span>
     </div>
 
+    <!-- New Insight Button -->
+    <div class="px-2 pt-4">
+      <%= link_to new_insight_item_path, class: "btn btn-primary btn-sm w-full justify-start tooltip tooltip-right", data: { tip: "New Insight" } do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+        <span data-nav-sidebar-target="label">New Insight</span>
+      <% end %>
+    </div>
+
     <!-- Main Navigation -->
     <ul class="menu w-full grow px-2 py-4 gap-1">
       <li>
@@ -51,16 +62,6 @@
             <path d="M12 17h.01"></path>
           </svg>
           <span data-nav-sidebar-target="label">How To</span>
-        <% end %>
-      </li>
-
-      <li class="mt-2">
-        <%= link_to new_insight_item_path, class: "btn btn-primary btn-sm justify-start tooltip tooltip-right", data: { tip: "New Insight" } do %>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
-            <path d="M12 5v14"></path>
-            <path d="M5 12h14"></path>
-          </svg>
-          <span data-nav-sidebar-target="label">New Insight</span>
         <% end %>
       </li>
 
