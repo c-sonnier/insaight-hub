@@ -1,0 +1,32 @@
+<%# Remove "no comments" message if it exists %>
+<%= turbo_stream.remove "no_comments" %>
+
+<% if @comment.reply? %>
+  <%# Append reply to the parent comment's replies container %>
+  <%= turbo_stream.append "replies_for_comment_#{@comment.parent_id}" do %>
+    <%= render "comments/comment", comment: @comment, engagement: @engagement %>
+  <% end %>
+
+  <%# Hide and reset the reply form %>
+  <%= turbo_stream.replace "reply_form_#{@comment.parent_id}_frame" do %>
+    <%= turbo_frame_tag "reply_form_#{@comment.parent_id}_frame", class: "hidden" do %>
+      <%= render "comments/form", insight_item: @insight_item, comment: Comment.new(parent_id: @comment.parent_id), parent: @comment.parent %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%# Prepend top-level comment to the main list %>
+  <%= turbo_stream.prepend "comments" do %>
+    <%= render "comments/comment", comment: @comment, engagement: @engagement %>
+  <% end %>
+
+  <%# Reset the main comment form %>
+  <%= turbo_stream.replace "new_comment_form" do %>
+    <%= render "comments/form", insight_item: @insight_item, comment: Comment.new, parent: nil %>
+  <% end %>
+<% end %>
+
+<%# Update comment count badge if visible %>
+<%= turbo_stream.update "comments_count" do %>
+  <%= @insight_item.comments_count %>
+<% end %>
+

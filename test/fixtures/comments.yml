@@ -1,0 +1,12 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 1
+  body: This is a test comment
+  parent:
+
+two:
+  id: 2
+  body: This is a reply comment
+  parent: one
+

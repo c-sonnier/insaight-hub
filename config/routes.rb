@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       get :export
     end
     get "files/*id", to: "insight_item_files#show", as: :file, format: false
+    resources :comments, only: [:create, :update, :destroy]
   end
   get "my-insights", to: "insight_items#my_insights", as: :my_insights
 
