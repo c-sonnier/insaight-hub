@@ -107,6 +107,8 @@ class CreateInsightTool < MCP::Tool
         "text/javascript"
       when ".json"
         "application/json"
+      when ".md", ".markdown"
+        "text/markdown"
       else
         "text/plain"
       end

@@ -81,7 +81,8 @@
               <%= file_form.select :content_type, [
                 ["HTML", "text/html"],
                 ["CSS", "text/css"],
-                ["JavaScript", "text/javascript"]
+                ["JavaScript", "text/javascript"],
+                ["Markdown", "text/markdown"]
               ], {}, class: "select select-bordered w-full select-sm" %>
             </div>
           </div>
@@ -90,7 +91,7 @@
             <%= file_form.label :content, class: "label" do %>
               <span class="label-text">Content</span>
             <% end %>
-            <%= file_form.text_area :content, class: "textarea textarea-bordered w-full font-mono text-sm", rows: 12, placeholder: "Paste your HTML, CSS, or JavaScript content here..." %>
+            <%= file_form.text_area :content, class: "textarea textarea-bordered w-full font-mono text-sm", rows: 12, placeholder: "Paste your HTML, CSS, JavaScript, or Markdown content here..." %>
           </div>
         </div>
       </div>
@@ -125,6 +126,7 @@
               <option value="text/html">HTML</option>
               <option value="text/css">CSS</option>
               <option value="text/javascript">JavaScript</option>
+              <option value="text/markdown">Markdown</option>
             </select>
           </div>
         </div>
@@ -133,7 +135,7 @@
           <label class="label">
             <span class="label-text">Content</span>
           </label>
-          <textarea name="insight_item[insight_item_files_attributes][NEW_INDEX][content]" class="textarea textarea-bordered w-full font-mono text-sm" rows="12" placeholder="Paste your HTML, CSS, or JavaScript content here..."></textarea>
+          <textarea name="insight_item[insight_item_files_attributes][NEW_INDEX][content]" class="textarea textarea-bordered w-full font-mono text-sm" rows="12" placeholder="Paste your HTML, CSS, JavaScript, or Markdown content here..."></textarea>
         </div>
       </div>
     </div>
