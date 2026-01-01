@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   # MCP (Model Context Protocol) endpoint
   post "mcp", to: "mcp#handle"
 
+  # Onboarding (first user setup)
+  get  "setup", to: "onboarding#new", as: :onboarding
+  post "setup", to: "onboarding#create"
+
   # Authentication (Rails 8 generated)
   resource :session
   resources :passwords, param: :token
