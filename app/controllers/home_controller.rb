@@ -5,5 +5,6 @@ class HomeController < ApplicationController
     @published_insights = InsightItem.published.count
     @user_insights = Current.user.insight_items.count
     @user_published = Current.user.insight_items.published.count
+    @user_drafts = @user_insights - @user_published
   end
 end

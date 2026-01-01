@@ -61,11 +61,18 @@
 
     <% if @recent_insights.empty? %>
       <div class="card bg-base-100 shadow">
-        <div class="card-body text-center">
-          <p class="text-base-content/50">No insights published yet. Create your first one!</p>
-          <div class="card-actions justify-center mt-4">
-            <%= link_to "Create Insight", new_insight_item_path, class: "btn btn-primary" %>
-          </div>
+        <div class="card-body text-center py-12">
+          <% if @user_drafts > 0 %>
+            <p class="text-base-content/70">You have <%= pluralize(@user_drafts, "draft") %> ready to share.</p>
+            <div class="card-actions justify-center mt-4">
+              <%= link_to "View My Insights", my_insights_path, class: "btn btn-primary" %>
+            </div>
+          <% else %>
+            <p class="text-base-content/70">No insights yet. Start by creating one.</p>
+            <div class="card-actions justify-center mt-4">
+              <%= link_to "Create Insight", new_insight_item_path, class: "btn btn-primary" %>
+            </div>
+          <% end %>
         </div>
       </div>
     <% else %>
