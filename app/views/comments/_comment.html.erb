@@ -1,5 +1,6 @@
 <%# Single comment display with threading support %>
 <% comment_user = engagement&.user || comment.user %>
+<% insight_item = local_assigns[:insight_item] || @insight_item || comment.insight_item %>
 <%= turbo_frame_tag dom_id(engagement) do %>
   <div id="<%= dom_id(engagement) %>" class="<%= 'ml-8 border-l-2 border-base-300 pl-4' if comment.reply? %>">
     <div class="flex gap-3 py-3">
@@ -48,7 +49,7 @@
                 Edit
               </button>
 
-              <%= button_to insight_item_comment_path(@insight_item || comment.insight_item, comment),
+              <%= button_to insight_item_comment_path(insight_item, comment),
                   method: :delete,
                   class: "btn btn-ghost btn-xs gap-1 text-error",
                   data: { turbo_confirm: "Delete this comment?" } do %>
@@ -63,12 +64,12 @@
 
         <%# Reply form placeholder %>
         <div id="reply_form_<%= comment.id %>" class="hidden mt-3">
-          <%= render "comments/form", insight_item: @insight_item || comment.insight_item, comment: Comment.new(parent_id: comment.id), parent: comment %>
+          <%= render "comments/form", insight_item: insight_item, comment: Comment.new(parent_id: comment.id), parent: comment %>
         </div>
 
         <%# Edit form placeholder %>
         <div id="edit_form_<%= comment.id %>" class="hidden mt-3">
-          <%= render "comments/edit_form", insight_item: @insight_item || comment.insight_item, comment: comment %>
+          <%= render "comments/edit_form", insight_item: insight_item, comment: comment %>
         </div>
       </div>
     </div>
