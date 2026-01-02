@@ -120,7 +120,7 @@ class ProfilesController < ApplicationController
 
     redirect_to my_insights_path, notice: message
   rescue Zip::Error => e
-    redirect_to my_insights_path, alert: "Invalid zip file: #{e.message}"
+    redirect_to profile_path, alert: "Invalid zip file: #{e.message}"
   end
 
   private
