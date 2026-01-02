@@ -18,8 +18,9 @@ Rails.application.routes.draw do
   get  "register/:token", to: "registrations#new", as: :register
   post "register/:token", to: "registrations#create"
 
-  # Dashboard
+  # Landing page (public) and Dashboard (authenticated)
   root "home#index"
+  get "dashboard", to: "home#dashboard", as: :dashboard
 
   # How To / Documentation
   get "how-to", to: "home#how_to", as: :how_to

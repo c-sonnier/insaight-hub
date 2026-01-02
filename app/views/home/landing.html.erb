@@ -1,0 +1,216 @@
+<!-- Full-screen container with diagonal background -->
+<div class="min-h-screen relative overflow-hidden">
+  <!-- Base background - white -->
+  <div class="absolute inset-0 bg-white"></div>
+
+  <!-- Two diagonal color bands - lower left, steep angle -->
+  <div class="absolute inset-0 overflow-hidden">
+    <!-- Lightest grey band (outermost) -->
+    <div class="absolute -bottom-[28%] -left-[30%] w-[160%] h-[70%] origin-center rotate-[-18deg] bg-[#f5f7f9]"></div>
+    <!-- Medium grey band -->
+    <div class="absolute -bottom-[38%] -left-[30%] w-[160%] h-[55%] origin-center rotate-[-18deg] bg-[#eef1f4]"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="relative z-20 w-full px-6 py-4">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <%= image_tag "logo_h_100.svg", class: "h-10", alt: "insAIght Hub" %>
+        <span class="text-2xl font-medium text-[#10325B] tracking-tight">ins<span class="font-bold text-[#38BDF8]">AI</span>ght Hub</span>
+      </div>
+
+      <!-- Sign In Button -->
+      <%= link_to "Sign In", new_session_path, class: "px-6 py-2.5 bg-[#183C67] hover:bg-[#1e4a7d] text-white font-semibold rounded-xl transition-all duration-200 shadow-[0_4px_14px_rgba(24,60,103,0.35)] hover:shadow-[0_6px_20px_rgba(24,60,103,0.4)]" %>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <div class="relative z-10 px-6 py-12 lg:py-20">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+
+        <!-- Left side: Content -->
+        <div class="lg:w-1/2 space-y-6 text-center lg:text-left">
+          <!-- Tagline -->
+          <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#10325B] leading-tight tracking-tight">
+            Because understanding<br>
+            <span class="text-[#38BDF8]">beats output</span>
+          </h1>
+
+          <!-- Description -->
+          <p class="text-lg lg:text-xl text-[#64748b] leading-relaxed max-w-lg">
+            Turn scattered AI output into <span class="font-semibold text-[#1e293b]">shared understanding</span> —
+            structured, searchable, and easy to act on.
+          </p>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+            <%= link_to new_session_path, class: "inline-flex items-center justify-center px-8 py-4 bg-[#183C67] hover:bg-[#1e4a7d] text-white font-semibold rounded-xl transition-all duration-200 shadow-[0_4px_14px_rgba(24,60,103,0.35)] hover:shadow-[0_6px_20px_rgba(24,60,103,0.4)] text-lg" do %>
+              Get Started
+              <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            <% end %>
+            <a href="#features" class="inline-flex items-center justify-center px-8 py-4 border-2 border-[#183C67] text-[#183C67] hover:bg-[#183C67] hover:text-white font-semibold rounded-xl transition-all duration-200 text-lg">
+              Learn More
+            </a>
+          </div>
+        </div>
+
+        <!-- Right side: Hero illustration -->
+        <div class="lg:w-1/2">
+          <%= image_tag "hero_illustration.png", class: "w-full max-w-lg mx-auto", alt: "Transform AI insights into knowledge" %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div id="features" class="relative z-10 px-6 py-16 lg:py-24 bg-white/80">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-[#10325B] mb-4">Why insAIght Hub?</h2>
+        <p class="text-lg text-[#64748b] max-w-2xl mx-auto">
+          Stop losing valuable AI insights in scattered chat logs. Capture, organize, and share knowledge that matters.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] transition-all duration-300">
+          <div class="w-14 h-14 bg-[#183C67]/10 rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-[#183C67]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-[#10325B] mb-3">Capture Insights</h3>
+          <p class="text-[#64748b] leading-relaxed">
+            Save valuable AI-generated insights with context, tags, and metadata. Never lose an important discovery again.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] transition-all duration-300">
+          <div class="w-14 h-14 bg-[#38BDF8]/10 rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-[#38BDF8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-[#10325B] mb-3">Search & Discover</h3>
+          <p class="text-[#64748b] leading-relaxed">
+            Powerful search across all your insights. Find exactly what you need with tags, full-text search, and filters.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white rounded-2xl p-8 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.1)] transition-all duration-300">
+          <div class="w-14 h-14 bg-[#10B981]/10 rounded-xl flex items-center justify-center mb-6">
+            <svg class="w-7 h-7 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-[#10325B] mb-3">Share Knowledge</h3>
+          <p class="text-[#64748b] leading-relaxed">
+            Publish insights to your team. Build a shared knowledge base that grows smarter with every contribution.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MCP Integration Section -->
+  <div class="relative z-10 px-6 py-16 lg:py-24">
+    <div class="max-w-6xl mx-auto">
+      <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+        <div class="lg:w-1/2">
+          <div class="bg-[#1e293b] rounded-2xl p-6 shadow-2xl">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-3 h-3 rounded-full bg-[#ef4444]"></div>
+              <div class="w-3 h-3 rounded-full bg-[#f59e0b]"></div>
+              <div class="w-3 h-3 rounded-full bg-[#22c55e]"></div>
+            </div>
+            <pre class="text-sm text-[#94a3b8] overflow-x-auto"><code class="text-[#e2e8f0]">{
+  "mcpServers": {
+    "insaight-hub": {
+      "url": "<span class="text-[#38BDF8]">https://your-hub.com/mcp</span>",
+      "headers": {
+        "Authorization": "Bearer <span class="text-[#10B981]">your-token</span>"
+      }
+    }
+  }
+}</code></pre>
+          </div>
+        </div>
+
+        <div class="lg:w-1/2 space-y-6">
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-[#38BDF8]/10 text-[#38BDF8] rounded-full text-sm font-semibold">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            MCP Integration
+          </div>
+          <h2 class="text-3xl lg:text-4xl font-bold text-[#10325B]">
+            Works with your AI tools
+          </h2>
+          <p class="text-lg text-[#64748b] leading-relaxed">
+            Seamlessly integrate with Claude, Cursor, and other MCP-compatible AI assistants.
+            Your AI can read from and write to your knowledge base directly.
+          </p>
+          <ul class="space-y-3">
+            <li class="flex items-center gap-3 text-[#64748b]">
+              <svg class="w-5 h-5 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Save insights directly from AI conversations
+            </li>
+            <li class="flex items-center gap-3 text-[#64748b]">
+              <svg class="w-5 h-5 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Let AI search your knowledge base for context
+            </li>
+            <li class="flex items-center gap-3 text-[#64748b]">
+              <svg class="w-5 h-5 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              Works with Claude Code, Cursor, and more
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Section -->
+  <div class="relative z-10 px-6 py-16 lg:py-24 bg-[#183C67]">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl lg:text-4xl font-bold text-white mb-6">
+        Ready to transform your AI insights?
+      </h2>
+      <p class="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
+        Start capturing, organizing, and sharing your AI-generated knowledge today.
+      </p>
+      <%= link_to new_session_path, class: "inline-flex items-center justify-center px-8 py-4 bg-white text-[#183C67] font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl text-lg" do %>
+        Sign In to Get Started
+        <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="relative z-10 px-6 py-8 bg-[#0f172a]">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <%= image_tag "logo_h_100.svg", class: "h-8", alt: "insAIght Hub" %>
+        <span class="text-lg font-medium text-white tracking-tight">ins<span class="font-bold text-[#38BDF8]">AI</span>ght Hub</span>
+      </div>
+      <p class="text-[#64748b] text-sm">
+        &copy; <%= Date.current.year %> insAIght Hub. All rights reserved.
+      </p>
+    </div>
+  </footer>
+</div>
