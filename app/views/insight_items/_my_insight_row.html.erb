@@ -1,0 +1,26 @@
+<tr id="<%= dom_id(insight_item, :row) %>">
+  <td>
+    <%= link_to insight_item.title, insight_item, class: "link link-hover font-semibold" %>
+  </td>
+  <td>
+    <span class="badge badge-outline badge-sm"><%= insight_item.audience.humanize %></span>
+  </td>
+  <td>
+    <% if insight_item.published? %>
+      <span class="badge badge-success badge-sm">Published</span>
+    <% else %>
+      <span class="badge badge-warning badge-sm">Draft</span>
+    <% end %>
+  </td>
+  <td><%= insight_item.insight_item_files.count %></td>
+  <td><%= time_ago_in_words(insight_item.created_at) %> ago</td>
+  <td class="flex gap-2">
+    <%= link_to "Edit", edit_insight_item_path(insight_item), class: "btn btn-ghost btn-xs" %>
+    <% if insight_item.draft? %>
+      <%= button_to "Publish", publish_insight_item_path(insight_item), method: :post, class: "btn btn-success btn-xs" %>
+    <% else %>
+      <%= button_to "Unpublish", unpublish_insight_item_path(insight_item), method: :post, class: "btn btn-warning btn-xs" %>
+    <% end %>
+    <%= button_to "Delete", insight_item, method: :delete, class: "btn btn-error btn-xs", data: { turbo_confirm: "Are you sure you want to delete this insight?" } %>
+  </td>
+</tr>

@@ -58,7 +58,92 @@ class ProfilesController < ApplicationController
               disposition: "attachment"
   end
 
+  def import_insights
+    unless params[:insights_zip].present?
+      redirect_to profile_path, alert: "Please select a zip file to import."
+      return
+    end
+
+    imported_count = 0
+    skipped_count = 0
+
+    Zip::File.open(params[:insights_zip].tempfile) do |zip_file|
+      # Group entries by folder
+      folders = zip_file.entries.reject(&:directory?).group_by do |entry|
+        entry.name.split("/").first
+      end
+
+      folders.each do |folder_name, entries|
+        # Skip if insight with this slug already exists
+        if InsightItem.exists?(slug: folder_name)
+          skipped_count += 1
+          next
+        end
+
+        # Derive title from folder name (slug)
+        title = folder_name.tr("-", " ").titleize
+
+        insight_item = Current.user.insight_items.build(
+          title: title,
+          slug: folder_name,
+          description: "[Imported] Please update this description.",
+          audience: :developer,
+          status: :draft,
+          metadata: { "tags" => ["imported"] }
+        )
+
+        entries.each do |entry|
+          filename = entry.name.sub("#{folder_name}/", "")
+          content = entry.get_input_stream.read.force_encoding("UTF-8")
+          content_type = determine_content_type(filename)
+
+          insight_item.insight_item_files.build(
+            filename: filename,
+            content: content,
+            content_type: content_type
+          )
+        end
+
+        # Set entry file to first HTML or markdown file if available
+        html_file = insight_item.insight_item_files.find { |f| f.filename.end_with?(".html") }
+        md_file = insight_item.insight_item_files.find { |f| f.filename.end_with?(".md") }
+        insight_item.entry_file = (html_file || md_file)&.filename
+
+        if insight_item.save
+          imported_count += 1
+        end
+      end
+    end
+
+    message = "Imported #{imported_count} insight(s)."
+    message += " Skipped #{skipped_count} (already exist)." if skipped_count > 0
+
+    redirect_to my_insights_path, notice: message
+  rescue Zip::Error => e
+    redirect_to my_insights_path, alert: "Invalid zip file: #{e.message}"
+  end
+
   private
+
+  def determine_content_type(filename)
+    extension = File.extname(filename).downcase
+    case extension
+    when ".html", ".htm"
+      "text/html"
+    when ".css"
+      "text/css"
+    when ".js"
+      "text/javascript"
+    when ".md", ".markdown"
+      "text/markdown"
+    when ".json"
+      "application/json"
+    when ".txt"
+      "text/plain"
+    else
+      "application/octet-stream"
+    end
+  end
 
   def generate_all_insights_zip(insight_items)
     stringio = Zip::OutputStream.write_buffer do |zio|
