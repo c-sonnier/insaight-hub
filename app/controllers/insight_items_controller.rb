@@ -74,12 +74,20 @@ class InsightItemsController < ApplicationController
 
   def publish
     @insight_item.publish!
-    redirect_to @insight_item, notice: "Insight has been published."
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace(dom_id(@insight_item, :row), partial: "my_insight_row", locals: { insight_item: @insight_item }) }
+      format.html { redirect_to @insight_item, notice: "Insight has been published." }
+    end
   end
 
   def unpublish
     @insight_item.unpublish!
-    redirect_to @insight_item, notice: "Insight has been unpublished."
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace(dom_id(@insight_item, :row), partial: "my_insight_row", locals: { insight_item: @insight_item }) }
+      format.html { redirect_to @insight_item, notice: "Insight has been unpublished." }
+    end
   end
 
   def my_insights
