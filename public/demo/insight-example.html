@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>insAIght Hub - Product Requirements Document</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #33B8ED;
+      --primary-deep: #10325B;
+      --primary-deep-hover: #183C67;
+      --spectrum-red: #EB413D;
+      --spectrum-orange: #F9AB4B;
+      --spectrum-yellow: #FCC64E;
+      --spectrum-lime: #A1D555;
+      --spectrum-cyan: #41BCDB;
+      --spectrum-indigo: #6772D1;
+      --ink: #020617;
+      --body: #0f172a;
+      --muted: #64748b;
+      --border: #e5e7eb;
+      --surface: #f9fafb;
+      --white: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--surface) 0%, var(--white) 100%);
+      color: var(--body);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-row {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+    }
+
+    .badge-primary {
+      background: rgba(51, 184, 237, 0.15);
+      color: var(--primary);
+    }
+
+    .badge-audience {
+      background: rgba(103, 114, 209, 0.15);
+      color: var(--spectrum-indigo);
+    }
+
+    .badge-status {
+      background: rgba(22, 163, 74, 0.15);
+      color: #16A34A;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary-deep);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: var(--muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .meta-item svg {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    /* Table of Contents */
+    .toc {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .toc h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--primary-deep);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .toc-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 0.5rem;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toc-link:hover {
+      background: rgba(51, 184, 237, 0.1);
+      color: var(--primary);
+    }
+
+    .toc-link .num {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Sections */
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-deep);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    h2 .section-num {
+      background: var(--primary);
+      color: white;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+    }
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--primary-deep);
+      margin: 1.5rem 0 1rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+      color: var(--body);
+    }
+
+    /* Cards */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .card-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-icon.red { background: rgba(235, 65, 61, 0.15); color: var(--spectrum-red); }
+    .card-icon.cyan { background: rgba(65, 188, 219, 0.15); color: var(--spectrum-cyan); }
+    .card-icon.lime { background: rgba(161, 213, 85, 0.15); color: var(--spectrum-lime); }
+
+    .card-title {
+      font-weight: 600;
+      color: var(--primary-deep);
+    }
+
+    /* Tech Stack Table */
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.875rem;
+    }
+
+    .tech-table th,
+    .tech-table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tech-table th {
+      background: var(--surface);
+      font-weight: 600;
+      color: var(--primary-deep);
+    }
+
+    .tech-table tr:hover td {
+      background: rgba(51, 184, 237, 0.05);
+    }
+
+    .tech-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.5rem;
+      background: var(--primary-deep);
+      color: white;
+      border-radius: 0.375rem;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Code Block */
+    .code-block {
+      background: var(--primary-deep);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      overflow-x: auto;
+    }
+
+    .code-block pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+      line-height: 1.7;
+    }
+
+    .code-block .keyword { color: var(--spectrum-orange); }
+    .code-block .string { color: var(--spectrum-lime); }
+    .code-block .comment { color: var(--muted); }
+
+    /* Features Grid */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      transition: all 0.2s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 8px 30px rgba(51, 184, 237, 0.12);
+      transform: translateY(-2px);
+    }
+
+    .feature-title {
+      font-weight: 600;
+      color: var(--primary-deep);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+
+    /* Phase Progress */
+    .phase-list {
+      list-style: none;
+    }
+
+    .phase-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .phase-item:last-child {
+      border-bottom: none;
+    }
+
+    .phase-num {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .phase-content h4 {
+      font-weight: 600;
+      color: var(--primary-deep);
+      margin-bottom: 0.25rem;
+    }
+
+    .phase-content p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* Callout */
+    .callout {
+      background: rgba(51, 184, 237, 0.1);
+      border-left: 4px solid var(--primary);
+      border-radius: 0 0.75rem 0.75rem 0;
+      padding: 1.25rem 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .callout-title {
+      font-weight: 600;
+      color: var(--primary-deep);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .callout p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--body);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.875rem;
+    }
+
+    .footer-brand {
+      font-weight: 600;
+      color: var(--primary-deep);
+    }
+
+    .footer-brand span {
+      color: var(--primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .container {
+        padding: 1.5rem 1rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .meta {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .toc-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="badge-row">
+        <span class="badge badge-primary">PRD</span>
+        <span class="badge badge-audience">Developer</span>
+        <span class="badge badge-status">Published</span>
+      </div>
+      <h1>insAIght Hub - Product Requirements Document</h1>
+      <p class="subtitle">
+        Transform dense AI/LLM outputs into beautiful, audience-tailored web pages that can be shared across your development team.
+      </p>
+      <div class="meta">
+        <span class="meta-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          Version 1.0 - Dec 29, 2024
+        </span>
+        <span class="meta-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          Product Team
+        </span>
+        <span class="meta-item">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Ready for Implementation
+        </span>
+      </div>
+    </header>
+
+    <!-- Table of Contents -->
+    <nav class="toc">
+      <h2>
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        Quick Navigation
+      </h2>
+      <div class="toc-grid">
+        <a href="#overview" class="toc-link"><span class="num">1</span> Overview</a>
+        <a href="#tech" class="toc-link"><span class="num">2</span> Technology Stack</a>
+        <a href="#models" class="toc-link"><span class="num">3</span> Data Models</a>
+        <a href="#auth" class="toc-link"><span class="num">4</span> Authentication</a>
+        <a href="#features" class="toc-link"><span class="num">5</span> Features</a>
+        <a href="#api" class="toc-link"><span class="num">6</span> API Specification</a>
+        <a href="#ui" class="toc-link"><span class="num">7</span> UI/UX Requirements</a>
+        <a href="#phases" class="toc-link"><span class="num">8</span> Implementation</a>
+      </div>
+    </nav>
+
+    <!-- Overview Section -->
+    <section id="overview">
+      <h2><span class="section-num">1</span> Overview</h2>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon red">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          </div>
+          <span class="card-title">Problem Statement</span>
+        </div>
+        <p>AI responses in terminals/chat interfaces are difficult to digest. There is no persistent storage for valuable AI-generated content, and team members can't easily share or reference AI outputs. Creating styled HTML outputs is manual and disconnected from workflow.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon cyan">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+          </div>
+          <span class="card-title">Solution</span>
+        </div>
+        <p>insAIght Hub is a web application that transforms dense AI/LLM outputs into beautiful, audience-tailored web pages that can be shared across a development team.</p>
+      </div>
+
+      <div class="callout">
+        <div class="callout-title">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Core Concepts
+        </div>
+        <p><strong>Insight:</strong> A collection of one or more HTML files representing a single piece of content (documentation, summary, report, etc.)</p>
+        <p><strong>InsightFile:</strong> An individual HTML file within an Insight</p>
+        <p><strong>Audience:</strong> The target reader type (developer, stakeholder, end_user) that influences how content is presented</p>
+      </div>
+    </section>
+
+    <!-- Technology Stack -->
+    <section id="tech">
+      <h2><span class="section-num">2</span> Technology Stack</h2>
+
+      <table class="tech-table">
+        <thead>
+          <tr>
+            <th>Component</th>
+            <th>Technology</th>
+            <th>Version</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Language</td>
+            <td><span class="tech-badge">Ruby</span></td>
+            <td>3.4.5</td>
+          </tr>
+          <tr>
+            <td>Framework</td>
+            <td><span class="tech-badge">Ruby on Rails</span></td>
+            <td>8.1.1</td>
+          </tr>
+          <tr>
+            <td>Database</td>
+            <td><span class="tech-badge">SQLite + Litestack</span></td>
+            <td>Latest</td>
+          </tr>
+          <tr>
+            <td>CSS Framework</td>
+            <td><span class="tech-badge">Tailwind CSS + DaisyUI</span></td>
+            <td>Latest</td>
+          </tr>
+          <tr>
+            <td>JavaScript</td>
+            <td><span class="tech-badge">Hotwire (Turbo + Stimulus)</span></td>
+            <td>Rails 8 default</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Key Features -->
+    <section id="features">
+      <h2><span class="section-num">5</span> Key Features</h2>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-title">
+            <svg width="16" height="16" fill="none" stroke="var(--primary)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            Insight Management
+          </div>
+          <p class="feature-desc">Create, edit, and organize insights with multi-file support and audience targeting.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-title">
+            <svg width="16" height="16" fill="none" stroke="var(--spectrum-lime)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            Search & Filter
+          </div>
+          <p class="feature-desc">Powerful search with audience filters, tags, and full-text search capabilities.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-title">
+            <svg width="16" height="16" fill="none" stroke="var(--spectrum-orange)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Team Sharing
+          </div>
+          <p class="feature-desc">Share insights with your team via publish/unpublish workflow.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-title">
+            <svg width="16" height="16" fill="none" stroke="var(--spectrum-indigo)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            REST API
+          </div>
+          <p class="feature-desc">Full API for programmatic access with token-based authentication.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-title">
+            <svg width="16" height="16" fill="none" stroke="var(--spectrum-cyan)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            MCP Integration
+          </div>
+          <p class="feature-desc">Model Context Protocol support for AI assistants like Claude and Cursor.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-title">
+            <svg width="16" height="16" fill="none" stroke="var(--spectrum-red)" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+            Theme Support
+          </div>
+          <p class="feature-desc">DaisyUI theme switcher with persistent user preferences.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- API Preview -->
+    <section id="api">
+      <h2><span class="section-num">6</span> API Example</h2>
+
+      <p>Create insights programmatically with our REST API:</p>
+
+      <div class="code-block">
+        <pre><span class="comment">// POST /api/v1/insights</span>
+{
+  <span class="string">"insight"</span>: {
+    <span class="string">"title"</span>: <span class="string">"Sprint Summary"</span>,
+    <span class="string">"description"</span>: <span class="string">"Key outcomes from sprint 42"</span>,
+    <span class="string">"audience"</span>: <span class="string">"stakeholder"</span>,
+    <span class="string">"tags"</span>: [<span class="string">"sprint"</span>, <span class="string">"summary"</span>],
+    <span class="string">"content"</span>: <span class="string">"&lt;!DOCTYPE html&gt;..."</span>
+  }
+}</pre>
+      </div>
+    </section>
+
+    <!-- Implementation Phases -->
+    <section id="phases">
+      <h2><span class="section-num">8</span> Implementation Roadmap</h2>
+
+      <ul class="phase-list">
+        <li class="phase-item">
+          <span class="phase-num">1</span>
+          <div class="phase-content">
+            <h4>Core Server</h4>
+            <p>Rails app setup, authentication, insight CRUD, file management</p>
+          </div>
+        </li>
+        <li class="phase-item">
+          <span class="phase-num">2</span>
+          <div class="phase-content">
+            <h4>MCP Integration</h4>
+            <p>Model Context Protocol server for AI assistant integration</p>
+          </div>
+        </li>
+        <li class="phase-item">
+          <span class="phase-num">3</span>
+          <div class="phase-content">
+            <h4>IDE Integration</h4>
+            <p>Cursor slash commands and IDE plugin development</p>
+          </div>
+        </li>
+        <li class="phase-item">
+          <span class="phase-num">4</span>
+          <div class="phase-content">
+            <h4>Collaboration</h4>
+            <p>Comments, version history, team workspaces, favorites</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Generated by <span class="footer-brand">ins<span>AI</span>ght Hub</span></p>
+      <p>Turn scattered AI output into shared understanding</p>
+    </footer>
+  </div>
+</body>
+</html>
