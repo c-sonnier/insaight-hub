@@ -120,6 +120,190 @@
     </div>
   </div>
 
+  <!-- Before & After Comparison Section - Full Width Side by Side -->
+  <div id="demo" class="relative z-10 py-16 lg:py-24 bg-[#f8fafc]">
+    <div class="px-6 mb-12">
+      <div class="max-w-4xl mx-auto text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 bg-[#38BDF8]/10 text-[#38BDF8] rounded-full text-sm font-semibold mb-4">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          See the Difference
+        </div>
+        <h2 class="text-3xl lg:text-4xl font-bold text-[#10325B] mb-4">From Raw Docs to Polished Insights</h2>
+        <p class="text-lg text-[#64748b] max-w-2xl mx-auto">
+          Watch how insAIght Hub transforms dense technical documentation into beautiful, navigable pages.
+        </p>
+      </div>
+    </div>
+
+    <!-- Side-by-Side Comparison -->
+    <div class="px-6 lg:px-12" data-controller="comparison">
+      <div class="flex flex-col lg:flex-row rounded-2xl overflow-hidden shadow-[0_8px_40px_rgba(0,0,0,0.08)] border border-[#e5e7eb]" style="height: 750px;">
+
+        <!-- Left Panel: Markdown Source -->
+        <div class="flex-1 flex flex-col border-r border-[#e5e7eb] bg-white">
+          <!-- Header with toggle -->
+          <div class="flex items-center justify-between px-4 py-3 bg-[#f9fafb] border-b border-[#e5e7eb]">
+            <div class="flex items-center gap-3">
+              <div class="flex gap-1.5">
+                <div class="w-3 h-3 rounded-full bg-[#ef4444]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#f59e0b]"></div>
+                <div class="w-3 h-3 rounded-full bg-[#22c55e]"></div>
+              </div>
+              <span class="text-[#64748b] text-sm font-medium">PRD.md</span>
+            </div>
+            <button
+              type="button"
+              class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 bg-white border border-[#e5e7eb] text-[#64748b] hover:bg-[#f1f5f9] hover:text-[#10325B]"
+              data-action="click->comparison#toggleMarkdown"
+              data-comparison-target="toggleBtn"
+              title="Toggle between raw and preview">
+              <!-- Code icon (shown when in preview mode) -->
+              <svg data-comparison-target="codeIcon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+              <!-- Eye icon (shown when in raw mode) -->
+              <svg data-comparison-target="eyeIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span data-comparison-target="toggleLabel">Preview</span>
+            </button>
+          </div>
+
+          <!-- Content area -->
+          <div class="flex-1 relative overflow-hidden">
+            <!-- Raw Markdown View -->
+            <div class="absolute inset-0 overflow-auto bg-[#1e293b] p-4" data-comparison-target="rawView">
+              <pre class="text-[#e2e8f0] text-sm leading-relaxed whitespace-pre-wrap font-mono"><span class="text-[#f472b6]"># Digest Hub - Product Requirements Document</span>
+
+<span class="text-[#94a3b8]">## Document Info</span>
+- **Version:** 1.0
+- **Created:** 2024-12-29
+- **Status:** Ready for Implementation
+
+---
+
+<span class="text-[#94a3b8]">## 1. Overview</span>
+
+<span class="text-[#fbbf24]">### 1.1 Problem Statement</span>
+AI responses in terminals/chat interfaces are difficult to
+digest. There is no persistent storage for valuable AI-generated
+content, and team members can't easily share or reference AI
+outputs. Creating styled HTML outputs is manual and disconnected
+from workflow.
+
+<span class="text-[#fbbf24]">### 1.2 Solution</span>
+Digest Hub is a web application that transforms dense AI/LLM
+outputs into beautiful, audience-tailored web pages that can
+be shared across a development team.
+
+<span class="text-[#fbbf24]">### 1.3 Core Concepts</span>
+- **Digest:** A collection of one or more HTML files...
+- **DigestFile:** An individual HTML file within a Digest
+- **Audience:** The target reader type (developer, stakeholder,
+  end_user) that influences how content is presented
+
+---
+
+<span class="text-[#94a3b8]">## 2. Technology Stack</span>
+
+| Component | Technology | Version |
+|-----------|------------|---------|
+| Language | Ruby | 3.4.5 |
+| Framework | Ruby on Rails | 8.1.1 |
+| Database | SQLite | Latest |
+| CSS Framework | Tailwind CSS | Latest |
+| UI Components | DaisyUI | Latest |
+
+<span class="text-[#94a3b8]">## 3. Data Models</span>
+
+<span class="text-[#fbbf24]">### 3.1 User</span>
+<span class="text-[#22d3ee]">```ruby</span>
+<span class="text-[#a5f3fc]">class User < ApplicationRecord
+  has_secure_password
+  has_many :sessions, dependent: :destroy
+  has_many :digests, dependent: :destroy
+
+  # Fields:
+  # - id: integer (PK)
+  # - email_address: string (unique, indexed)
+  # - password_digest: string
+  # - name: string
+  # - api_token: string (unique, indexed)
+  # - admin: boolean (default: false)
+end</span>
+<span class="text-[#22d3ee]">```</span>
+
+<span class="text-[#94a3b8]">## 5. Features & Requirements</span>
+
+<span class="text-[#fbbf24]">### 5.1 User Management (Admin)</span>
+
+#### 5.1.1 List Users
+- Display all users in a table
+- Show: name, email, admin status, created date
+- Pagination
+
+#### 5.1.2 Create User
+- Admin can create a user with: email, name, password
+- Generates API token automatically
+
+<span class="text-[#94a3b8]">...</span>
+<span class="text-[#64748b]">(1,380 lines total)</span></pre>
+            </div>
+
+            <!-- Rendered Markdown Preview -->
+            <div class="absolute inset-0 hidden" data-comparison-target="previewView">
+              <iframe
+                src="/demo/markdown-preview.html"
+                class="w-full h-full border-0 bg-white"
+                title="Markdown Preview">
+              </iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Panel: insAIght View -->
+        <div class="flex-1 flex flex-col bg-white">
+          <!-- Header -->
+          <div class="flex items-center justify-between px-4 py-3 bg-[#10325B] border-b border-[#e5e7eb]">
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-[#38BDF8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+                <span class="text-white text-sm font-medium">insAIght View</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-[#38BDF8]/20 text-[#38BDF8]">PRD</span>
+              <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-[#22c55e]/20 text-[#22c55e]">Published</span>
+            </div>
+          </div>
+
+          <!-- Insight iframe -->
+          <div class="flex-1 overflow-hidden">
+            <iframe
+              src="/demo/insight-example.html"
+              class="w-full h-full border-0"
+              title="Rendered Insight Preview">
+            </iframe>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Caption -->
+    <div class="px-6 mt-8">
+      <p class="text-center text-[#64748b] text-sm max-w-2xl mx-auto">
+        <strong class="text-[#10325B]">Left:</strong> Your markdown source file with toggle to preview.
+        <strong class="text-[#10325B] ml-4">Right:</strong> The polished insAIght page your team will see.
+      </p>
+    </div>
+  </div>
+
   <!-- MCP Integration Section -->
   <div class="relative z-10 px-6 py-16 lg:py-24">
     <div class="max-w-6xl mx-auto">
