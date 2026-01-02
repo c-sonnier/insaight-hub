@@ -41,6 +41,7 @@ Rails.application.routes.draw do
   resource :profile, only: [:show, :edit, :update] do
     post :regenerate_token
     get :export_all_insights
+    post :import_insights
   end
 
   # Admin
