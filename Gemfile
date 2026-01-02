@@ -28,6 +28,9 @@ gem "pagy", "~> 8.0"
 # Markdown rendering for insight item files
 gem "redcarpet"
 
+# Zip file handling for insight import/export
+gem "rubyzip"
+
 # MCP (Model Context Protocol) server for AI agent integration
 gem "mcp"
 
