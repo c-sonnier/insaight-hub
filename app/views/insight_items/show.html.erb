@@ -1,3 +1,11 @@
+<%
+  page_title @insight_item.title
+  page_description @insight_item.description.presence || "#{@insight_item.title} - An insight by #{@insight_item.user.name} on insAIght Hub"
+  page_type "article"
+  page_url insight_item_url(@insight_item)
+  page_keywords @insight_item.tags.any? ? @insight_item.tags.join(", ") : nil
+%>
+
 <div class="flex flex-col h-[100dvh]">
   <div class="bg-base-200 border-b border-base-300 px-4 py-2">
     <div class="flex items-center">
