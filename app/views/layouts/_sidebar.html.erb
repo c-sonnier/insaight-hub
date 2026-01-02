@@ -21,7 +21,7 @@
     <!-- Main Navigation -->
     <ul class="menu w-full grow px-2 py-4 gap-1">
       <li>
-        <%= link_to root_path, class: "#{current_page?(root_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "Dashboard" } do %>
+        <%= link_to root_path, class: "#{current_page?(root_path) ? 'text-primary underline' : ''} tooltip tooltip-right", data: { tip: "Dashboard" } do %>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
             <rect x="3" y="3" width="7" height="9"></rect>
             <rect x="14" y="3" width="7" height="5"></rect>
@@ -32,7 +32,7 @@
         <% end %>
       </li>
       <li>
-        <%= link_to insight_items_path, class: "#{current_page?(insight_items_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "Browse Insights" } do %>
+        <%= link_to insight_items_path, class: "#{current_page?(insight_items_path) ? 'text-primary underline' : ''} tooltip tooltip-right", data: { tip: "Browse Insights" } do %>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
             <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
             <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -44,7 +44,7 @@
         <% end %>
       </li>
       <li>
-        <%= link_to my_insights_path, class: "#{current_page?(my_insights_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "My Insights" } do %>
+        <%= link_to my_insights_path, class: "#{current_page?(my_insights_path) ? 'text-primary underline' : ''} tooltip tooltip-right", data: { tip: "My Insights" } do %>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
             <circle cx="9" cy="7" r="4"></circle>
@@ -55,7 +55,7 @@
         <% end %>
       </li>
       <li>
-        <%= link_to how_to_path, class: "#{current_page?(how_to_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "How To" } do %>
+        <%= link_to how_to_path, class: "#{current_page?(how_to_path) ? 'text-primary underline' : ''} tooltip tooltip-right", data: { tip: "How To" } do %>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
             <circle cx="12" cy="12" r="10"></circle>
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
@@ -70,7 +70,7 @@
           <span>Admin</span>
         </li>
         <li>
-          <%= link_to admin_users_path, class: "#{current_page?(admin_users_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "Users" } do %>
+          <%= link_to admin_users_path, class: "#{current_page?(admin_users_path) ? 'text-primary underline' : ''} tooltip tooltip-right", data: { tip: "Users" } do %>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
               <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
               <circle cx="9" cy="7" r="4"></circle>
@@ -81,7 +81,7 @@
           <% end %>
         </li>
         <li>
-          <%= link_to admin_invites_path, class: "#{current_page?(admin_invites_path) ? 'active' : ''} tooltip tooltip-right", data: { tip: "Invites" } do %>
+          <%= link_to admin_invites_path, class: "#{current_page?(admin_invites_path) ? 'text-primary underline' : ''} tooltip tooltip-right", data: { tip: "Invites" } do %>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
               <rect x="2" y="4" width="20" height="16" rx="2"></rect>
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
