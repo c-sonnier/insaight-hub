@@ -1,9 +1,6 @@
 <div class="container mx-auto px-4 py-8" data-controller="live-updates">
-  <div class="flex justify-between items-center mb-8">
+  <div class="mb-8">
     <h1 class="text-3xl font-bold">Insights</h1>
-    <% if authenticated? %>
-      <%= link_to "New Insight", new_insight_item_path, class: "btn btn-primary" %>
-    <% end %>
   </div>
 
   <div class="flex flex-wrap gap-4 mb-6 items-center">
