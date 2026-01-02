@@ -1,6 +1,8 @@
 require "zip"
 
 class ProfilesController < ApplicationController
+  include ActionController::Live
+
   def show
     @user = Current.user
   end
@@ -51,11 +53,13 @@ class ProfilesController < ApplicationController
       return
     end
 
-    zip_data = generate_all_insights_zip(insight_items)
-    send_data zip_data,
-              filename: "all-insights-#{Date.current}.zip",
-              type: "application/zip",
-              disposition: "attachment"
+    filename = "all-insights-#{Date.current}.zip"
+    response.headers["Content-Type"] = "application/zip"
+    response.headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
+
+    stream_insights_zip(insight_items, response.stream)
+  ensure
+    response.stream.close
   end
 
   def import_insights
@@ -145,19 +149,27 @@ class ProfilesController < ApplicationController
     end
   end
 
-  def generate_all_insights_zip(insight_items)
-    stringio = Zip::OutputStream.write_buffer do |zio|
-      insight_items.each do |insight_item|
-        folder_name = insight_item.slug
+  def stream_insights_zip(insight_items, stream)
+    # Use a temp file to build the ZIP, then stream it in chunks
+    Tempfile.create(["insights", ".zip"]) do |tempfile|
+      Zip::OutputStream.open(tempfile.path) do |zio|
+        insight_items.each do |insight_item|
+          folder_name = insight_item.slug
 
-        insight_item.insight_item_files.each do |file|
-          zio.put_next_entry("#{folder_name}/#{file.filename}")
-          zio.write(file.content)
+          insight_item.insight_item_files.each do |file|
+            zio.put_next_entry("#{folder_name}/#{file.filename}")
+            zio.write(file.content)
+          end
+        end
+      end
+
+      # Stream the file in 64KB chunks
+      File.open(tempfile.path, "rb") do |file|
+        while (chunk = file.read(65536))
+          stream.write(chunk)
         end
       end
     end
-    stringio.rewind
-    stringio.read
   end
 
   def profile_params
