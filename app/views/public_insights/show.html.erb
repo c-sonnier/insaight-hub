@@ -1,0 +1,35 @@
+<%
+  page_title @insight_item.title
+  page_description @insight_item.description.presence || "#{@insight_item.title} - Shared from insAIght Hub"
+%>
+
+<div class="flex flex-col h-[100dvh]">
+  <%# Minimal header with title only %>
+  <div class="bg-base-100 border-b border-base-200 px-4 py-3">
+    <div class="flex items-center justify-between max-w-screen-lg mx-auto">
+      <h1 class="text-lg font-bold"><%= @insight_item.title %></h1>
+      <span class="text-sm text-base-content/60">
+        by <%= @insight_item.user.name %>
+      </span>
+    </div>
+  </div>
+
+  <%# Full-width content iframe %>
+  <div class="flex-1 bg-white relative">
+    <% if @current_file %>
+      <iframe
+        src="<%= public_insight_file_path(@insight_item.share_token, @current_file.filename) %>"
+        class="w-full h-full border-0"
+      ></iframe>
+    <% else %>
+      <div class="flex items-center justify-center h-full text-base-content/60">
+        <p>This insight has no content.</p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Simple footer with branding %>
+  <div class="bg-base-100 border-t border-base-200 px-4 py-2 text-center text-sm text-base-content/60">
+    Shared via <a href="<%= root_url %>" class="link link-hover font-medium">insAIght Hub</a>
+  </div>
+</div>

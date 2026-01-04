@@ -35,6 +35,11 @@
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
               <li><%= link_to "Edit", edit_insight_item_path(@insight_item) %></li>
               <li><%= link_to "Export", export_insight_item_path(@insight_item) %></li>
+              <li>
+                <button type="button" onclick="document.getElementById('share_modal').showModal()">
+                  Share
+                </button>
+              </li>
               <% if @insight_item.draft? %>
                 <li><%= button_to "Publish", publish_insight_item_path(@insight_item), method: :post, class: "text-success" %></li>
               <% else %>
@@ -143,3 +148,20 @@
     </div>
   </div>
 </div>
+
+<%# Share Modal %>
+<% if authenticated? && (@insight_item.user == Current.user || Current.user&.admin?) %>
+  <dialog id="share_modal" class="modal">
+    <div class="modal-box">
+      <%= render "insight_items/share_panel", insight_item: @insight_item %>
+      <div class="modal-action">
+        <form method="dialog">
+          <button class="btn">Close</button>
+        </form>
+      </div>
+    </div>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+<% end %>
