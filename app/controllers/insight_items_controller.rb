@@ -1,8 +1,8 @@
 require "zip"
 
 class InsightItemsController < ApplicationController
-  before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :export]
-  before_action :authorize_owner, only: [:edit, :update, :destroy, :publish, :unpublish, :export]
+  before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token]
+  before_action :authorize_owner, only: [:edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token]
   before_action :authorize_published_or_owner, only: [:show]
 
   def index
@@ -110,7 +110,47 @@ class InsightItemsController < ApplicationController
     end
   end
 
+  def enable_share
+    unless @insight_item.published?
+      redirect_to @insight_item, alert: "Only published insights can be shared."
+      return
+    end
+
+    @insight_item.enable_sharing!
+
+    respond_to do |format|
+      format.turbo_stream { render_share_panel_update }
+      format.html { redirect_to @insight_item, notice: "Share link enabled." }
+    end
+  end
+
+  def disable_share
+    @insight_item.disable_sharing!
+
+    respond_to do |format|
+      format.turbo_stream { render_share_panel_update }
+      format.html { redirect_to @insight_item, notice: "Share link disabled." }
+    end
+  end
+
+  def regenerate_share_token
+    @insight_item.regenerate_share_token!
+
+    respond_to do |format|
+      format.turbo_stream { render_share_panel_update }
+      format.html { redirect_to @insight_item, notice: "Share link regenerated. Previous links are now invalid." }
+    end
+  end
+
   private
+
+  def render_share_panel_update
+    render turbo_stream: turbo_stream.replace(
+      dom_id(@insight_item, :share_panel),
+      partial: "insight_items/share_panel",
+      locals: { insight_item: @insight_item }
+    )
+  end
 
   def generate_insight_zip(insight_item)
     stringio = Zip::OutputStream.write_buffer do |zio|

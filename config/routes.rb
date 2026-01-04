@@ -25,12 +25,19 @@ Rails.application.routes.draw do
   # How To / Documentation
   get "how-to", to: "home#how_to", as: :how_to
 
+  # Public share links (unauthenticated access)
+  get "s/:token", to: "public_insights#show", as: :public_insight
+  get "s/:token/files/*id", to: "public_insight_files#show", as: :public_insight_file, format: false
+
   # Insights
   resources :insight_items, param: :id do
     member do
       post :publish
       post :unpublish
       get :export
+      post :enable_share
+      post :disable_share
+      post :regenerate_share_token
     end
     get "files/*id", to: "insight_item_files#show", as: :file, format: false
     resources :comments, only: [:create, :update, :destroy]

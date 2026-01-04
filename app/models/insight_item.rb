@@ -13,6 +13,7 @@ class InsightItem < ApplicationRecord
   validates :slug, presence: true, uniqueness: true, format: { with: /\A[a-z0-9-]+\z/, message: "must contain only lowercase letters, numbers, and hyphens" }
   validates :audience, presence: true, inclusion: { in: audiences.keys }
   validates :status, presence: true, inclusion: { in: statuses.keys }
+  validates :share_token, uniqueness: true, allow_nil: true
 
   before_validation :generate_slug, if: -> { slug.blank? && title.present? }
 
@@ -21,6 +22,7 @@ class InsightItem < ApplicationRecord
   scope :by_audience, ->(audience) { where(audience: audience) if audience.present? }
   scope :by_tag, ->(tag) { where("json_extract(metadata, '$.tags') LIKE ?", "%#{tag}%") if tag.present? }
   scope :search, ->(query) { where("title LIKE :q OR description LIKE :q", q: "%#{query}%") if query.present? }
+  scope :shareable, -> { published.where(share_enabled: true).where.not(share_token: nil) }
 
   def tags
     metadata&.dig("tags") || []
@@ -62,6 +64,27 @@ class InsightItem < ApplicationRecord
 
   def to_param
     slug
+  end
+
+  def generate_share_token!
+    update!(share_token: SecureRandom.urlsafe_base64(16))
+  end
+
+  def regenerate_share_token!
+    generate_share_token!
+  end
+
+  def enable_sharing!
+    generate_share_token! if share_token.blank?
+    update!(share_enabled: true)
+  end
+
+  def disable_sharing!
+    update!(share_enabled: false)
+  end
+
+  def shareable?
+    published? && share_enabled? && share_token.present?
   end
 
   private

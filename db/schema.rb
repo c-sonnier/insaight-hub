@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_31_194310) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
   create_table "action_mcp_session_messages", force: :cascade do |t|
     t.string "session_id", null: false
     t.string "direction", default: "client", null: false
@@ -112,6 +112,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_31_194310) do
     t.integer "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "commentable_type"
+    t.integer "commentable_id"
+    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
     t.index ["parent_id"], name: "index_comments_on_parent_id"
   end
 
@@ -126,6 +129,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_31_194310) do
     t.index ["insight_item_id", "created_at"], name: "index_engagements_on_insight_and_time"
     t.index ["insight_item_id"], name: "index_engagements_on_insight_item_id"
     t.index ["user_id"], name: "index_engagements_on_user_id"
+  end
+
+  create_table "highlights", force: :cascade do |t|
+    t.text "text_content", null: false
+    t.integer "start_offset", null: false
+    t.integer "end_offset", null: false
+    t.boolean "archived", default: false, null: false
+    t.text "original_text_content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["archived"], name: "index_highlights_on_archived"
   end
 
   create_table "insight_item_files", force: :cascade do |t|
@@ -151,7 +165,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_31_194310) do
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "share_token"
+    t.boolean "share_enabled", default: false, null: false
     t.index ["audience"], name: "index_insight_items_on_audience"
+    t.index ["share_token"], name: "index_insight_items_on_share_token", unique: true
     t.index ["slug"], name: "index_insight_items_on_slug", unique: true
     t.index ["status"], name: "index_insight_items_on_status"
     t.index ["user_id"], name: "index_insight_items_on_user_id"
