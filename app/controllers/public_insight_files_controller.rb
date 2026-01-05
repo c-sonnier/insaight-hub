@@ -13,8 +13,13 @@ class PublicInsightFilesController < ApplicationController
 
     if @insight_item_file.markdown?
       render html: markdown_html_wrapper(@insight_item_file.rendered_content).html_safe, content_type: "text/html"
+    elsif @insight_item_file.content_type == "text/html"
+      render html: @insight_item_file.content.html_safe, content_type: "text/html"
     else
-      render html: @insight_item_file.content.html_safe, content_type: @insight_item_file.content_type
+      # For CSS, JS, JSON, and other non-HTML files, use send_data to preserve MIME type
+      send_data @insight_item_file.content,
+                type: @insight_item_file.content_type,
+                disposition: "inline"
     end
   end
 
