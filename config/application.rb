@@ -16,6 +16,13 @@ module DigestHub
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # Autoload middleware
+    config.autoload_paths << Rails.root.join("app/middleware")
+
+    # Add AccountSlug::Extractor middleware for multi-tenancy
+    # This extracts the account UUID from URL paths and sets Current.account
+    config.middleware.use "AccountSlug::Extractor"
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
