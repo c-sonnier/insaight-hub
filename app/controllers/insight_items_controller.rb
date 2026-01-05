@@ -76,7 +76,13 @@ class InsightItemsController < ApplicationController
     @insight_item.publish!
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace(dom_id(@insight_item, :row), partial: "my_insight_row", locals: { insight_item: @insight_item }) }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace(dom_id(@insight_item, :row), partial: "my_insight_row", locals: { insight_item: @insight_item }),
+          turbo_stream.replace(dom_id(@insight_item, :show_toolbar), partial: "show_toolbar", locals: { insight_item: @insight_item }),
+          turbo_stream.replace(dom_id(@insight_item, :share_panel), partial: "share_panel", locals: { insight_item: @insight_item })
+        ]
+      end
       format.html { redirect_to @insight_item, notice: "Insight has been published." }
     end
   end
@@ -85,7 +91,13 @@ class InsightItemsController < ApplicationController
     @insight_item.unpublish!
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace(dom_id(@insight_item, :row), partial: "my_insight_row", locals: { insight_item: @insight_item }) }
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace(dom_id(@insight_item, :row), partial: "my_insight_row", locals: { insight_item: @insight_item }),
+          turbo_stream.replace(dom_id(@insight_item, :show_toolbar), partial: "show_toolbar", locals: { insight_item: @insight_item }),
+          turbo_stream.replace(dom_id(@insight_item, :share_panel), partial: "share_panel", locals: { insight_item: @insight_item })
+        ]
+      end
       format.html { redirect_to @insight_item, notice: "Insight has been unpublished." }
     end
   end
