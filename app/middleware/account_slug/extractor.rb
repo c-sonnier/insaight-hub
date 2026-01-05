@@ -4,6 +4,7 @@ module AccountSlug
     UUID_PATTERN = /\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/i
 
     # Routes that should not have account prefix (global routes)
+    # These include authentication, public pages, and static assets
     GLOBAL_ROUTES = %w[
       /
       /up
@@ -12,6 +13,11 @@ module AccountSlug
       /s
       /assets
       /rails
+      /session
+      /passwords
+      /setup
+      /register
+      /how-to
     ].freeze
 
     def initialize(app)

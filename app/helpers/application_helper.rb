@@ -1,5 +1,6 @@
 module ApplicationHelper
   include Pagy::Frontend
+  include AccountRoutingHelper
 
   def user_avatar(user, size: "w-10", css_class: "")
     avatar_classes = "avatar #{css_class}".strip
