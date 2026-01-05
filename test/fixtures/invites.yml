@@ -1,17 +1,28 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  token: MyString
-  email: MyString
-  created_by: one
-  used_by: one
-  expires_at: 2025-12-29 14:25:14
-  used_at: 2025-12-29 14:25:14
+available_invite:
+  account: default
+  token: <%= SecureRandom.urlsafe_base64(32) %>
+  email: newuser@example.com
+  created_by: owner_user
+  used_by:
+  expires_at: <%= 7.days.from_now %>
+  used_at:
 
-two:
-  token: MyString
-  email: MyString
-  created_by: two
-  used_by: two
-  expires_at: 2025-12-29 14:25:14
-  used_at: 2025-12-29 14:25:14
+used_invite:
+  account: default
+  token: <%= SecureRandom.urlsafe_base64(32) %>
+  email: member@example.com
+  created_by: owner_user
+  used_by: member_user
+  expires_at: <%= 7.days.from_now %>
+  used_at: <%= 1.day.ago %>
+
+expired_invite:
+  account: default
+  token: <%= SecureRandom.urlsafe_base64(32) %>
+  email: expired@example.com
+  created_by: owner_user
+  used_by:
+  expires_at: <%= 1.day.ago %>
+  used_at:

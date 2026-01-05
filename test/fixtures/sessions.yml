@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+admin_session:
+  identity: admin
+  user_agent: Test Browser
+  ip_address: 127.0.0.1
+
+owner_session:
+  identity: owner
+  user_agent: Test Browser
+  ip_address: 127.0.0.1
+
+member_session:
+  identity: member
+  user_agent: Test Browser
+  ip_address: 127.0.0.1
+
+other_owner_session:
+  identity: other_owner
+  user_agent: Test Browser
+  ip_address: 127.0.0.1
