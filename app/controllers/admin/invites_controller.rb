@@ -1,15 +1,15 @@
 module Admin
   class InvitesController < BaseController
     def index
-      @invites = Invite.includes(:created_by, :used_by).order(created_at: :desc)
+      @invites = current_account.invites.includes(created_by: :identity, used_by: :identity).order(created_at: :desc)
     end
 
     def new
-      @invite = Invite.new
+      @invite = current_account.invites.build
     end
 
     def create
-      @invite = Invite.new(invite_params)
+      @invite = current_account.invites.build(invite_params)
       @invite.created_by = Current.user
 
       if @invite.save
@@ -20,7 +20,7 @@ module Admin
     end
 
     def destroy
-      @invite = Invite.find(params[:id])
+      @invite = current_account.invites.find(params[:id])
 
       if @invite.used_at.present?
         redirect_to admin_invites_path, alert: "Cannot delete an invite that has already been used."
