@@ -1,4 +1,5 @@
 class InsightItem < ApplicationRecord
+  belongs_to :account
   belongs_to :user
   has_many :insight_item_files, dependent: :destroy
   has_many :engagements, dependent: :destroy
@@ -10,7 +11,7 @@ class InsightItem < ApplicationRecord
   enum :status, { draft: "draft", published: "published" }
 
   validates :title, presence: true
-  validates :slug, presence: true, uniqueness: true, format: { with: /\A[a-z0-9-]+\z/, message: "must contain only lowercase letters, numbers, and hyphens" }
+  validates :slug, presence: true, uniqueness: { scope: :account_id }, format: { with: /\A[a-z0-9-]+\z/, message: "must contain only lowercase letters, numbers, and hyphens" }
   validates :audience, presence: true, inclusion: { in: audiences.keys }
   validates :status, presence: true, inclusion: { in: statuses.keys }
   validates :share_token, uniqueness: true, allow_nil: true
@@ -93,7 +94,7 @@ class InsightItem < ApplicationRecord
     base_slug = title.to_s.parameterize
     self.slug = base_slug
     counter = 1
-    while InsightItem.exists?(slug: slug)
+    while InsightItem.where(account_id: account_id).exists?(slug: slug)
       self.slug = "#{base_slug}-#{counter}"
       counter += 1
     end
