@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 class CommentsController < ApplicationController
-  include Authentication
-  include ActionView::RecordIdentifier
+  include AccountScoped
 
   before_action :set_insight_item
   before_action :set_comment, only: [:update, :destroy]
   before_action :authorize_comment!, only: [:update, :destroy]
 
   def create
-    @comment = Comment.new(comment_params)
+    @comment = Comment.new(comment_params.merge(account: current_account))
     @engagement = @insight_item.engagements.build(
       user: Current.user,
+      account: current_account,
       engageable: @comment
     )
 
@@ -71,11 +71,11 @@ class CommentsController < ApplicationController
   private
 
   def set_insight_item
-    @insight_item = InsightItem.find_by!(slug: params[:insight_item_id])
+    @insight_item = current_account.insight_items.find_by!(slug: params[:insight_item_id])
   end
 
   def set_comment
-    @comment = Comment.find(params[:id])
+    @comment = current_account.comments.find(params[:id])
   end
 
   def authorize_comment!
@@ -91,7 +91,7 @@ class CommentsController < ApplicationController
   end
 
   def can_modify_comment?(comment)
-    Current.user == comment.user || Current.user.admin?
+    Current.user == comment.user || Current.super_admin?
   end
 
   def comment_params
