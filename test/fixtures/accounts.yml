@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  external_id: MyString
-  name: MyString
+default:
+  external_id: <%= SecureRandom.uuid %>
+  name: Acme Corporation
 
-two:
-  external_id: MyString
-  name: MyString
+other_account:
+  external_id: <%= SecureRandom.uuid %>
+  name: Other Company
