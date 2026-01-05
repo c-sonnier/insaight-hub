@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  email_address: MyString
+  password_digest: MyString
+  name: MyString
+  api_token: MyString
+  admin: false
+  theme: MyString
+
+two:
+  email_address: MyString
+  password_digest: MyString
+  name: MyString
+  api_token: MyString
+  admin: false
+  theme: MyString
