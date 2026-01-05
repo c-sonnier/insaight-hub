@@ -2,16 +2,16 @@
   <div class="card bg-base-100 shadow-xl w-full max-w-md">
     <div class="card-body">
       <h2 class="card-title text-2xl font-bold text-center justify-center mb-4">Welcome to insAIght Hub</h2>
-      <p class="text-center text-base-content/70 mb-6">Create your admin account to get started</p>
+      <p class="text-center text-base-content/70 mb-6">Create your admin account and organization to get started</p>
 
-      <%= form_with model: @user, url: onboarding_path, class: "space-y-4" do |form| %>
-        <% if @user.errors.any? %>
+      <%= form_with model: @identity, url: onboarding_path, scope: :user, class: "space-y-4" do |form| %>
+        <% if @identity.errors.any? %>
           <div class="alert alert-error">
             <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             <div>
               <h3 class="font-bold">Please fix the following errors:</h3>
               <ul class="list-disc list-inside">
-                <% @user.errors.full_messages.each do |message| %>
+                <% @identity.errors.full_messages.each do |message| %>
                   <li><%= message %></li>
                 <% end %>
               </ul>
@@ -20,10 +20,17 @@
         <% end %>
 
         <div class="form-control">
-          <%= form.label :name, class: "label" do %>
-            <span class="label-text">Name</span>
+          <%= form.label :account_name, class: "label" do %>
+            <span class="label-text">Organization Name</span>
           <% end %>
-          <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Your full name", autofocus: true, required: true %>
+          <%= form.text_field :account_name, class: "input input-bordered w-full", placeholder: "Your company or team name", autofocus: true %>
+        </div>
+
+        <div class="form-control">
+          <%= form.label :name, class: "label" do %>
+            <span class="label-text">Your Name</span>
+          <% end %>
+          <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Your full name", required: true %>
         </div>
 
         <div class="form-control">
@@ -48,7 +55,7 @@
         </div>
 
         <div class="form-control mt-6">
-          <%= form.submit "Create Admin Account", class: "btn btn-primary w-full" %>
+          <%= form.submit "Create Account", class: "btn btn-primary w-full" %>
         </div>
       <% end %>
     </div>
