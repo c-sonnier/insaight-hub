@@ -12,7 +12,7 @@ module Api
       private
 
       def set_insight_item
-        @insight_item = current_user.insight_items.find_by!(slug: params[:insight_item_id])
+        @insight_item = current_account.insight_items.find_by!(slug: params[:insight_item_id])
       rescue ActiveRecord::RecordNotFound
         render json: { error: "Insight not found" }, status: :not_found
       end
