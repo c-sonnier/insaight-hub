@@ -1,0 +1,13 @@
+<h1>You've been invited to <%= @account.name %></h1>
+
+<p><%= @inviter.name %> has invited you to join <strong><%= @account.name %></strong> on insAIght Hub.</p>
+
+<p>insAIght Hub helps teams extract insights from documents using AI-powered analysis.</p>
+
+<p>
+  <%= link_to "Accept Invitation", register_url(token: @invite.token) %>
+</p>
+
+<p>This invitation will expire on <%= @invite.expires_at.strftime("%B %d, %Y at %I:%M %p") %>.</p>
+
+<p>If you weren't expecting this invitation, you can safely ignore this email.</p>

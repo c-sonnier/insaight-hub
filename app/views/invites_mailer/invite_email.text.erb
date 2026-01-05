@@ -1,0 +1,12 @@
+You've been invited to <%= @account.name %>
+
+<%= @inviter.name %> has invited you to join <%= @account.name %> on insAIght Hub.
+
+insAIght Hub helps teams extract insights from documents using AI-powered analysis.
+
+Accept your invitation here:
+<%= register_url(token: @invite.token) %>
+
+This invitation will expire on <%= @invite.expires_at.strftime("%B %d, %Y at %I:%M %p") %>.
+
+If you weren't expecting this invitation, you can safely ignore this email.
