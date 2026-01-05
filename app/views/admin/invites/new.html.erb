@@ -38,6 +38,16 @@
           </label>
         </div>
 
+        <div class="form-control">
+          <label class="label cursor-pointer justify-start gap-3">
+            <%= check_box_tag :send_email, "1", false, class: "checkbox checkbox-primary" %>
+            <span class="label-text">Send invitation email</span>
+          </label>
+          <label class="label">
+            <span class="label-text-alt">Requires an email address above</span>
+          </label>
+        </div>
+
         <div class="form-control mt-6">
           <%= form.submit "Create Invite", class: "btn btn-primary" %>
           <%= link_to "Cancel", admin_invites_path, class: "btn btn-ghost" %>
