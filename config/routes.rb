@@ -22,6 +22,11 @@ Rails.application.routes.draw do
   root "home#index"
   get "dashboard", to: "home#dashboard", as: :dashboard
 
+  # Waitlist
+  get  "waitlist", to: "waitlist#new", as: :new_waitlist
+  post "waitlist", to: "waitlist#create", as: :waitlist
+  get  "waitlist/thank-you", to: "waitlist#thank_you", as: :waitlist_thank_you
+
   # How To / Documentation
   get "how-to", to: "home#how_to", as: :how_to
 
@@ -55,6 +60,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :users
     resources :invites, only: [ :index, :new, :create, :destroy ]
+    resources :waitlist_entries, only: [ :index, :destroy ]
   end
 
   # API

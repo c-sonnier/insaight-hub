@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_05_185317) do
   create_table "action_mcp_session_messages", force: :cascade do |t|
     t.string "session_id", null: false
     t.string "direction", default: "client", null: false
@@ -208,6 +208,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
     t.datetime "updated_at", null: false
     t.index ["api_token"], name: "index_users_on_api_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+  end
+
+  create_table "waitlist_entries", force: :cascade do |t|
+    t.string "email", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_waitlist_entries_on_email", unique: true
   end
 
   add_foreign_key "action_mcp_session_messages", "action_mcp_sessions", column: "session_id", on_update: :cascade, on_delete: :cascade

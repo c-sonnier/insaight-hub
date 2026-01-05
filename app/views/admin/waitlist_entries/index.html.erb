@@ -1,0 +1,39 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold">Waitlist</h1>
+      <p class="text-base-content/60 mt-1"><%= @waitlist_entries.count %> <%= "entry".pluralize(@waitlist_entries.count) %></p>
+    </div>
+  </div>
+
+  <% if @waitlist_entries.any? %>
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Signed Up</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @waitlist_entries.each do |entry| %>
+            <tr>
+              <td><%= entry.email %></td>
+              <td><%= entry.created_at.strftime("%b %d, %Y at %H:%M") %></td>
+              <td>
+                <%= button_to "Remove", admin_waitlist_entry_path(entry), method: :delete,
+                    class: "btn btn-sm btn-error btn-outline",
+                    form: { data: { turbo_confirm: "Remove #{entry.email} from the waitlist?" } } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <p class="text-base-content/50">No one has joined the waitlist yet.</p>
+    </div>
+  <% end %>
+</div>
