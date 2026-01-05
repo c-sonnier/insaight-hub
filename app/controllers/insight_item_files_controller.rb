@@ -1,9 +1,11 @@
 class InsightItemFilesController < ApplicationController
+  include AccountScoped
+
   def show
-    @insight_item = InsightItem.find_by!(slug: params[:insight_item_id])
+    @insight_item = current_account.insight_items.find_by!(slug: params[:insight_item_id])
     @insight_item_file = @insight_item.insight_item_files.find_by!(filename: params[:id])
 
-    unless @insight_item.published? || @insight_item.user == Current.user || Current.user&.admin?
+    unless @insight_item.published? || @insight_item.user == Current.user || Current.super_admin?
       head :not_found
       return
     end

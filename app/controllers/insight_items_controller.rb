@@ -1,12 +1,14 @@
 require "zip"
 
 class InsightItemsController < ApplicationController
+  include AccountScoped
+
   before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token]
   before_action :authorize_owner, only: [:edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token]
   before_action :authorize_published_or_owner, only: [:show]
 
   def index
-    @insight_items = InsightItem.published.includes(:user)
+    @insight_items = current_account.insight_items.published.includes(user: :identity)
     @insight_items = @insight_items.by_audience(params[:audience]) if params[:audience].present?
     @insight_items = @insight_items.by_tag(params[:tag]) if params[:tag].present?
     @insight_items = @insight_items.search(params[:q]) if params[:q].present?
@@ -42,12 +44,12 @@ class InsightItemsController < ApplicationController
   end
 
   def new
-    @insight_item = Current.user.insight_items.build
+    @insight_item = Current.user.insight_items.build(account: current_account)
     @insight_item.insight_item_files.build
   end
 
   def create
-    @insight_item = Current.user.insight_items.build(insight_item_params)
+    @insight_item = Current.user.insight_items.build(insight_item_params.merge(account: current_account))
 
     if @insight_item.save
       redirect_to @insight_item, notice: "Insight was successfully created."
@@ -176,17 +178,17 @@ class InsightItemsController < ApplicationController
   end
 
   def set_insight_item
-    @insight_item = InsightItem.find_by!(slug: params[:id])
+    @insight_item = current_account.insight_items.find_by!(slug: params[:id])
   end
 
   def authorize_owner
-    unless @insight_item.user == Current.user || Current.user&.admin?
+    unless @insight_item.user == Current.user || Current.super_admin?
       redirect_to insight_items_path, alert: "You are not authorized to perform this action."
     end
   end
 
   def authorize_published_or_owner
-    unless @insight_item.published? || @insight_item.user == Current.user || Current.user&.admin?
+    unless @insight_item.published? || @insight_item.user == Current.user || Current.super_admin?
       redirect_to insight_items_path, alert: "This insight is not available."
     end
   end

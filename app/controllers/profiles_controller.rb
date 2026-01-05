@@ -1,28 +1,32 @@
 require "zip"
 
 class ProfilesController < ApplicationController
+  include AccountScoped
   include ActionController::Live
 
   def show
+    @identity = Current.identity
     @user = Current.user
   end
 
   def edit
+    @identity = Current.identity
     @user = Current.user
   end
 
   def update
+    @identity = Current.identity
     @user = Current.user
 
     # Handle avatar removal if requested
     if params[:user][:remove_avatar] == "1"
-      @user.avatar.purge
+      @identity.avatar.purge
     end
 
     # Handle password change - require current password verification
     if params[:user][:password].present?
-      unless @user.authenticate(params[:user][:current_password])
-        @user.errors.add(:current_password, "is incorrect")
+      unless @identity.authenticate(params[:user][:current_password])
+        @identity.errors.add(:current_password, "is incorrect")
         return render :edit, status: :unprocessable_entity
       end
     end
@@ -33,7 +37,7 @@ class ProfilesController < ApplicationController
       update_params = update_params.except(:password, :password_confirmation)
     end
 
-    if @user.update(update_params)
+    if @identity.update(update_params)
       redirect_to profile_path, notice: "Profile updated successfully."
     else
       render :edit, status: :unprocessable_entity
@@ -41,7 +45,7 @@ class ProfilesController < ApplicationController
   end
 
   def regenerate_token
-    Current.user.regenerate_api_token!
+    Current.identity.regenerate_api_token!
     redirect_to profile_path, notice: "API token regenerated successfully."
   end
 
@@ -191,5 +195,11 @@ class ProfilesController < ApplicationController
 
   def profile_params
     params.require(:user).permit(:name, :email_address, :theme, :avatar, :password, :password_confirmation, :current_password)
+  end
+
+  # Alias for view compatibility - views can use @user or @identity
+  helper_method :current_identity
+  def current_identity
+    Current.identity
   end
 end
