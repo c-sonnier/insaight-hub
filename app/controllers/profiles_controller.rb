@@ -98,8 +98,21 @@ class ProfilesController < ApplicationController
 
         entries.each do |entry|
           filename = entry.name.sub("#{folder_name}/", "")
-          content = entry.get_input_stream.read.force_encoding("UTF-8")
+          raw_content = entry.get_input_stream.read
           content_type = determine_content_type(filename)
+
+          # Handle text vs binary content appropriately
+          if text_content_type?(content_type)
+            # For text files, encode to UTF-8 and replace invalid sequences
+            content = raw_content.dup.force_encoding("UTF-8")
+            unless content.valid_encoding?
+              # Try to detect and convert from common encodings
+              content = raw_content.encode("UTF-8", "ISO-8859-1", invalid: :replace, undef: :replace)
+            end
+          else
+            # For binary files, keep as-is with binary encoding
+            content = raw_content.force_encoding("BINARY")
+          end
 
           insight_item.insight_item_files.build(
             filename: filename,
@@ -147,6 +160,10 @@ class ProfilesController < ApplicationController
     else
       "application/octet-stream"
     end
+  end
+
+  def text_content_type?(content_type)
+    content_type.start_with?("text/") || content_type == "application/json"
   end
 
   def stream_insights_zip(insight_items, stream)
