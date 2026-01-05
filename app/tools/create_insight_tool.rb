@@ -21,6 +21,7 @@ class CreateInsightTool < MCP::Tool
   class << self
     def call(title:, audience:, slug: nil, description: nil, tags: nil, content: nil, files: nil, entry_file: nil, publish: false, server_context:)
       user = server_context[:user]
+      account = server_context[:account]
 
       # Validate audience
       unless InsightItem.audiences.keys.include?(audience)
@@ -40,6 +41,7 @@ class CreateInsightTool < MCP::Tool
 
       insight = InsightItem.new(
         user: user,
+        account: account,
         title: title,
         slug: slug.presence,
         description: description,

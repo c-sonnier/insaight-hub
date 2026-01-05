@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class McpController < ActionController::API
-  before_action :authenticate_user
+  before_action :set_current_account
+  before_action :authenticate_identity
+  before_action :require_account_membership
 
   def handle
     server = MCP::Server.new(
@@ -18,7 +20,11 @@ class McpController < ActionController::API
         DeleteInsightTool,
         GetTagsTool
       ],
-      server_context: { user: @current_user }
+      server_context: {
+        user: @current_user,
+        identity: @current_identity,
+        account: @current_account
+      }
     )
 
     render json: server.handle_json(request.body.read)
@@ -26,7 +32,13 @@ class McpController < ActionController::API
 
   private
 
-  def authenticate_user
+  # Account is set by middleware from URL path
+  def set_current_account
+    @current_account = request.env["insaight.account"]
+    Current.account = @current_account
+  end
+
+  def authenticate_identity
     token = request.headers["Authorization"]&.gsub(/^Bearer\s+/, "")
 
     if token.blank?
@@ -34,11 +46,26 @@ class McpController < ActionController::API
       return
     end
 
-    @current_user = User.find_by(api_token: token)
+    # API token is now on Identity
+    @current_identity = Identity.find_by(api_token: token)
 
-    if @current_user.nil?
+    if @current_identity.nil?
       render json: { error: "Invalid API token" }, status: :unauthorized
       nil
+    end
+  end
+
+  def require_account_membership
+    return if @current_account.nil?
+
+    # Super admins can access any account
+    return if @current_identity&.admin?
+
+    # Regular users need membership in the account
+    @current_user = @current_identity&.users&.find_by(account: @current_account)
+
+    unless @current_user
+      render json: { error: "You don't have access to this organization" }, status: :forbidden
     end
   end
 end

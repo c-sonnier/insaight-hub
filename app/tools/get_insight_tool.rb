@@ -12,7 +12,8 @@ class GetInsightTool < MCP::Tool
 
   class << self
     def call(slug:, server_context:)
-      insight = InsightItem.includes(:user, :insight_item_files).find_by(slug: slug)
+      account = server_context[:account]
+      insight = account.insight_items.includes(user: :identity).includes(:insight_item_files).find_by(slug: slug)
 
       unless insight
         return MCP::Tool::Response.new([{

@@ -19,7 +19,8 @@ class UpdateInsightTool < MCP::Tool
   class << self
     def call(slug:, title: nil, description: nil, audience: nil, tags: nil, entry_file: nil, files: nil, server_context:)
       user = server_context[:user]
-      insight = InsightItem.find_by(slug: slug)
+      account = server_context[:account]
+      insight = account.insight_items.find_by(slug: slug)
 
       unless insight
         return MCP::Tool::Response.new([{
