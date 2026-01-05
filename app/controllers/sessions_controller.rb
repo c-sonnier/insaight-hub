@@ -8,8 +8,8 @@ class SessionsController < ApplicationController
   end
 
   def create
-    if user = User.authenticate_by(params.permit(:email_address, :password))
-      start_new_session_for user
+    if identity = Identity.authenticate_by(params.permit(:email_address, :password))
+      start_new_session_for identity
       redirect_to after_authentication_url
     else
       redirect_to new_session_path, alert: "Try another email address or password."
@@ -24,6 +24,6 @@ class SessionsController < ApplicationController
   private
 
   def redirect_to_onboarding_if_no_users
-    redirect_to onboarding_path if User.none?
+    redirect_to onboarding_path if Identity.none?
   end
 end
