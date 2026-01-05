@@ -7,69 +7,7 @@
 %>
 
 <div class="flex flex-col h-[100dvh]">
-  <div class="bg-base-200 border-b border-base-300 px-4 py-2">
-    <div class="flex items-center">
-      <%# Left side: Back button %>
-      <div class="flex-none">
-        <%= link_to insight_items_path, class: "btn btn-ghost btn-sm gap-1" do %>
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-          Back
-        <% end %>
-      </div>
-
-      <%# Center: Title with dropdown menu %>
-      <div class="flex-1 flex justify-center items-center gap-2">
-        <h1 class="text-lg font-bold"><%= @insight_item.title %></h1>
-        <% if @insight_item.draft? %>
-          <span class="badge badge-sm badge-warning">Draft</span>
-        <% end %>
-        <% if authenticated? && (@insight_item.user == Current.user || Current.user&.admin?) %>
-          <div class="dropdown dropdown-end">
-            <label tabindex="0" class="btn btn-ghost btn-sm btn-circle">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-              </svg>
-            </label>
-            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
-              <li><%= link_to "Edit", edit_insight_item_path(@insight_item) %></li>
-              <li><%= link_to "Export", export_insight_item_path(@insight_item) %></li>
-              <li>
-                <button type="button" onclick="document.getElementById('share_modal').showModal()">
-                  Share
-                </button>
-              </li>
-              <% if @insight_item.draft? %>
-                <li><%= button_to "Publish", publish_insight_item_path(@insight_item), method: :post, class: "text-success" %></li>
-              <% else %>
-                <li><%= button_to "Unpublish", unpublish_insight_item_path(@insight_item), method: :post, class: "text-warning" %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
-      </div>
-
-      <%# Right side: Author, audience, and comments toggle %>
-      <div class="flex-none flex items-center gap-2 text-sm text-base-content/70">
-        <%= user_avatar_or_initials(@insight_item.user, size: "w-6") %>
-        <span>by <%= @insight_item.user.name %></span>
-        <span class="badge badge-sm badge-outline"><%= @insight_item.audience.humanize %></span>
-        
-        <%# Comments toggle button %>
-        <button type="button"
-                class="btn btn-ghost btn-sm gap-1 ml-2"
-                data-action="click->comments-drawer#toggle"
-                data-controller="comments-drawer"
-                data-comments-drawer-target="toggleButton">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
-          <span id="comments_count" class="badge badge-sm"><%= @insight_item.comments_count %></span>
-        </button>
-      </div>
-    </div>
-  </div>
+  <%= render "insight_items/show_toolbar", insight_item: @insight_item %>
 
   <div class="flex flex-1 overflow-hidden relative" data-controller="sidebar-toggle">
     <% unless @insight_item.single_file? %>
