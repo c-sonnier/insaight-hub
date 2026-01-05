@@ -1,4 +1,5 @@
 class Invite < ApplicationRecord
+  belongs_to :account
   belongs_to :created_by, class_name: "User"
   belongs_to :used_by, class_name: "User", optional: true
 
