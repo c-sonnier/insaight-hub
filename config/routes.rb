@@ -14,6 +14,10 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  # Account setup (for approved waitlist users)
+  get  "setup-password/:token", to: "account_setup#edit", as: :edit_account_setup
+  put  "setup-password/:token", to: "account_setup#update", as: :account_setup
+
   # Registration via invite
   get  "register/:token", to: "registrations#new", as: :register
   post "register/:token", to: "registrations#create"
@@ -33,6 +37,9 @@ Rails.application.routes.draw do
   # Public share links (unauthenticated access)
   get "s/:token", to: "public_insights#show", as: :public_insight
   get "s/:token/files/*id", to: "public_insight_files#show", as: :public_insight_file, format: false
+
+  # Organization members (read-only for all members)
+  resources :members, only: [:index]
 
   # Insights
   resources :insight_items, param: :id do
@@ -58,9 +65,13 @@ Rails.application.routes.draw do
 
   # Admin
   namespace :admin do
-    resources :users
+    resources :users, only: [ :index, :edit, :update, :destroy ]
     resources :invites, only: [ :index, :new, :create, :destroy ]
-    resources :waitlist_entries, only: [ :index, :destroy ]
+    resources :waitlist_entries, only: [ :index, :destroy ] do
+      member do
+        post :approve
+      end
+    end
   end
 
   # API

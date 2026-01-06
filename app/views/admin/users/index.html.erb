@@ -1,7 +1,18 @@
 <div class="container mx-auto px-4 py-8">
   <div class="flex justify-between items-center mb-6">
-    <h1 class="text-3xl font-bold">Users</h1>
-    <%= link_to "New User", new_admin_user_path, class: "btn btn-primary" %>
+    <div>
+      <h1 class="text-3xl font-bold">Members</h1>
+      <p class="text-base-content/70 mt-1">Manage organization members and their roles</p>
+    </div>
+    <%= link_to new_admin_invite_path, class: "btn btn-primary gap-2" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <line x1="19" y1="8" x2="19" y2="14"></line>
+        <line x1="22" y1="11" x2="16" y2="11"></line>
+      </svg>
+      Invite Member
+    <% end %>
   </div>
 
   <div class="overflow-x-auto">
@@ -10,9 +21,9 @@
         <tr>
           <th>Name</th>
           <th>Email</th>
-          <th>Admin</th>
+          <th>Role</th>
           <th>Insights</th>
-          <th>Created</th>
+          <th>Joined</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -22,15 +33,18 @@
             <td>
               <div class="flex items-center gap-2">
                 <%= user_avatar_or_initials(user, size: "w-8") %>
-                <%= user.name %>
+                <span><%= user.name %></span>
+                <% if user == Current.user %>
+                  <span class="badge badge-outline badge-xs">You</span>
+                <% end %>
               </div>
             </td>
             <td><%= user.email_address %></td>
             <td>
-              <% if user.admin? %>
-                <span class="badge badge-primary">Admin</span>
+              <% if user.owner? %>
+                <span class="badge badge-primary">Owner</span>
               <% else %>
-                <span class="badge badge-ghost">User</span>
+                <span class="badge badge-ghost">Member</span>
               <% end %>
             </td>
             <td><%= user.insight_items.count %></td>
@@ -38,9 +52,9 @@
             <td class="space-x-2">
               <%= link_to "Edit", edit_admin_user_path(user), class: "btn btn-sm btn-ghost" %>
               <% unless user == Current.user %>
-                <%= button_to "Delete", admin_user_path(user), method: :delete,
+                <%= button_to "Remove", admin_user_path(user), method: :delete,
                     class: "btn btn-sm btn-error btn-outline",
-                    form: { data: { turbo_confirm: "Are you sure you want to delete #{user.name}? This will also delete all their insights." } } %>
+                    form: { data: { turbo_confirm: "Are you sure you want to remove #{user.name} from this organization? Their insights will also be deleted." } } %>
               <% end %>
             </td>
           </tr>

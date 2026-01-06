@@ -13,6 +13,12 @@ class InsightItemsController < ApplicationController
     @insight_items = @insight_items.by_tag(params[:tag]) if params[:tag].present?
     @insight_items = @insight_items.search(params[:q]) if params[:q].present?
 
+    # Filter by member
+    if params[:member_id].present?
+      @selected_member = current_account.users.find_by(id: params[:member_id])
+      @insight_items = @insight_items.where(user_id: params[:member_id]) if @selected_member
+    end
+
     @insight_items = case params[:sort]
     when "oldest"
       @insight_items.order(published_at: :asc)
@@ -24,8 +30,9 @@ class InsightItemsController < ApplicationController
 
     @pagy, @insight_items = pagy(@insight_items, items: 12)
 
-    @has_filters = params[:audience].present? || params[:tag].present? || params[:q].present?
+    @has_filters = params[:audience].present? || params[:tag].present? || params[:q].present? || params[:member_id].present?
     @user_drafts = Current.user&.insight_items&.draft&.count || 0
+    @members = current_account.users.includes(:identity).order(:created_at)
   end
 
   def show
