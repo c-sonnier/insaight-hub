@@ -93,4 +93,3 @@ class CommentTest < ActiveSupport::TestCase
     assert_equal 1, root_comments.where(id: [parent.id, parent.replies.first.id]).count
   end
 end
-

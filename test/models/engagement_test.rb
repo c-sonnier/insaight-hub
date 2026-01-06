@@ -97,4 +97,3 @@ class EngagementTest < ActiveSupport::TestCase
     assert_equal comment, engagement.comment
   end
 end
-

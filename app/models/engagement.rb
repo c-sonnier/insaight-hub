@@ -19,4 +19,3 @@ class Engagement < ApplicationRecord
   scope :by_user, ->(user) { where(user: user) }
   scope :comments, -> { where(engageable_type: "Comment") }
 end
-

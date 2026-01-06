@@ -2,6 +2,7 @@
 
 class CommentsController < ApplicationController
   include AccountScoped
+  include ActionView::RecordIdentifier
 
   before_action :set_insight_item
   before_action :set_comment, only: [:update, :destroy]
@@ -98,4 +99,3 @@ class CommentsController < ApplicationController
     params.require(:comment).permit(:body, :parent_id)
   end
 end
-

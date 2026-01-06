@@ -4,6 +4,9 @@ class User < ApplicationRecord
   belongs_to :account
   belongs_to :identity
   has_many :insight_items, dependent: :destroy
+  has_many :engagements, dependent: :destroy
+  has_many :comments, through: :engagements, source: :engageable, source_type: "Comment"
+  has_many :created_invites, class_name: "Invite", foreign_key: "created_by_id"
 
   # Delegations for backward compatibility during transition
   delegate :email_address, :name, :admin?, :api_token, :theme, :avatar, to: :identity

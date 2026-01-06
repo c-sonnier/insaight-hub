@@ -35,4 +35,3 @@ class Comment < ApplicationRecord
     1 + parent.depth
   end
 end
-
