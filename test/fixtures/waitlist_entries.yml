@@ -2,6 +2,8 @@
 
 one:
   email: waitlist1@example.com
+  name: Test User One
 
 two:
   email: waitlist2@example.com
+  name: Test User Two

@@ -21,7 +21,7 @@ class RegistrationsController < ApplicationController
         # Verify password if this is an existing identity
         unless @identity.authenticate(identity_params[:password])
           @identity = Identity.new(email_address: email)
-          @identity.errors.add(:password, "is incorrect for existing account")
+          @identity.errors.add(:password, "is invalid")
           return render :new, status: :unprocessable_entity
         end
       else
