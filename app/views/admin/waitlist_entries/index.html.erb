@@ -11,6 +11,7 @@
       <table class="table table-zebra w-full">
         <thead>
           <tr>
+            <th>Name</th>
             <th>Email</th>
             <th>Signed Up</th>
             <th>Actions</th>
@@ -19,12 +20,16 @@
         <tbody>
           <% @waitlist_entries.each do |entry| %>
             <tr>
+              <td><%= entry.name %></td>
               <td><%= entry.email %></td>
               <td><%= entry.created_at.strftime("%b %d, %Y at %H:%M") %></td>
-              <td>
+              <td class="flex gap-2">
+                <%= button_to "Approve", approve_admin_waitlist_entry_path(entry), method: :post,
+                    class: "btn btn-sm btn-success",
+                    form: { data: { turbo_confirm: "Approve #{entry.name || entry.email}? This will create their account and send them a welcome email." } } %>
                 <%= button_to "Remove", admin_waitlist_entry_path(entry), method: :delete,
                     class: "btn btn-sm btn-error btn-outline",
-                    form: { data: { turbo_confirm: "Remove #{entry.email} from the waitlist?" } } %>
+                    form: { data: { turbo_confirm: "Remove #{entry.name || entry.email} from the waitlist?" } } %>
               </td>
             </tr>
           <% end %>

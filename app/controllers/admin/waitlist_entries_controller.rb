@@ -10,6 +10,39 @@ module Admin
       @waitlist_entries = WaitlistEntry.order(created_at: :desc)
     end
 
+    def approve
+      @waitlist_entry = WaitlistEntry.find(params[:id])
+
+      ActiveRecord::Base.transaction do
+        # Create the organization account
+        account = Account.create!(name: "#{@waitlist_entry.name}'s Organization")
+
+        # Create the identity (user will set password via email link)
+        identity = Identity.create!(
+          name: @waitlist_entry.name,
+          email_address: @waitlist_entry.email,
+          password: SecureRandom.hex(32) # Temporary password, user will reset via email
+        )
+
+        # Create membership as organization owner
+        User.create!(
+          account: account,
+          identity: identity,
+          role: :owner
+        )
+
+        # Send welcome email with password setup link
+        WaitlistMailer.welcome(identity: identity, account: account).deliver_later
+
+        # Remove from waitlist
+        @waitlist_entry.destroy!
+      end
+
+      redirect_to admin_waitlist_entries_path, notice: "#{@waitlist_entry.name} has been approved. A welcome email has been sent."
+    rescue ActiveRecord::RecordInvalid => e
+      redirect_to admin_waitlist_entries_path, alert: "Failed to approve: #{e.message}"
+    end
+
     def destroy
       @waitlist_entry = WaitlistEntry.find(params[:id])
       @waitlist_entry.destroy

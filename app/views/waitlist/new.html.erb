@@ -26,12 +26,23 @@
       <!-- Form -->
       <%= form_with model: @waitlist_entry, url: waitlist_path, class: "space-y-6" do |f| %>
         <div>
+          <%= f.label :name, "Full Name", class: "block text-sm font-medium text-[#10325B] mb-2" %>
+          <%= f.text_field :name,
+              class: "w-full px-4 py-3 rounded-xl border border-[#e5e7eb] focus:border-[#38BDF8] focus:ring-2 focus:ring-[#38BDF8]/20 outline-none transition-all #{@waitlist_entry.errors[:name].any? ? 'border-red-500' : ''}",
+              placeholder: "John Doe",
+              required: true,
+              autofocus: true %>
+          <% if @waitlist_entry.errors[:name].any? %>
+            <p class="mt-2 text-sm text-red-600"><%= @waitlist_entry.errors[:name].first %></p>
+          <% end %>
+        </div>
+
+        <div>
           <%= f.label :email, "Email Address", class: "block text-sm font-medium text-[#10325B] mb-2" %>
           <%= f.email_field :email,
               class: "w-full px-4 py-3 rounded-xl border border-[#e5e7eb] focus:border-[#38BDF8] focus:ring-2 focus:ring-[#38BDF8]/20 outline-none transition-all #{@waitlist_entry.errors[:email].any? ? 'border-red-500' : ''}",
               placeholder: "you@example.com",
-              required: true,
-              autofocus: true %>
+              required: true %>
           <% if @waitlist_entry.errors[:email].any? %>
             <p class="mt-2 text-sm text-red-600"><%= @waitlist_entry.errors[:email].first %></p>
           <% end %>

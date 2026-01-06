@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   belongs_to :account
   belongs_to :identity
+  has_many :insight_items, dependent: :destroy
 
   # Delegations for backward compatibility during transition
   delegate :email_address, :name, :admin?, :api_token, :theme, :avatar, to: :identity

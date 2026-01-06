@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_05_215846) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_06_153309) do
   create_table "accounts", force: :cascade do |t|
     t.string "external_id"
     t.string "name"
@@ -241,6 +241,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_05_215846) do
     t.string "email", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
     t.index ["email"], name: "index_waitlist_entries_on_email", unique: true
   end
 

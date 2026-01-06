@@ -8,6 +8,7 @@ module AccountScoped
   included do
     before_action :set_current_account
     before_action :require_account_membership
+    helper_method :current_account
   end
 
   private

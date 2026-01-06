@@ -1,9 +1,65 @@
 <div class="container mx-auto px-4 py-8 max-w-2xl">
-  <h1 class="text-3xl font-bold mb-6">Edit User</h1>
+  <h1 class="text-3xl font-bold mb-6">Edit Member</h1>
 
   <div class="card bg-base-100 shadow-xl">
     <div class="card-body">
-      <%= render "form", user: @user %>
+      <div class="flex items-center gap-4 mb-6">
+        <%= user_avatar_or_initials(@user, size: "w-16") %>
+        <div>
+          <h2 class="text-xl font-semibold"><%= @user.name %></h2>
+          <p class="text-base-content/70"><%= @user.email_address %></p>
+        </div>
+      </div>
+
+      <%= form_with model: [:admin, @user], class: "space-y-4" do |form| %>
+        <% if @user.errors.any? %>
+          <div class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div>
+              <h3 class="font-bold">Please fix the following errors:</h3>
+              <ul class="list-disc list-inside">
+                <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-control">
+          <%= form.label :role, class: "label" do %>
+            <span class="label-text font-medium">Organization Role</span>
+          <% end %>
+          <div class="space-y-2">
+            <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-base-200 transition-colors <%= @user.owner? ? 'border-primary bg-primary/5' : 'border-base-300' %>">
+              <%= form.radio_button :role, "owner", class: "radio radio-primary" %>
+              <div>
+                <span class="font-medium">Owner</span>
+                <p class="text-sm text-base-content/70">Can manage members, invites, and all organization settings</p>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-base-200 transition-colors <%= @user.member? ? 'border-primary bg-primary/5' : 'border-base-300' %>">
+              <%= form.radio_button :role, "member", class: "radio radio-primary" %>
+              <div>
+                <span class="font-medium">Member</span>
+                <p class="text-sm text-base-content/70">Can view and create insights within the organization</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <% if @user == Current.user %>
+          <div class="alert alert-warning">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            <span>You are editing your own role. Be careful not to lock yourself out!</span>
+          </div>
+        <% end %>
+
+        <div class="form-control mt-6 flex-row gap-2">
+          <%= form.submit "Update Role", class: "btn btn-primary" %>
+          <%= link_to "Cancel", admin_users_path, class: "btn btn-ghost" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>

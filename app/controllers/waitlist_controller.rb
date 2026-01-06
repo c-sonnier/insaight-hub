@@ -21,6 +21,6 @@ class WaitlistController < ApplicationController
   private
 
   def waitlist_params
-    params.require(:waitlist_entry).permit(:email)
+    params.require(:waitlist_entry).permit(:name, :email)
   end
 end
