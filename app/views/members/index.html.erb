@@ -1,0 +1,68 @@
+<%
+  page_title "Team Members"
+  page_description "View all members of your organization."
+%>
+
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold">Team Members</h1>
+      <p class="text-base-content/70 mt-1"><%= pluralize(@members.count, "member") %> in <%= current_account.name %></p>
+    </div>
+    <% if Current.owner? || Current.super_admin? %>
+      <%= link_to admin_invites_path, class: "btn btn-primary btn-sm gap-2" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <line x1="19" y1="8" x2="19" y2="14"></line>
+          <line x1="22" y1="11" x2="16" y2="11"></line>
+        </svg>
+        Invite Member
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <% @members.each do |member| %>
+      <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow">
+        <div class="card-body">
+          <div class="flex items-start gap-4">
+            <%= user_avatar_or_initials(member, size: "w-14") %>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-lg truncate"><%= member.name %></h3>
+              <p class="text-base-content/60 text-sm truncate"><%= member.email_address %></p>
+              <div class="flex items-center gap-2 mt-2">
+                <% if member.owner? %>
+                  <span class="badge badge-primary badge-sm">Owner</span>
+                <% else %>
+                  <span class="badge badge-ghost badge-sm">Member</span>
+                <% end %>
+                <% if member == Current.user %>
+                  <span class="badge badge-outline badge-sm">You</span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider my-2"></div>
+
+          <div class="flex justify-between items-center text-sm">
+            <div class="text-base-content/70">
+              <span class="font-medium"><%= member.insight_items.count %></span> insights
+              <span class="text-base-content/50 mx-1">·</span>
+              <span class="font-medium"><%= member.insight_items.published.count %></span> published
+            </div>
+            <%= link_to insight_items_path(member_id: member.id), class: "btn btn-ghost btn-xs gap-1" do %>
+              View insights
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+

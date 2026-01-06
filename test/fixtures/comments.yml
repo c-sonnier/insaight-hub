@@ -1,12 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  id: 1
+  account: default
   body: This is a test comment
   parent:
+  commentable_type:
+  commentable_id:
 
 two:
-  id: 2
+  account: default
   body: This is a reply comment
   parent: one
-
+  commentable_type:
+  commentable_id:

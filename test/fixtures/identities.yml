@@ -1,0 +1,33 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+admin:
+  email_address: admin@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  name: Admin User
+  api_token: <%= SecureRandom.hex(32) %>
+  admin: true
+  theme: light
+
+owner:
+  email_address: owner@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  name: Owner User
+  api_token: <%= SecureRandom.hex(32) %>
+  admin: false
+  theme: light
+
+member:
+  email_address: member@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  name: Member User
+  api_token: <%= SecureRandom.hex(32) %>
+  admin: false
+  theme: light
+
+other_owner:
+  email_address: other_owner@example.com
+  password_digest: <%= BCrypt::Password.create('password123') %>
+  name: Other Owner
+  api_token: <%= SecureRandom.hex(32) %>
+  admin: false
+  theme: light

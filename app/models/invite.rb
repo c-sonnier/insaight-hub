@@ -1,12 +1,13 @@
 class Invite < ApplicationRecord
+  belongs_to :account
   belongs_to :created_by, class_name: "User"
   belongs_to :used_by, class_name: "User", optional: true
 
   validates :token, presence: true, uniqueness: true
   validates :created_by_id, presence: true
 
-  before_create :generate_token
-  before_create :set_expiration
+  before_validation :generate_token, on: :create
+  before_validation :set_expiration, on: :create
 
   scope :available, -> { where(used_at: nil).where("expires_at > ?", Time.current) }
   scope :used, -> { where.not(used_at: nil) }

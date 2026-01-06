@@ -1,0 +1,22 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# User is a membership model linking Identity to Account
+
+admin_user:
+  account: default
+  identity: admin
+  role: owner
+
+owner_user:
+  account: default
+  identity: owner
+  role: owner
+
+member_user:
+  account: default
+  identity: member
+  role: member
+
+other_owner_user:
+  account: other_account
+  identity: other_owner
+  role: owner

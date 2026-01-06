@@ -17,7 +17,8 @@ class ListInsightsTool < MCP::Tool
 
   class << self
     def call(status: nil, audience: nil, tag: nil, search: nil, page: 1, per_page: 20, server_context:)
-      insights = InsightItem.includes(:user)
+      account = server_context[:account]
+      insights = account.insight_items.includes(user: :identity)
 
       # Apply filters
       insights = insights.where(status: status) if status.present?

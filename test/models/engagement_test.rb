@@ -4,15 +4,17 @@ require "test_helper"
 
 class EngagementTest < ActiveSupport::TestCase
   setup do
-    @user = users(:one)
+    @user = users(:owner_user)
     @insight_item = insight_items(:one)
+    @account = accounts(:default)
   end
 
   test "valid engagement with comment" do
-    comment = Comment.new(body: "Test comment")
+    comment = Comment.new(body: "Test comment", account: @account)
     engagement = Engagement.new(
       insight_item: @insight_item,
       user: @user,
+      account: @account,
       engageable: comment
     )
 
@@ -20,9 +22,10 @@ class EngagementTest < ActiveSupport::TestCase
   end
 
   test "requires insight_item" do
-    comment = Comment.new(body: "Test comment")
+    comment = Comment.new(body: "Test comment", account: @account)
     engagement = Engagement.new(
       user: @user,
+      account: @account,
       engageable: comment
     )
 
@@ -31,9 +34,10 @@ class EngagementTest < ActiveSupport::TestCase
   end
 
   test "requires user" do
-    comment = Comment.new(body: "Test comment")
+    comment = Comment.new(body: "Test comment", account: @account)
     engagement = Engagement.new(
       insight_item: @insight_item,
+      account: @account,
       engageable: comment
     )
 
@@ -42,18 +46,23 @@ class EngagementTest < ActiveSupport::TestCase
   end
 
   test "recent scope orders by created_at desc" do
-    comment1 = Comment.create!(body: "First comment")
+    # Clear existing engagements to avoid fixture interference
+    Engagement.delete_all
+
+    comment1 = Comment.create!(body: "First comment", account: @account)
     engagement1 = Engagement.create!(
       insight_item: @insight_item,
       user: @user,
+      account: @account,
       engageable: comment1,
       created_at: 2.days.ago
     )
 
-    comment2 = Comment.create!(body: "Second comment")
+    comment2 = Comment.create!(body: "Second comment", account: @account)
     engagement2 = Engagement.create!(
       insight_item: @insight_item,
       user: @user,
+      account: @account,
       engageable: comment2,
       created_at: 1.day.ago
     )
@@ -64,10 +73,11 @@ class EngagementTest < ActiveSupport::TestCase
   end
 
   test "comments scope filters by engageable_type" do
-    comment = Comment.create!(body: "A comment")
+    comment = Comment.create!(body: "A comment", account: @account)
     engagement = Engagement.create!(
       insight_item: @insight_item,
       user: @user,
+      account: @account,
       engageable: comment
     )
 
@@ -75,10 +85,11 @@ class EngagementTest < ActiveSupport::TestCase
   end
 
   test "delegates engageable methods" do
-    comment = Comment.create!(body: "Test comment")
+    comment = Comment.create!(body: "Test comment", account: @account)
     engagement = Engagement.create!(
       insight_item: @insight_item,
       user: @user,
+      account: @account,
       engageable: comment
     )
 
@@ -86,4 +97,3 @@ class EngagementTest < ActiveSupport::TestCase
     assert_equal comment, engagement.comment
   end
 end
-

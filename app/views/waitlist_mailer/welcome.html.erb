@@ -1,0 +1,17 @@
+<h1>Welcome to insAIght Hub!</h1>
+
+<p>Hi <%= @identity.name %>,</p>
+
+<p>Great news! Your request to join insAIght Hub has been approved.</p>
+
+<p>Your organization <strong><%= @account.name %></strong> has been created and you've been set up as the administrator.</p>
+
+<p>insAIght Hub helps teams extract insights from documents using AI-powered analysis.</p>
+
+<p>
+  <%= link_to "Set up your password", edit_account_setup_url(@identity.generate_token_for(:account_setup)) %>
+</p>
+
+<p>This link will expire in 7 days. If you need a new link, you can use the password reset feature on the sign-in page.</p>
+
+<p>Welcome aboard!</p>

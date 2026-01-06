@@ -10,6 +10,7 @@ class Engagement < ApplicationRecord
   delegated_type :engageable, types: %w[Comment], dependent: :destroy
 
   # Common associations shared by all engagement types
+  belongs_to :account
   belongs_to :insight_item
   belongs_to :user
 
@@ -18,4 +19,3 @@ class Engagement < ApplicationRecord
   scope :by_user, ->(user) { where(user: user) }
   scope :comments, -> { where(engageable_type: "Comment") }
 end
-

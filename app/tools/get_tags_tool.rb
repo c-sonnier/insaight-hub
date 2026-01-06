@@ -10,8 +10,10 @@ class GetTagsTool < MCP::Tool
 
   class << self
     def call(server_context:)
-      # Extract all unique tags from insights
-      tags = InsightItem
+      account = server_context[:account]
+
+      # Extract all unique tags from account's insights
+      tags = account.insight_items
         .where.not(metadata: nil)
         .pluck(:metadata)
         .map { |m| m&.dig("tags") }

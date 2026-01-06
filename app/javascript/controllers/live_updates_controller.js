@@ -3,12 +3,16 @@ import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
   static targets = ["list", "toast"]
+  static values = { accountId: String }
 
   connect() {
+    if (!this.hasAccountIdValue) return
+
     this.consumer = createConsumer()
-    this.subscription = this.consumer.subscriptions.create("InsightItemsChannel", {
-      received: (data) => this.handleMessage(data)
-    })
+    this.subscription = this.consumer.subscriptions.create(
+      { channel: "InsightItemsChannel", account_id: this.accountIdValue },
+      { received: (data) => this.handleMessage(data) }
+    )
   }
 
   disconnect() {
@@ -34,7 +38,7 @@ export default class extends Controller {
     toast.className = "toast toast-end z-50"
     toast.innerHTML = `
       <div class="alert alert-info">
-        <span>New insight published: <a href="/insight_items/${insight.slug}" class="link link-hover font-bold">${this.escapeHtml(insight.title)}</a></span>
+        <span>New insight published: <a href="/${this.accountIdValue}/insight_items/${insight.slug}" class="link link-hover font-bold">${this.escapeHtml(insight.title)}</a></span>
         <button class="btn btn-ghost btn-xs" onclick="this.closest('.toast').remove()">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -52,7 +56,7 @@ export default class extends Controller {
     card.innerHTML = `
       <div class="card-body">
         <h2 class="card-title">
-          <a href="/insight_items/${insight.slug}" class="link link-hover">${this.escapeHtml(insight.title)}</a>
+          <a href="/${this.accountIdValue}/insight_items/${insight.slug}" class="link link-hover">${this.escapeHtml(insight.title)}</a>
         </h2>
         <p class="text-base-content/70 line-clamp-2">${this.escapeHtml(insight.description || '')}</p>
         <div class="flex flex-wrap gap-2 mt-2">
@@ -61,7 +65,7 @@ export default class extends Controller {
         </div>
         <div class="card-actions justify-between items-center mt-4">
           <span class="text-sm text-base-content/60">by ${this.escapeHtml(insight.user_name)} &middot; just now</span>
-          <a href="/insight_items/${insight.slug}" class="btn btn-primary btn-sm">View</a>
+          <a href="/${this.accountIdValue}/insight_items/${insight.slug}" class="btn btn-primary btn-sm">View</a>
         </div>
       </div>
     `

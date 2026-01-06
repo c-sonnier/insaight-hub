@@ -5,7 +5,8 @@ module Api
       before_action :authorize_owner, only: [:update, :destroy, :publish, :unpublish]
 
       def index
-        @insight_items = current_user.insight_items
+        # Scope to current user's insights within this account
+        @insight_items = current_user.insight_items.where(account: current_account)
 
         @insight_items = @insight_items.where(status: params[:status]) if params[:status].present?
         @insight_items = @insight_items.by_audience(params[:audience]) if params[:audience].present?
@@ -26,7 +27,7 @@ module Api
       end
 
       def create
-        @insight_item = current_user.insight_items.build(insight_item_create_params)
+        @insight_item = current_user.insight_items.build(insight_item_create_params.merge(account: current_account))
 
         # Handle single-file creation via content parameter
         if params[:content].present? && @insight_item.insight_item_files.empty?
@@ -70,7 +71,7 @@ module Api
       private
 
       def set_insight_item
-        @insight_item = current_user.insight_items.find_by!(slug: params[:id])
+        @insight_item = current_account.insight_items.find_by!(slug: params[:id])
       rescue ActiveRecord::RecordNotFound
         render json: { error: "Insight not found" }, status: :not_found
       end

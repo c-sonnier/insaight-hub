@@ -1,0 +1,45 @@
+<% page_title "Thanks for Joining!" %>
+
+<div class="min-h-screen relative overflow-hidden flex items-center justify-center">
+  <!-- Background -->
+  <div class="absolute inset-0 bg-white"></div>
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -bottom-[28%] -left-[30%] w-[160%] h-[70%] origin-center rotate-[-18deg] bg-[#f5f7f9]"></div>
+    <div class="absolute -bottom-[38%] -left-[30%] w-[160%] h-[55%] origin-center rotate-[-18deg] bg-[#eef1f4]"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 w-full max-w-md mx-auto px-6 py-12">
+    <div class="bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.08)] p-8 text-center">
+      <!-- Success Icon -->
+      <div class="w-16 h-16 bg-[#10B981]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-8 h-8 text-[#10B981]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+
+      <!-- Logo and Header -->
+      <div class="flex items-center justify-center gap-2 mb-4">
+        <%= image_tag "logo_h_100.svg", class: "h-8", alt: "insAIght Hub" %>
+        <span class="text-xl font-medium text-[#10325B] tracking-tight">ins<span class="font-bold text-[#38BDF8]">AI</span>ght Hub</span>
+      </div>
+
+      <h1 class="text-2xl font-bold text-[#10325B] mb-4">You're on the list!</h1>
+
+      <p class="text-[#64748b] mb-6">
+        Thank you for your interest in insAIght Hub. We'll keep you updated on our progress and let you know as soon as we're ready to launch.
+      </p>
+
+      <div class="bg-[#f8fafc] rounded-xl p-4 mb-6">
+        <p class="text-sm text-[#64748b]">
+          <span class="font-semibold text-[#10325B]">Our promise:</span> We'll only send you important updates about insAIght Hub. No spam, no selling your email, no nonsense.
+        </p>
+      </div>
+
+      <!-- Back link -->
+      <%= link_to root_path, class: "inline-flex items-center justify-center px-6 py-3 bg-[#183C67] hover:bg-[#1e4a7d] text-white font-semibold rounded-xl transition-all duration-200 shadow-[0_4px_14px_rgba(24,60,103,0.35)] hover:shadow-[0_6px_20px_rgba(24,60,103,0.4)]" do %>
+        Back to Home
+      <% end %>
+    </div>
+  </div>
+</div>

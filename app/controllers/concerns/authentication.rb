@@ -31,7 +31,7 @@ module Authentication
     end
 
     def request_authentication
-      if User.none?
+      if Identity.none?
         redirect_to onboarding_path
       else
         session[:return_to_after_authenticating] = request.url
@@ -40,11 +40,21 @@ module Authentication
     end
 
     def after_authentication_url
-      session.delete(:return_to_after_authenticating) || dashboard_url
+      return_url = session.delete(:return_to_after_authenticating)
+      return return_url if return_url.present?
+
+      # Redirect to user's default account dashboard
+      if Current.identity&.accounts&.any?
+        account = Current.identity.accounts.first
+        "/#{account.external_id}/dashboard"
+      else
+        # No accounts - shouldn't happen normally, but fallback to root
+        root_url
+      end
     end
 
-    def start_new_session_for(user)
-      user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
+    def start_new_session_for(identity)
+      identity.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip).tap do |session|
         Current.session = session
         cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax }
       end

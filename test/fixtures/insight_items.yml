@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  account: default
+  user: owner_user
+  title: Test Insight One
+  slug: test-insight-one
+  description: A test insight for testing purposes
+  audience: developer
+  status: published
+  published_at: <%= 1.day.ago %>
+
+two:
+  account: default
+  user: member_user
+  title: Test Insight Two
+  slug: test-insight-two
+  description: Another test insight
+  audience: stakeholder
+  status: draft
+  published_at:
+
+other_account_insight:
+  account: other_account
+  user: other_owner_user
+  title: Other Account Insight
+  slug: other-account-insight
+  description: An insight in another account
+  audience: end_user
+  status: published
+  published_at: <%= 1.day.ago %>

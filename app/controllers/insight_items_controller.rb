@@ -1,15 +1,23 @@
 require "zip"
 
 class InsightItemsController < ApplicationController
+  include AccountScoped
+
   before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token]
   before_action :authorize_owner, only: [:edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token]
   before_action :authorize_published_or_owner, only: [:show]
 
   def index
-    @insight_items = InsightItem.published.includes(:user)
+    @insight_items = current_account.insight_items.published.includes(user: :identity)
     @insight_items = @insight_items.by_audience(params[:audience]) if params[:audience].present?
     @insight_items = @insight_items.by_tag(params[:tag]) if params[:tag].present?
     @insight_items = @insight_items.search(params[:q]) if params[:q].present?
+
+    # Filter by member
+    if params[:member_id].present?
+      @selected_member = current_account.users.find_by(id: params[:member_id])
+      @insight_items = @insight_items.where(user_id: params[:member_id]) if @selected_member
+    end
 
     @insight_items = case params[:sort]
     when "oldest"
@@ -22,8 +30,9 @@ class InsightItemsController < ApplicationController
 
     @pagy, @insight_items = pagy(@insight_items, items: 12)
 
-    @has_filters = params[:audience].present? || params[:tag].present? || params[:q].present?
+    @has_filters = params[:audience].present? || params[:tag].present? || params[:q].present? || params[:member_id].present?
     @user_drafts = Current.user&.insight_items&.draft&.count || 0
+    @members = current_account.users.includes(:identity).order(:created_at)
   end
 
   def show
@@ -42,12 +51,12 @@ class InsightItemsController < ApplicationController
   end
 
   def new
-    @insight_item = Current.user.insight_items.build
+    @insight_item = Current.user.insight_items.build(account: current_account)
     @insight_item.insight_item_files.build
   end
 
   def create
-    @insight_item = Current.user.insight_items.build(insight_item_params)
+    @insight_item = Current.user.insight_items.build(insight_item_params.merge(account: current_account))
 
     if @insight_item.save
       redirect_to @insight_item, notice: "Insight was successfully created."
@@ -176,17 +185,17 @@ class InsightItemsController < ApplicationController
   end
 
   def set_insight_item
-    @insight_item = InsightItem.find_by!(slug: params[:id])
+    @insight_item = current_account.insight_items.find_by!(slug: params[:id])
   end
 
   def authorize_owner
-    unless @insight_item.user == Current.user || Current.user&.admin?
+    unless @insight_item.user == Current.user || Current.super_admin?
       redirect_to insight_items_path, alert: "You are not authorized to perform this action."
     end
   end
 
   def authorize_published_or_owner
-    unless @insight_item.published? || @insight_item.user == Current.user || Current.user&.admin?
+    unless @insight_item.published? || @insight_item.user == Current.user || Current.super_admin?
       redirect_to insight_items_path, alert: "This insight is not available."
     end
   end

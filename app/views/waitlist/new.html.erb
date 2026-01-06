@@ -1,0 +1,65 @@
+<% page_title "Join the Waitlist" %>
+
+<div class="min-h-screen relative overflow-hidden flex items-center justify-center">
+  <!-- Background -->
+  <div class="absolute inset-0 bg-white"></div>
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -bottom-[28%] -left-[30%] w-[160%] h-[70%] origin-center rotate-[-18deg] bg-[#f5f7f9]"></div>
+    <div class="absolute -bottom-[38%] -left-[30%] w-[160%] h-[55%] origin-center rotate-[-18deg] bg-[#eef1f4]"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative z-10 w-full max-w-md mx-auto px-6 py-12">
+    <div class="bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.08)] p-8">
+      <!-- Logo and Header -->
+      <div class="text-center mb-8">
+        <div class="flex items-center justify-center gap-2 mb-4">
+          <%= image_tag "logo_h_100.svg", class: "h-10", alt: "insAIght Hub" %>
+          <span class="text-2xl font-medium text-[#10325B] tracking-tight">ins<span class="font-bold text-[#38BDF8]">AI</span>ght Hub</span>
+        </div>
+        <h1 class="text-2xl font-bold text-[#10325B] mb-2">Join the Waitlist</h1>
+        <p class="text-[#64748b]">
+          Be the first to know when we launch. We'll only email you about important updates.
+        </p>
+      </div>
+
+      <!-- Form -->
+      <%= form_with model: @waitlist_entry, url: waitlist_path, class: "space-y-6" do |f| %>
+        <div>
+          <%= f.label :name, "Full Name", class: "block text-sm font-medium text-[#10325B] mb-2" %>
+          <%= f.text_field :name,
+              class: "w-full px-4 py-3 rounded-xl border border-[#e5e7eb] focus:border-[#38BDF8] focus:ring-2 focus:ring-[#38BDF8]/20 outline-none transition-all #{@waitlist_entry.errors[:name].any? ? 'border-red-500' : ''}",
+              placeholder: "John Doe",
+              required: true,
+              autofocus: true %>
+          <% if @waitlist_entry.errors[:name].any? %>
+            <p class="mt-2 text-sm text-red-600"><%= @waitlist_entry.errors[:name].first %></p>
+          <% end %>
+        </div>
+
+        <div>
+          <%= f.label :email, "Email Address", class: "block text-sm font-medium text-[#10325B] mb-2" %>
+          <%= f.email_field :email,
+              class: "w-full px-4 py-3 rounded-xl border border-[#e5e7eb] focus:border-[#38BDF8] focus:ring-2 focus:ring-[#38BDF8]/20 outline-none transition-all #{@waitlist_entry.errors[:email].any? ? 'border-red-500' : ''}",
+              placeholder: "you@example.com",
+              required: true %>
+          <% if @waitlist_entry.errors[:email].any? %>
+            <p class="mt-2 text-sm text-red-600"><%= @waitlist_entry.errors[:email].first %></p>
+          <% end %>
+        </div>
+
+        <%= f.submit "Join Waitlist", class: "w-full px-6 py-3 bg-[#183C67] hover:bg-[#1e4a7d] text-white font-semibold rounded-xl transition-all duration-200 shadow-[0_4px_14px_rgba(24,60,103,0.35)] hover:shadow-[0_6px_20px_rgba(24,60,103,0.4)] cursor-pointer" %>
+      <% end %>
+
+      <!-- Privacy note -->
+      <p class="text-center text-xs text-[#94a3b8] mt-6">
+        We respect your privacy. No spam, ever.
+      </p>
+    </div>
+
+    <!-- Back link -->
+    <div class="text-center mt-6">
+      <%= link_to "← Back to home", root_path, class: "text-[#64748b] hover:text-[#10325B] transition-colors" %>
+    </div>
+  </div>
+</div>

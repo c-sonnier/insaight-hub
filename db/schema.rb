@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_06_153309) do
+  create_table "accounts", force: :cascade do |t|
+    t.string "external_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["external_id"], name: "index_accounts_on_external_id", unique: true
+  end
+
   create_table "action_mcp_session_messages", force: :cascade do |t|
     t.string "session_id", null: false
     t.string "direction", default: "client", null: false
@@ -114,6 +122,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
     t.datetime "updated_at", null: false
     t.string "commentable_type"
     t.integer "commentable_id"
+    t.integer "account_id", null: false
+    t.index ["account_id"], name: "index_comments_on_account_id"
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
     t.index ["parent_id"], name: "index_comments_on_parent_id"
   end
@@ -125,6 +135,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
     t.bigint "engageable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "account_id", null: false
+    t.index ["account_id"], name: "index_engagements_on_account_id"
     t.index ["engageable_type", "engageable_id"], name: "index_engagements_on_engageable"
     t.index ["insight_item_id", "created_at"], name: "index_engagements_on_insight_and_time"
     t.index ["insight_item_id"], name: "index_engagements_on_insight_item_id"
@@ -140,6 +152,19 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["archived"], name: "index_highlights_on_archived"
+  end
+
+  create_table "identities", force: :cascade do |t|
+    t.string "email_address", null: false
+    t.string "password_digest", null: false
+    t.string "name"
+    t.string "api_token"
+    t.boolean "admin", default: false, null: false
+    t.string "theme", default: "light"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["api_token"], name: "index_identities_on_api_token", unique: true
+    t.index ["email_address"], name: "index_identities_on_email_address", unique: true
   end
 
   create_table "insight_item_files", force: :cascade do |t|
@@ -167,6 +192,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
     t.datetime "updated_at", null: false
     t.string "share_token"
     t.boolean "share_enabled", default: false, null: false
+    t.integer "account_id", null: false
+    t.index ["account_id"], name: "index_insight_items_on_account_id"
     t.index ["audience"], name: "index_insight_items_on_audience"
     t.index ["share_token"], name: "index_insight_items_on_share_token", unique: true
     t.index ["slug"], name: "index_insight_items_on_slug", unique: true
@@ -183,31 +210,39 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
     t.datetime "used_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "account_id", null: false
+    t.index ["account_id"], name: "index_invites_on_account_id"
     t.index ["created_by_id"], name: "index_invites_on_created_by_id"
     t.index ["token"], name: "index_invites_on_token", unique: true
     t.index ["used_by_id"], name: "index_invites_on_used_by_id"
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer "user_id", null: false
     t.string "ip_address"
     t.string "user_agent"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_sessions_on_user_id"
+    t.integer "identity_id", null: false
+    t.index ["identity_id"], name: "index_sessions_on_identity_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email_address", null: false
-    t.string "password_digest", null: false
-    t.string "name"
-    t.string "api_token"
-    t.boolean "admin", default: false, null: false
-    t.string "theme", default: "light"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["api_token"], name: "index_users_on_api_token", unique: true
-    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.integer "account_id", null: false
+    t.integer "identity_id", null: false
+    t.string "role", default: "member", null: false
+    t.index ["account_id", "identity_id"], name: "index_users_on_account_id_and_identity_id", unique: true
+    t.index ["account_id"], name: "index_users_on_account_id"
+    t.index ["identity_id"], name: "index_users_on_identity_id"
+  end
+
+  create_table "waitlist_entries", force: :cascade do |t|
+    t.string "email", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "name"
+    t.index ["email"], name: "index_waitlist_entries_on_email", unique: true
   end
 
   add_foreign_key "action_mcp_session_messages", "action_mcp_sessions", column: "session_id", on_update: :cascade, on_delete: :cascade
@@ -216,12 +251,18 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_04_145650) do
   add_foreign_key "action_mcp_sse_events", "action_mcp_sessions", column: "session_id"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "comments", "accounts"
   add_foreign_key "comments", "comments", column: "parent_id"
+  add_foreign_key "engagements", "accounts"
   add_foreign_key "engagements", "insight_items"
   add_foreign_key "engagements", "users"
   add_foreign_key "insight_item_files", "insight_items"
+  add_foreign_key "insight_items", "accounts"
   add_foreign_key "insight_items", "users"
+  add_foreign_key "invites", "accounts"
   add_foreign_key "invites", "users", column: "created_by_id"
   add_foreign_key "invites", "users", column: "used_by_id"
-  add_foreign_key "sessions", "users"
+  add_foreign_key "sessions", "identities"
+  add_foreign_key "users", "accounts"
+  add_foreign_key "users", "identities"
 end

@@ -3,7 +3,7 @@
   page_description "Browse and discover AI-generated insights. Search by audience, tags, or keywords to find the knowledge you need."
 %>
 
-<div class="container mx-auto px-4 py-8" data-controller="live-updates">
+<div class="container mx-auto px-4 py-8" data-controller="live-updates" data-live-updates-account-id-value="<%= current_account.external_id %>">
   <div class="mb-8">
     <h1 class="text-3xl font-bold">Insights</h1>
   </div>
@@ -11,10 +11,54 @@
   <div class="flex flex-wrap gap-4 mb-6 items-center">
     <div class="flex gap-2 items-center">
       <span class="text-sm text-base-content/70">Audience:</span>
-      <%= link_to "All", insight_items_path(sort: params[:sort]), class: "btn btn-sm #{params[:audience].blank? ? 'btn-primary' : 'btn-ghost'}" %>
-      <%= link_to "Developer", insight_items_path(audience: "developer", sort: params[:sort]), class: "btn btn-sm #{params[:audience] == 'developer' ? 'btn-primary' : 'btn-ghost'}" %>
-      <%= link_to "Stakeholder", insight_items_path(audience: "stakeholder", sort: params[:sort]), class: "btn btn-sm #{params[:audience] == 'stakeholder' ? 'btn-primary' : 'btn-ghost'}" %>
-      <%= link_to "End User", insight_items_path(audience: "end_user", sort: params[:sort]), class: "btn btn-sm #{params[:audience] == 'end_user' ? 'btn-primary' : 'btn-ghost'}" %>
+      <%= link_to "All", insight_items_path(sort: params[:sort], member_id: params[:member_id]), class: "btn btn-sm #{params[:audience].blank? ? 'btn-primary' : 'btn-ghost'}" %>
+      <%= link_to "Developer", insight_items_path(audience: "developer", sort: params[:sort], member_id: params[:member_id]), class: "btn btn-sm #{params[:audience] == 'developer' ? 'btn-primary' : 'btn-ghost'}" %>
+      <%= link_to "Stakeholder", insight_items_path(audience: "stakeholder", sort: params[:sort], member_id: params[:member_id]), class: "btn btn-sm #{params[:audience] == 'stakeholder' ? 'btn-primary' : 'btn-ghost'}" %>
+      <%= link_to "End User", insight_items_path(audience: "end_user", sort: params[:sort], member_id: params[:member_id]), class: "btn btn-sm #{params[:audience] == 'end_user' ? 'btn-primary' : 'btn-ghost'}" %>
+    </div>
+
+    <div class="flex gap-2 items-center">
+      <span class="text-sm text-base-content/70">Member:</span>
+      <div class="dropdown">
+        <div tabindex="0" role="button" class="btn btn-sm <%= @selected_member ? 'btn-secondary' : 'btn-ghost' %> gap-2">
+          <% if @selected_member %>
+            <%= user_avatar_or_initials(@selected_member, size: "w-5") %>
+            <span class="max-w-24 truncate"><%= @selected_member.name %></span>
+          <% else %>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+              <path d="M18 21a8 8 0 0 0-16 0"></path>
+              <circle cx="10" cy="8" r="5"></circle>
+              <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"></path>
+            </svg>
+            All Members
+          <% end %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-56 max-h-80 overflow-y-auto">
+          <li>
+            <%= link_to insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag], sort: params[:sort]), class: "gap-2" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5">
+                <path d="M18 21a8 8 0 0 0-16 0"></path>
+                <circle cx="10" cy="8" r="5"></circle>
+                <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"></path>
+              </svg>
+              All Members
+            <% end %>
+          </li>
+          <li class="menu-title text-xs mt-2">Team Members</li>
+          <% @members.each do |member| %>
+            <li>
+              <%= link_to insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag], sort: params[:sort], member_id: member.id), class: "gap-2 #{'bg-base-200' if @selected_member&.id == member.id}" do %>
+                <%= user_avatar_or_initials(member, size: "w-6") %>
+                <span class="truncate"><%= member.name %></span>
+                <% if member == Current.user %>
+                  <span class="badge badge-outline badge-xs">You</span>
+                <% end %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
     </div>
 
     <div class="flex gap-2 items-center">
@@ -29,9 +73,9 @@
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
         </div>
         <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-48">
-          <li><%= link_to "Newest First", insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag]) %></li>
-          <li><%= link_to "Oldest First", insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag], sort: "oldest") %></li>
-          <li><%= link_to "Recently Updated", insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag], sort: "updated") %></li>
+          <li><%= link_to "Newest First", insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag], member_id: params[:member_id]) %></li>
+          <li><%= link_to "Oldest First", insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag], member_id: params[:member_id], sort: "oldest") %></li>
+          <li><%= link_to "Recently Updated", insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag], member_id: params[:member_id], sort: "updated") %></li>
         </ul>
       </div>
     </div>
@@ -39,16 +83,44 @@
     <%= form_with url: insight_items_path, method: :get, class: "flex gap-2 ml-auto", data: { turbo_frame: "_top" } do |form| %>
       <%= form.hidden_field :audience, value: params[:audience] %>
       <%= form.hidden_field :sort, value: params[:sort] %>
+      <%= form.hidden_field :member_id, value: params[:member_id] %>
       <%= form.text_field :q, value: params[:q], placeholder: "Search insights...", class: "input input-bordered input-sm w-64" %>
       <%= form.submit "Search", class: "btn btn-sm btn-ghost" %>
     <% end %>
   </div>
 
-  <% if params[:tag].present? %>
-    <div class="mb-4">
-      <span class="text-sm text-base-content/70">Filtered by tag:</span>
-      <span class="badge badge-primary"><%= params[:tag] %></span>
-      <%= link_to "Clear", insight_items_path(audience: params[:audience], q: params[:q]), class: "text-sm link link-hover" %>
+  <% if params[:tag].present? || @selected_member %>
+    <div class="mb-4 flex flex-wrap gap-3 items-center">
+      <% if params[:tag].present? %>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-base-content/70">Tag:</span>
+          <span class="badge badge-primary"><%= params[:tag] %></span>
+          <%= link_to insight_items_path(audience: params[:audience], q: params[:q], member_id: params[:member_id], sort: params[:sort]), class: "btn btn-ghost btn-xs" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          <% end %>
+        </div>
+      <% end %>
+      <% if @selected_member %>
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-base-content/70">By:</span>
+          <div class="badge badge-secondary gap-2">
+            <%= user_avatar_or_initials(@selected_member, size: "w-4") %>
+            <%= @selected_member.name %>
+          </div>
+          <%= link_to insight_items_path(audience: params[:audience], q: params[:q], tag: params[:tag], sort: params[:sort]), class: "btn btn-ghost btn-xs" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3">
+              <path d="M18 6 6 18"></path>
+              <path d="m6 6 12 12"></path>
+            </svg>
+          <% end %>
+        </div>
+      <% end %>
+      <% if @has_filters %>
+        <%= link_to "Clear all filters", insight_items_path, class: "text-sm link link-hover ml-auto" %>
+      <% end %>
     </div>
   <% end %>
 

@@ -1,0 +1,59 @@
+<% page_title "Set Up Your Account" %>
+
+<div class="hero min-h-[calc(100vh-6rem)] bg-base-200 px-4 py-12">
+  <div class="hero-content flex-col lg:flex-row gap-12 w-full max-w-6xl">
+    <div class="lg:w-1/2 space-y-6 text-center lg:text-left">
+      <span class="badge badge-outline badge-primary uppercase tracking-wide">Welcome</span>
+      <h1 class="text-4xl font-bold leading-tight text-base-content">Welcome to insAIght Hub!</h1>
+      <p class="text-base text-base-content/80">
+        Your account has been approved. Set up your password to get started with your organization.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+        <div class="p-4 rounded-2xl bg-base-100 shadow-sm border border-base-200">
+          <p class="text-sm font-medium text-base-content/70">Min length</p>
+          <p class="text-2xl font-semibold text-base-content">8 chars</p>
+        </div>
+        <div class="p-4 rounded-2xl bg-base-100 shadow-sm border border-base-200">
+          <p class="text-sm font-medium text-base-content/70">Max length</p>
+          <p class="text-2xl font-semibold text-base-content">72 chars</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card lg:w-5/12 w-full max-w-md bg-base-100 shadow-2xl">
+      <div class="card-body space-y-6">
+        <div class="space-y-2">
+          <h2 class="text-2xl font-semibold text-base-content">Set your password</h2>
+          <p class="text-sm text-base-content/70">Create a password for <strong><%= @identity.email_address %></strong></p>
+        </div>
+
+        <% if alert = flash[:alert] %>
+          <div class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span><%= alert %></span>
+          </div>
+        <% end %>
+
+        <%= form_with url: account_setup_path(params[:token]), method: :put, class: "space-y-5" do |form| %>
+          <div class="form-control">
+            <label class="label" for="password">
+              <span class="label-text">Password</span>
+            </label>
+            <%= form.password_field :password, required: true, autocomplete: "new-password", placeholder: "Enter password", maxlength: 72, class: "input input-bordered w-full" %>
+          </div>
+
+          <div class="form-control">
+            <label class="label" for="password_confirmation">
+              <span class="label-text">Confirm password</span>
+            </label>
+            <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm password", maxlength: 72, class: "input input-bordered w-full" %>
+          </div>
+
+          <div class="form-control">
+            <%= form.submit "Create account", class: "btn btn-primary w-full" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
