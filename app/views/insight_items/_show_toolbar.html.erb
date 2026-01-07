@@ -25,7 +25,7 @@
               </svg>
             </label>
             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-40">
-              <li><%= link_to "Edit", edit_insight_item_path(insight_item), data: { turbo: false } %></li>
+              <li><%= link_to "Edit", edit_insight_item_path(insight_item), data: { turbo_frame: "_top" } %></li>
               <li><%= link_to "Export", export_insight_item_path(insight_item) %></li>
               <li>
                 <button type="button" onclick="document.getElementById('share_modal').showModal()">
