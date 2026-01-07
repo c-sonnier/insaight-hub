@@ -105,7 +105,7 @@
 
           <% mcp_config = {
             "insaight-hub" => {
-              "url" => "#{request.base_url}/mcp",
+              "url" => "#{request.base_url}/#{Current.account.external_id}/mcp",
               "transport" => "http",
               "headers" => {
                 "Authorization" => "Bearer #{@user.api_token}"
