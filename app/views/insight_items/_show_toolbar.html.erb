@@ -3,12 +3,12 @@
     <div class="flex items-center">
       <%# Left side: Back button %>
       <div class="flex-none">
-        <%= link_to insight_items_path, class: "btn btn-ghost btn-sm gap-1" do %>
+        <button type="button" onclick="history.back()" class="btn btn-ghost btn-sm gap-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
           Back
-        <% end %>
+        </button>
       </div>
 
       <%# Center: Title with dropdown menu %>
