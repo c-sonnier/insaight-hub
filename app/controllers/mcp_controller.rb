@@ -56,7 +56,10 @@ class McpController < ActionController::API
   end
 
   def require_account_membership
-    return if @current_account.nil?
+    if @current_account.nil?
+      render json: { error: "Account not found. Please check your MCP URL configuration." }, status: :not_found
+      return
+    end
 
     # Super admins can access any account
     return if @current_identity&.admin?
