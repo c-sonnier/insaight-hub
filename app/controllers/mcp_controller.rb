@@ -61,14 +61,19 @@ class McpController < ActionController::API
       return
     end
 
-    # Super admins can access any account
-    return if @current_identity&.admin?
-
-    # Regular users need membership in the account
+    # Always try to find the user's membership in this account
     @current_user = @current_identity&.users&.find_by(account: @current_account)
 
-    unless @current_user
+    # Super admins can access any account but still need a user record to create content
+    return if @current_user.present?
+
+    # Non-members get forbidden
+    unless @current_identity&.admin?
       render json: { error: "You don't have access to this organization" }, status: :forbidden
+      return
     end
+
+    # Admins without membership in this account cannot create content
+    render json: { error: "Admin access granted but you need a user membership in this account to create content. Please join this organization first." }, status: :unprocessable_entity
   end
 end
