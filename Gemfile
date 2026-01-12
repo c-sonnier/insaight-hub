@@ -23,7 +23,7 @@ gem "jbuilder"
 gem "bcrypt", "~> 3.1.7"
 
 # Pagination (pinned to 8.x for Backend/Frontend modules)
-gem "pagy", "~> 8.0"
+gem "pagy", "~> 43.2"
 
 # Markdown rendering for insight item files
 gem "redcarpet"
