@@ -5,15 +5,20 @@ FROM ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /rails
 
-# Install base packages
+# Install base packages including Chromium for thumbnail generation
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
     curl \
     libjemalloc2 \
     libsqlite3-0 \
     libvips \
-    sqlite3 && \
+    sqlite3 \
+    chromium \
+    chromium-sandbox && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Set Chromium path for Ferrum
+ENV BROWSER_PATH="/usr/bin/chromium"
 
 # Set production environment
 ENV RAILS_ENV="production" \
