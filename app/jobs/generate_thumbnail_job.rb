@@ -45,11 +45,33 @@ class GenerateThumbnailJob < ApplicationJob
     if entry_file.markdown?
       render_markdown_html(entry_file)
     elsif entry_file.html?
-      # For HTML files, we need to make relative URLs absolute
-      entry_file.content
+      inline_css_into_html(entry_file.content, insight_item)
     else
       # For other file types, create a basic wrapper
       wrap_content(entry_file)
+    end
+  end
+
+  def inline_css_into_html(html_content, insight_item)
+    # Build a map of CSS filenames to their content
+    css_files = insight_item.insight_item_files.css_files.index_by(&:filename)
+    return html_content if css_files.empty?
+
+    # Replace <link rel="stylesheet" href="..."> with inline <style> tags
+    html_content.gsub(/<link[^>]+rel=["']stylesheet["'][^>]*>/i) do |link_tag|
+      # Extract the href value
+      href_match = link_tag.match(/href=["']([^"']+)["']/i)
+      next link_tag unless href_match
+
+      href = href_match[1]
+      # Get just the filename (ignore paths)
+      filename = File.basename(href)
+
+      if css_files[filename]
+        "<style>#{css_files[filename].content}</style>"
+      else
+        link_tag # Keep external links as-is
+      end
     end
   end
 
