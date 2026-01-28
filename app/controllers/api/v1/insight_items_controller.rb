@@ -39,6 +39,7 @@ module Api
         end
 
         if @insight_item.save
+          @insight_item.enqueue_thumbnail_generation!
           render json: insight_item_json(@insight_item, include_files: true), status: :created
         else
           render json: { errors: @insight_item.errors.full_messages }, status: :unprocessable_entity
@@ -47,6 +48,7 @@ module Api
 
       def update
         if @insight_item.update(insight_item_update_params)
+          @insight_item.enqueue_thumbnail_generation!
           render json: insight_item_json(@insight_item, include_files: true)
         else
           render json: { errors: @insight_item.errors.full_messages }, status: :unprocessable_entity

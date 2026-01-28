@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_06_153309) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_28_114124) do
   create_table "accounts", force: :cascade do |t|
     t.string "external_id"
     t.string "name"
@@ -193,6 +193,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_06_153309) do
     t.string "share_token"
     t.boolean "share_enabled", default: false, null: false
     t.integer "account_id", null: false
+    t.boolean "thumbnail_generating", default: false, null: false
     t.index ["account_id"], name: "index_insight_items_on_account_id"
     t.index ["audience"], name: "index_insight_items_on_audience"
     t.index ["share_token"], name: "index_insight_items_on_share_token", unique: true

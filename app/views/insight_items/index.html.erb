@@ -3,6 +3,8 @@
   page_description "Browse and discover AI-generated insights. Search by audience, tags, or keywords to find the knowledge you need."
 %>
 
+<%= turbo_stream_from "insight_item_thumbnails_#{current_account.id}" %>
+
 <div class="container mx-auto px-4 py-8" data-controller="live-updates" data-live-updates-account-id-value="<%= current_account.external_id %>">
   <div class="mb-8">
     <h1 class="text-3xl font-bold">Insights</h1>
@@ -151,7 +153,10 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-live-updates-target="list">
       <% @insight_items.each do |insight_item| %>
         <div class="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow">
-          <div class="card-body">
+          <%= link_to insight_item do %>
+            <%= render "insight_items/thumbnail", insight_item: insight_item %>
+          <% end %>
+          <div class="card-body pt-3">
             <h2 class="card-title">
               <%= link_to insight_item.title, insight_item, class: "link link-hover" %>
             </h2>
