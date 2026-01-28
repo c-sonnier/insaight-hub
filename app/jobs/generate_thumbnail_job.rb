@@ -122,7 +122,11 @@ class GenerateThumbnailJob < ApplicationJob
         browser_options: {
           "no-sandbox": nil,
           "disable-gpu": nil,
-          "disable-dev-shm-usage": nil
+          "disable-dev-shm-usage": nil,
+          "no-zygote": nil,
+          "single-process": nil,
+          "disable-extensions": nil,
+          "disable-background-networking": nil
         },
         timeout: 30,
         process_timeout: 30
@@ -135,7 +139,7 @@ class GenerateThumbnailJob < ApplicationJob
       sleep 0.5
 
       # Take screenshot
-      page.screenshot(format: :png, full: false)
+      page.screenshot(format: :png, full: false, encoding: :binary)
     ensure
       browser&.quit
     end

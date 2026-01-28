@@ -218,6 +218,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_114124) do
     t.index ["used_by_id"], name: "index_invites_on_used_by_id"
   end
 
+  create_table "pinned_insights", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_pinned_insights_on_account_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.string "ip_address"
     t.string "user_agent"
@@ -263,6 +270,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_114124) do
   add_foreign_key "invites", "accounts"
   add_foreign_key "invites", "users", column: "created_by_id"
   add_foreign_key "invites", "users", column: "used_by_id"
+  add_foreign_key "pinned_insights", "accounts"
   add_foreign_key "sessions", "identities"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "identities"
