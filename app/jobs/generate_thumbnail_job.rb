@@ -157,8 +157,8 @@ class GenerateThumbnailJob < ApplicationJob
       page = browser.create_page
       page.content = html_content
 
-      # Wait for content to render
-      sleep 0.5
+      # Wait for content and JavaScript to render
+      sleep 2
 
       # Take screenshot
       page.screenshot(format: :png, full: false, encoding: :binary)
