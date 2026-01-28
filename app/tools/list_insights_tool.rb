@@ -24,7 +24,7 @@ class ListInsightsTool < MCP::Tool
       insights = insights.where(status: status) if status.present?
       insights = insights.by_audience(audience) if audience.present?
       insights = insights.by_tag(tag) if tag.present?
-      insights = insights.search(search) if search.present?
+      insights = insights.search_basic(search) if search.present?
 
       # Order by most recent
       insights = insights.order(created_at: :desc)

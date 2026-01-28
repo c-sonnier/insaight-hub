@@ -24,7 +24,14 @@ class InsightItem < ApplicationRecord
   scope :draft, -> { where(status: :draft) }
   scope :by_audience, ->(audience) { where(audience: audience) if audience.present? }
   scope :by_tag, ->(tag) { where("json_extract(metadata, '$.tags') LIKE ?", "%#{tag}%") if tag.present? }
-  scope :search, ->(query) { where("title LIKE :q OR description LIKE :q", q: "%#{query}%") if query.present? }
+  scope :search_basic, ->(query) { where("title LIKE :q OR description LIKE :q", q: "%#{query}%") if query.present? }
+  scope :search, ->(query) {
+    if query.present?
+      left_joins(:insight_item_files)
+        .where("insight_items.title LIKE :q OR insight_items.description LIKE :q OR insight_item_files.content LIKE :q", q: "%#{query}%")
+        .distinct
+    end
+  }
   scope :shareable, -> { published.where(share_enabled: true).where.not(share_token: nil) }
 
   def tags
