@@ -49,8 +49,9 @@ Rails.application.configure do
   # Use memory cache store (simpler for single-server deployments)
   config.cache_store = :memory_store
 
-  # Use async queue adapter (simpler for single-server deployments)
-  config.active_job.queue_adapter = :async
+  # Use Solid Queue for background jobs
+  config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # Raise delivery errors so we know if emails fail to send
   config.action_mailer.raise_delivery_errors = true

@@ -59,6 +59,7 @@ class InsightItemsController < ApplicationController
     @insight_item = Current.user.insight_items.build(insight_item_params.merge(account: current_account))
 
     if @insight_item.save
+      @insight_item.enqueue_thumbnail_generation!
       redirect_to @insight_item, notice: "Insight was successfully created."
     else
       render :new, status: :unprocessable_entity
@@ -70,6 +71,7 @@ class InsightItemsController < ApplicationController
 
   def update
     if @insight_item.update(insight_item_params)
+      @insight_item.enqueue_thumbnail_generation!
       redirect_to @insight_item, notice: "Insight was successfully updated."
     else
       render :edit, status: :unprocessable_entity

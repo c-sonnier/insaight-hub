@@ -3,6 +3,8 @@
   page_description "Your insAIght Hub dashboard. View recent insights and manage your AI-generated knowledge."
 %>
 
+<%= turbo_stream_from "insight_item_thumbnails_#{current_account.id}" %>
+
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold mb-2">Welcome back, <%= Current.user.name %>!</h1>
   <p class="text-base-content/70 mb-8">Here's what's happening in insAIght Hub</p>
@@ -72,10 +74,13 @@
         </div>
       </div>
     <% else %>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <% @recent_insights.each do |insight| %>
           <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow">
-            <div class="card-body">
+            <%= link_to insight do %>
+              <%= render "insight_items/thumbnail", insight_item: insight %>
+            <% end %>
+            <div class="card-body pt-3">
               <h3 class="card-title text-base">
                 <%= link_to insight.title, insight, class: "link link-hover" %>
               </h3>

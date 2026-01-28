@@ -5,6 +5,8 @@ class InsightItem < ApplicationRecord
   has_many :engagements, dependent: :destroy
   has_many :comments, through: :engagements, source: :engageable, source_type: "Comment"
 
+  has_one_attached :thumbnail
+
   accepts_nested_attributes_for :insight_item_files, allow_destroy: true, reject_if: :all_blank
 
   enum :audience, { developer: "developer", stakeholder: "stakeholder", end_user: "end_user" }
@@ -86,6 +88,15 @@ class InsightItem < ApplicationRecord
 
   def shareable?
     published? && share_enabled? && share_token.present?
+  end
+
+  def enqueue_thumbnail_generation!
+    update!(thumbnail_generating: true)
+    GenerateThumbnailJob.perform_later(insight_item_id: id, account_id: account_id)
+  end
+
+  def thumbnail_ready?
+    thumbnail.attached? && !thumbnail_generating?
   end
 
   private

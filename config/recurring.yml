@@ -13,3 +13,6 @@ production:
   clear_solid_queue_finished_jobs:
     command: "SolidQueue::Job.clear_finished_in_batches(sleep_between_batches: 0.3)"
     schedule: every hour at minute 12
+  generate_missing_thumbnails:
+    command: "InsightItem.left_joins(:thumbnail_attachment).where(active_storage_attachments: { id: nil }).where(thumbnail_generating: false).find_each(&:enqueue_thumbnail_generation!)"
+    schedule: every 5 minutes
