@@ -16,8 +16,14 @@ module Oauth
     end
 
     def protected_resource
+      resource_url = if params[:path].present?
+        "#{request.base_url}/#{params[:path]}"
+      else
+        request.base_url
+      end
+
       render json: {
-        resource: request.original_url.sub("/.well-known/oauth-protected-resource", ""),
+        resource: resource_url,
         authorization_servers: [root_url],
         scopes_supported: ["mcp:read", "mcp:write", "mcp:admin"],
         bearer_methods_supported: ["header"]

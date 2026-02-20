@@ -8,16 +8,17 @@ module Oauth
       if result[:errors]
         oauth_error(:invalid_client_metadata, result[:errors].full_messages.join(", "))
       else
-        render json: {
+        response = {
           client_id: result[:client].client_id,
           client_name: result[:client].client_name,
-          client_secret: result[:client_secret],
           redirect_uris: result[:client].redirect_uris,
           grant_types: result[:client].grant_types,
           token_endpoint_auth_method: result[:client].token_endpoint_auth_method,
           registration_access_token: result[:registration_access_token],
           registration_client_uri: "#{root_url}oauth/register/#{result[:client].client_id}"
-        }, status: :created
+        }
+        response[:client_secret] = result[:client_secret] if result[:client_secret].present?
+        render json: response, status: :created
       end
     end
 

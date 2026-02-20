@@ -1,10 +1,21 @@
 # frozen_string_literal: true
 
 class McpController < ActionController::API
-  before_action :set_current_account
-  before_action :authenticate_identity
-  before_action :require_account_membership
+  before_action :set_current_account, only: :handle
+  before_action :authenticate_identity, only: :handle
+  before_action :require_account_membership, only: :handle
 
+  # GET /mcp — SSE stream (not supported, return 405 per spec)
+  def stream
+    head :method_not_allowed
+  end
+
+  # DELETE /mcp — session termination (not supported, return 405 per spec)
+  def disconnect
+    head :method_not_allowed
+  end
+
+  # POST /mcp — JSON-RPC message handling
   def handle
     server = MCP::Server.new(
       name: "digest-hub",
@@ -94,7 +105,10 @@ class McpController < ActionController::API
   end
 
   def www_authenticate_header
-    resource_uri = @current_account ? "#{request.base_url}/#{@current_account.external_id}/mcp" : request.original_url
-    %(Bearer resource_metadata="#{request.base_url}/.well-known/oauth-protected-resource")
+    if @current_account
+      %(Bearer resource_metadata="#{request.base_url}/.well-known/oauth-protected-resource/#{@current_account.external_id}/mcp")
+    else
+      %(Bearer resource_metadata="#{request.base_url}/.well-known/oauth-protected-resource")
+    end
   end
 end

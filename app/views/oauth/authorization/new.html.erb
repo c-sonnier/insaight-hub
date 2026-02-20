@@ -50,7 +50,7 @@
         </div>
 
         <% accounts = Current.identity.accounts %>
-        <%= form_with url: oauth_authorize_path, method: :post, class: "space-y-4" do |form| %>
+        <%= form_with url: oauth_authorize_path, method: :post, data: { turbo: false }, class: "space-y-4" do |form| %>
           <%= form.hidden_field :client_id, value: params[:client_id] %>
           <%= form.hidden_field :redirect_uri, value: params[:redirect_uri] %>
           <%= form.hidden_field :response_type, value: params[:response_type] %>
