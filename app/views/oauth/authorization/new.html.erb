@@ -1,0 +1,80 @@
+<div class="min-h-screen relative overflow-hidden">
+  <div class="absolute inset-0 bg-white"></div>
+
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -bottom-[28%] -left-[30%] w-[160%] h-[70%] origin-center rotate-[-18deg] bg-[#f5f7f9]"></div>
+    <div class="absolute -bottom-[38%] -left-[30%] w-[160%] h-[55%] origin-center rotate-[-18deg] bg-[#eef1f4]"></div>
+  </div>
+
+  <div class="relative z-10 min-h-screen flex items-center justify-center px-6 py-16">
+    <div class="w-full max-w-md">
+      <div class="bg-white rounded-2xl shadow-[0_4px_40px_rgba(0,0,0,0.08)] p-8 lg:p-10">
+        <div class="space-y-2 mb-8">
+          <div class="flex items-center gap-3 mb-4">
+            <%= image_tag "logo_h_100.svg", class: "h-10", alt: "insAIght Hub" %>
+            <span class="text-2xl font-medium text-[#10325B] tracking-tight">ins<span class="font-bold text-[#38BDF8]">AI</span>ght Hub</span>
+          </div>
+          <h2 class="text-xl font-bold text-[#10325B] tracking-tight">Authorize Application</h2>
+          <p class="text-[#64748b] text-sm leading-relaxed">
+            <strong class="text-[#1e293b]"><%= @service.client.client_name %></strong> is requesting access to your account.
+          </p>
+        </div>
+
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold text-[#1e293b] mb-3">This application will be able to:</h3>
+          <ul class="space-y-2">
+            <% @service.resolved_scope.split(" ").each do |scope| %>
+              <li class="flex items-start gap-2 text-sm text-[#64748b]">
+                <svg class="h-5 w-5 text-[#38BDF8] shrink-0 mt-0.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>
+                  <% case scope %>
+                  <% when "mcp:read" %>
+                    <strong class="text-[#1e293b]">Read</strong> insights, tags, and comments
+                  <% when "mcp:write" %>
+                    <strong class="text-[#1e293b]">Create, update, and delete</strong> insights
+                  <% when "mcp:admin" %>
+                    <strong class="text-[#1e293b]">Full access</strong> including publish and unpublish
+                  <% end %>
+                </span>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+        <div class="bg-[#f8fafc] rounded-xl p-4 mb-6">
+          <p class="text-xs text-[#64748b]">
+            Signed in as <strong class="text-[#1e293b]"><%= Current.identity.email_address %></strong>
+          </p>
+        </div>
+
+        <% accounts = Current.identity.accounts %>
+        <%= form_with url: oauth_authorize_path, method: :post, class: "space-y-4" do |form| %>
+          <%= form.hidden_field :client_id, value: params[:client_id] %>
+          <%= form.hidden_field :redirect_uri, value: params[:redirect_uri] %>
+          <%= form.hidden_field :response_type, value: params[:response_type] %>
+          <%= form.hidden_field :scope, value: params[:scope] %>
+          <%= form.hidden_field :code_challenge, value: params[:code_challenge] %>
+          <%= form.hidden_field :code_challenge_method, value: params[:code_challenge_method] %>
+          <%= form.hidden_field :resource, value: params[:resource] %>
+          <%= form.hidden_field :state, value: params[:state] %>
+
+          <% if accounts.size > 1 %>
+            <div>
+              <label class="block text-sm font-medium text-[#1e293b] mb-2">Account</label>
+              <%= form.select :account_id, accounts.map { |a| [a.name, a.external_id] }, {}, class: "w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#183C67] focus:border-transparent transition text-sm" %>
+            </div>
+          <% else %>
+            <%= form.hidden_field :account_id, value: accounts.first&.external_id %>
+          <% end %>
+
+          <div class="flex gap-3 pt-2">
+            <%= form.submit "Authorize", class: "flex-1 py-3 px-4 bg-[#183C67] hover:bg-[#1e4a7d] text-white font-semibold rounded-xl transition-all duration-200 cursor-pointer shadow-[0_4px_14px_rgba(24,60,103,0.35)] hover:shadow-[0_6px_20px_rgba(24,60,103,0.4)]" %>
+            <a href="<%= params[:redirect_uri] %>?error=access_denied&state=<%= params[:state] %>" class="flex-1 py-3 px-4 bg-white border border-gray-200 text-[#64748b] font-semibold rounded-xl text-center hover:bg-gray-50 transition-all duration-200" data-turbo="false">Deny</a>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

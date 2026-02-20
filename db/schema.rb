@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_28_114124) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
   create_table "accounts", force: :cascade do |t|
     t.string "external_id"
     t.string "name"
@@ -120,11 +120,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_114124) do
     t.integer "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "commentable_type"
-    t.integer "commentable_id"
-    t.integer "account_id", null: false
+    t.integer "account_id"
     t.index ["account_id"], name: "index_comments_on_account_id"
-    t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable"
     t.index ["parent_id"], name: "index_comments_on_parent_id"
   end
 
@@ -218,6 +215,78 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_114124) do
     t.index ["used_by_id"], name: "index_invites_on_used_by_id"
   end
 
+  create_table "oauth_access_tokens", force: :cascade do |t|
+    t.string "token_digest", null: false
+    t.integer "oauth_client_id", null: false
+    t.integer "identity_id", null: false
+    t.integer "account_id", null: false
+    t.string "scope"
+    t.string "resource"
+    t.integer "oauth_refresh_token_id"
+    t.datetime "expires_at", null: false
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_oauth_access_tokens_on_account_id"
+    t.index ["identity_id"], name: "index_oauth_access_tokens_on_identity_id"
+    t.index ["oauth_client_id"], name: "index_oauth_access_tokens_on_oauth_client_id"
+    t.index ["oauth_refresh_token_id"], name: "index_oauth_access_tokens_on_oauth_refresh_token_id"
+    t.index ["token_digest"], name: "index_oauth_access_tokens_on_token_digest", unique: true
+  end
+
+  create_table "oauth_authorization_codes", force: :cascade do |t|
+    t.string "code_digest", null: false
+    t.integer "oauth_client_id", null: false
+    t.integer "identity_id", null: false
+    t.integer "account_id", null: false
+    t.string "redirect_uri", null: false
+    t.string "scope"
+    t.string "code_challenge", null: false
+    t.string "code_challenge_method", default: "S256", null: false
+    t.string "resource"
+    t.string "state"
+    t.datetime "expires_at", null: false
+    t.datetime "used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_oauth_authorization_codes_on_account_id"
+    t.index ["code_digest"], name: "index_oauth_authorization_codes_on_code_digest", unique: true
+    t.index ["identity_id"], name: "index_oauth_authorization_codes_on_identity_id"
+    t.index ["oauth_client_id"], name: "index_oauth_authorization_codes_on_oauth_client_id"
+  end
+
+  create_table "oauth_clients", force: :cascade do |t|
+    t.string "client_id", null: false
+    t.string "client_secret_digest"
+    t.string "client_name", null: false
+    t.json "redirect_uris", default: []
+    t.json "grant_types", default: ["authorization_code"]
+    t.string "token_endpoint_auth_method", default: "none"
+    t.string "registration_access_token_digest"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_oauth_clients_on_client_id", unique: true
+  end
+
+  create_table "oauth_refresh_tokens", force: :cascade do |t|
+    t.string "token_digest", null: false
+    t.integer "oauth_client_id", null: false
+    t.integer "identity_id", null: false
+    t.integer "account_id", null: false
+    t.string "scope"
+    t.string "resource"
+    t.datetime "expires_at", null: false
+    t.datetime "revoked_at"
+    t.integer "previous_token_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_oauth_refresh_tokens_on_account_id"
+    t.index ["identity_id"], name: "index_oauth_refresh_tokens_on_identity_id"
+    t.index ["oauth_client_id"], name: "index_oauth_refresh_tokens_on_oauth_client_id"
+    t.index ["previous_token_id"], name: "index_oauth_refresh_tokens_on_previous_token_id"
+    t.index ["token_digest"], name: "index_oauth_refresh_tokens_on_token_digest", unique: true
+  end
+
   create_table "pinned_insights", force: :cascade do |t|
     t.integer "account_id", null: false
     t.datetime "created_at", null: false
@@ -270,6 +339,17 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_28_114124) do
   add_foreign_key "invites", "accounts"
   add_foreign_key "invites", "users", column: "created_by_id"
   add_foreign_key "invites", "users", column: "used_by_id"
+  add_foreign_key "oauth_access_tokens", "accounts"
+  add_foreign_key "oauth_access_tokens", "identities"
+  add_foreign_key "oauth_access_tokens", "oauth_clients"
+  add_foreign_key "oauth_access_tokens", "oauth_refresh_tokens"
+  add_foreign_key "oauth_authorization_codes", "accounts"
+  add_foreign_key "oauth_authorization_codes", "identities"
+  add_foreign_key "oauth_authorization_codes", "oauth_clients"
+  add_foreign_key "oauth_refresh_tokens", "accounts"
+  add_foreign_key "oauth_refresh_tokens", "identities"
+  add_foreign_key "oauth_refresh_tokens", "oauth_clients"
+  add_foreign_key "oauth_refresh_tokens", "oauth_refresh_tokens", column: "previous_token_id"
   add_foreign_key "pinned_insights", "accounts"
   add_foreign_key "sessions", "identities"
   add_foreign_key "users", "accounts"

@@ -3,6 +3,16 @@ Rails.application.routes.draw do
   get "health", to: proc { [ 200, {}, [ "OK" ] ] }
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # OAuth 2.1 endpoints
+  get  ".well-known/oauth-authorization-server", to: "oauth/metadata#authorization_server"
+  get  ".well-known/oauth-protected-resource", to: "oauth/metadata#protected_resource"
+  post "oauth/register", to: "oauth/clients#create"
+  get  "oauth/register/:client_id", to: "oauth/clients#show", as: :oauth_client
+  get  "oauth/authorize", to: "oauth/authorization#new", as: :oauth_authorize
+  post "oauth/authorize", to: "oauth/authorization#create"
+  post "oauth/token", to: "oauth/tokens#create"
+  post "oauth/revoke", to: "oauth/revocation#create"
+
   # MCP (Model Context Protocol) endpoint
   post "mcp", to: "mcp#handle"
 

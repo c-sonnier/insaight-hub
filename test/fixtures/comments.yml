@@ -4,12 +4,8 @@ one:
   account: default
   body: This is a test comment
   parent:
-  commentable_type:
-  commentable_id:
 
 two:
   account: default
   body: This is a reply comment
   parent: one
-  commentable_type:
-  commentable_id:

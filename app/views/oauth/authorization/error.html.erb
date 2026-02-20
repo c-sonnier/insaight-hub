@@ -1,0 +1,26 @@
+<div class="min-h-screen relative overflow-hidden">
+  <div class="absolute inset-0 bg-white"></div>
+
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute -bottom-[28%] -left-[30%] w-[160%] h-[70%] origin-center rotate-[-18deg] bg-[#f5f7f9]"></div>
+    <div class="absolute -bottom-[38%] -left-[30%] w-[160%] h-[55%] origin-center rotate-[-18deg] bg-[#eef1f4]"></div>
+  </div>
+
+  <div class="relative z-10 min-h-screen flex items-center justify-center px-6 py-16">
+    <div class="w-full max-w-md">
+      <div class="bg-white rounded-2xl shadow-[0_4px_40px_rgba(0,0,0,0.08)] p-8 lg:p-10">
+        <div class="space-y-2 mb-6">
+          <div class="flex items-center gap-3 mb-4">
+            <%= image_tag "logo_h_100.svg", class: "h-10", alt: "insAIght Hub" %>
+            <span class="text-2xl font-medium text-[#10325B] tracking-tight">ins<span class="font-bold text-[#38BDF8]">AI</span>ght Hub</span>
+          </div>
+          <h2 class="text-xl font-bold text-[#10325B] tracking-tight">Authorization Error</h2>
+        </div>
+
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+          <%= flash[:alert] %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

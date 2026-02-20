@@ -18,6 +18,8 @@ module AccountSlug
       /setup
       /register
       /how-to
+      /oauth
+      /.well-known
     ].freeze
 
     def initialize(app)

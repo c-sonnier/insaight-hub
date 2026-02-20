@@ -42,15 +42,17 @@ class McpController < ActionController::API
     token = request.headers["Authorization"]&.gsub(/^Bearer\s+/, "")
 
     if token.blank?
+      response.set_header("WWW-Authenticate", www_authenticate_header)
       render json: { error: "Missing authorization header" }, status: :unauthorized
       return
     end
 
-    # API token is now on Identity
-    @current_identity = Identity.find_by(api_token: token)
+    # Try OAuth token first, fall back to API token (temporary — remove once clients have migrated)
+    @current_identity = authenticate_via_oauth(token) || Identity.find_by(api_token: token)
 
     if @current_identity.nil?
-      render json: { error: "Invalid API token" }, status: :unauthorized
+      response.set_header("WWW-Authenticate", www_authenticate_header)
+      render json: { error: "Invalid token" }, status: :unauthorized
       nil
     end
   end
@@ -75,5 +77,24 @@ class McpController < ActionController::API
 
     # Admins without membership in this account cannot create content
     render json: { error: "Admin access granted but you need a user membership in this account to create content. Please join this organization first." }, status: :unprocessable_entity
+  end
+
+  def authenticate_via_oauth(token)
+    access_token = Oauth::AccessToken.find_by_plaintext(token)
+    return nil unless access_token&.active?
+
+    # Validate resource parameter matches this account's MCP endpoint
+    if access_token.resource.present? && @current_account.present?
+      expected_resource = "#{request.base_url}/#{@current_account.external_id}/mcp"
+      return nil unless access_token.resource == expected_resource
+    end
+
+    @oauth_scope = access_token.scope
+    access_token.identity
+  end
+
+  def www_authenticate_header
+    resource_uri = @current_account ? "#{request.base_url}/#{@current_account.external_id}/mcp" : request.original_url
+    %(Bearer resource_metadata="#{request.base_url}/.well-known/oauth-protected-resource")
   end
 end
