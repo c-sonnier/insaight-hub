@@ -110,6 +110,11 @@ List insights with optional filtering and pagination.
 
 Get a single insight with its files.
 
+**Query Parameters**:
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `content_format` | Response format for file content: `markdown` (text only, HTML converted to markdown, CSS/JS excluded) or `html` (all raw files) | `html` |
+
 **Response (200)**:
 ```json
 {
@@ -141,6 +146,19 @@ Get a single insight with its files.
   }
 }
 ```
+
+**Example: Get insight as markdown** (optimized for LLM consumption):
+```bash
+curl http://localhost:3000/api/v1/insight_items/api-documentation?content_format=markdown \
+  -H "Authorization: Bearer YOUR_API_TOKEN"
+```
+
+When `content_format=markdown`:
+- HTML files are converted to markdown (CSS/JS stripped, images replaced with placeholders)
+- Markdown files are passed through as-is
+- JSON files are wrapped in fenced code blocks
+- CSS and JavaScript files are excluded
+- Converted HTML files have `content_type: "text/markdown"`
 
 ---
 

@@ -72,6 +72,33 @@ class InsightItem < ApplicationRecord
     engagements.comments.count
   end
 
+  def files_as_markdown
+    entry = entry_insight_item_file
+    convertible = insight_item_files.select(&:markdown_convertible?)
+
+    convertible.sort_by! { |f| [f == entry ? 0 : 1, f.filename] }
+
+    convertible.map do |file|
+      md = file.to_markdown
+      if md
+        {
+          id: file.id,
+          filename: file.filename,
+          content_type: file.html? ? "text/markdown" : file.content_type,
+          content: md
+        }
+      else
+        {
+          id: file.id,
+          filename: file.filename,
+          content_type: file.content_type,
+          content: file.content,
+          conversion_warning: "HTML to markdown conversion failed, returning raw content"
+        }
+      end
+    end
+  end
+
   def to_param
     slug
   end
