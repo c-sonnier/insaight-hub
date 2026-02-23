@@ -28,6 +28,9 @@ gem "pagy", "~> 8.0"
 # Markdown rendering for insight item files
 gem "redcarpet"
 
+# HTML to markdown conversion for LLM-optimized output
+gem "reverse_markdown"
+
 # Zip file handling for insight import/export
 gem "rubyzip"
 

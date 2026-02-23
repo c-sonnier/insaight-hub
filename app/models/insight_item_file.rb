@@ -26,6 +26,21 @@ class InsightItemFile < ApplicationRecord
     content_type == "text/markdown"
   end
 
+  def markdown_convertible?
+    html? || markdown? || content_type == "application/json"
+  end
+
+  def to_markdown
+    case
+    when html?
+      HtmlToMarkdownConverter.convert(content)
+    when markdown?
+      content
+    when content_type == "application/json"
+      "```json\n#{content}\n```"
+    end
+  end
+
   def rendered_content
     return content unless markdown?
 

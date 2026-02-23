@@ -1,0 +1,29 @@
+html_file:
+  insight_item: one
+  filename: index.html
+  content: "<html><head><title>Test</title></head><body><h1>Hello World</h1><p>This is a test.</p></body></html>"
+  content_type: text/html
+
+css_file:
+  insight_item: one
+  filename: styles.css
+  content: "body { color: red; }"
+  content_type: text/css
+
+js_file:
+  insight_item: one
+  filename: app.js
+  content: "console.log('hello');"
+  content_type: text/javascript
+
+markdown_file:
+  insight_item: two
+  filename: readme.md
+  content: "# Readme\n\nThis is a markdown file."
+  content_type: text/markdown
+
+json_file:
+  insight_item: two
+  filename: data.json
+  content: '{"key": "value", "count": 42}'
+  content_type: application/json

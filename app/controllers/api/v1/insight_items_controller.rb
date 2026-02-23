@@ -23,7 +23,7 @@ module Api
       end
 
       def show
-        render json: insight_item_json(@insight_item, include_files: true)
+        render json: insight_item_json(@insight_item, include_files: true, content_format: params[:content_format])
       end
 
       def create
@@ -120,7 +120,7 @@ module Api
         end
       end
 
-      def insight_item_json(insight_item, include_files: false)
+      def insight_item_json(insight_item, include_files: false, content_format: nil)
         result = {
           id: insight_item.id,
           slug: insight_item.slug,
@@ -136,13 +136,17 @@ module Api
         }
 
         if include_files
-          result[:files] = insight_item.insight_item_files.map do |file|
-            {
-              id: file.id,
-              filename: file.filename,
-              content: file.content,
-              content_type: file.content_type
-            }
+          result[:files] = if content_format == "markdown"
+            insight_item.files_as_markdown
+          else
+            insight_item.insight_item_files.map do |file|
+              {
+                id: file.id,
+                filename: file.filename,
+                content: file.content,
+                content_type: file.content_type
+              }
+            end
           end
         else
           result[:files_count] = insight_item.insight_item_files.count
