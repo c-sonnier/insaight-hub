@@ -39,7 +39,7 @@ module Oauth
         scope: scope,
         resource: resource,
         oauth_refresh_token: refresh_token,
-        expires_at: 1.hour.from_now
+        expires_at: 30.days.from_now
       )
 
       { token: token, plaintext_token: plaintext_token }

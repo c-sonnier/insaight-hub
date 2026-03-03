@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["sidebar", "toggleIcon", "label", "menuTitle"]
+  static targets = ["sidebar", "toggleIcon", "label", "menuTitle", "dropdown"]
   static values = { collapsed: { type: Boolean, default: false } }
 
   connect() {
@@ -44,5 +44,12 @@ export default class extends Controller {
     if (this.hasToggleIconTarget) {
       this.toggleIconTarget.classList.toggle("rotate-180", this.collapsedValue)
     }
+
+    // Switch dropdown direction: top when expanded, right+end when collapsed
+    this.dropdownTargets.forEach(dropdown => {
+      dropdown.classList.toggle("dropdown-top", !this.collapsedValue)
+      dropdown.classList.toggle("dropdown-right", this.collapsedValue)
+      dropdown.classList.toggle("dropdown-end", this.collapsedValue)
+    })
   }
 }

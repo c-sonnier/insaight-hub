@@ -126,7 +126,7 @@
       </button>
 
       <!-- Theme Selector -->
-      <div class="dropdown dropdown-top w-full" data-controller="theme" data-theme-current-value="<%= Current.user&.theme || 'light' %>">
+      <div class="dropdown dropdown-top w-full" data-controller="theme" data-theme-current-value="<%= Current.user&.theme || 'light' %>" data-nav-sidebar-target="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost btn-sm w-full justify-start tooltip tooltip-right" data-tip="Theme">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
             <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
@@ -155,7 +155,7 @@
       </div>
 
       <!-- Profile -->
-      <div class="dropdown dropdown-top w-full">
+      <div class="dropdown dropdown-top w-full" data-nav-sidebar-target="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost btn-sm w-full justify-start tooltip tooltip-right" data-tip="<%= Current.user&.name %>">
           <%= user_avatar_or_initials(Current.user, size: "w-6") %>
           <span class="truncate" data-nav-sidebar-target="label"><%= Current.user&.name %></span>

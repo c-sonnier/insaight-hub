@@ -97,7 +97,7 @@ module Oauth
       {
         access_token: access_result[:plaintext_token],
         token_type: "Bearer",
-        expires_in: 3600,
+        expires_in: 30.days.to_i,
         refresh_token: refresh_result[:plaintext_token],
         scope: scope
       }
