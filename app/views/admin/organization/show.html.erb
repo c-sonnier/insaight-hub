@@ -1,0 +1,159 @@
+<%
+  page_title "Organization"
+  page_description "Manage your organization, members, and invites."
+%>
+
+<div class="container mx-auto px-4 py-8">
+  <%# Header: Org name + stats %>
+  <div class="mb-8">
+    <div class="flex items-center gap-2">
+      <h1 class="text-3xl font-bold"><%= @account.name %></h1>
+      <%= link_to edit_admin_account_path, class: "btn btn-ghost btn-sm btn-square", title: "Edit organization name" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+          <path d="m15 5 4 4"></path>
+        </svg>
+      <% end %>
+    </div>
+    <p class="text-base-content/70 mt-1">
+      <%= pluralize(@users.size, "member") %>
+      <span class="mx-1">&middot;</span>
+      <%= pluralize(@account.insight_items.count, "insight") %>
+      <span class="mx-1">&middot;</span>
+      <%= @account.insight_items.published.count %> published
+    </p>
+  </div>
+
+  <%# Tabs %>
+  <div role="tablist" class="tabs tabs-box mb-6">
+    <%= link_to admin_organization_path(tab: "members"),
+        role: "tab",
+        class: "tab #{@tab == 'members' ? 'tab-active' : ''}" do %>
+      Members
+    <% end %>
+    <%= link_to admin_organization_path(tab: "invites"),
+        role: "tab",
+        class: "tab #{@tab == 'invites' ? 'tab-active' : ''}" do %>
+      Invites
+    <% end %>
+  </div>
+
+  <% if @tab == "members" %>
+    <%# Members table %>
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Insights</th>
+            <th>Joined</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <tr>
+              <td>
+                <div class="flex items-center gap-2">
+                  <%= user_avatar_or_initials(user, size: "w-8") %>
+                  <span><%= user.name %></span>
+                  <% if user == Current.user %>
+                    <span class="badge badge-outline badge-xs">You</span>
+                  <% end %>
+                </div>
+              </td>
+              <td><%= user.email_address %></td>
+              <td>
+                <% if user.owner? %>
+                  <span class="badge badge-primary">Owner</span>
+                <% else %>
+                  <span class="badge badge-ghost">Member</span>
+                <% end %>
+              </td>
+              <td><%= user.insight_items.count %></td>
+              <td><%= user.created_at.strftime("%b %d, %Y") %></td>
+              <td class="space-x-2">
+                <%= link_to "Edit", edit_admin_user_path(user), class: "btn btn-sm btn-ghost" %>
+                <% unless user == Current.user %>
+                  <%= button_to "Remove", admin_user_path(user), method: :delete,
+                      class: "btn btn-sm btn-error btn-outline",
+                      form: { data: { turbo_confirm: "Are you sure you want to remove #{user.name} from this organization? Their insights will also be deleted." } } %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <%# Invites tab header with button %>
+    <div class="flex justify-end mb-4">
+      <%= link_to new_admin_invite_path, class: "btn btn-primary btn-sm gap-2" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+        Invite Member
+      <% end %>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Created By</th>
+            <th>Expires</th>
+            <th>Used By</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @invites.each do |invite| %>
+            <tr>
+              <td>
+                <code class="text-xs"><%= invite.token.first(8) %>...</code>
+              </td>
+              <td><%= invite.email || "-" %></td>
+              <td>
+                <% if invite.used_at.present? %>
+                  <span class="badge badge-success">Used</span>
+                <% elsif invite.expires_at < Time.current %>
+                  <span class="badge badge-error">Expired</span>
+                <% else %>
+                  <span class="badge badge-info">Available</span>
+                <% end %>
+              </td>
+              <td><%= invite.created_by.name %></td>
+              <td><%= invite.expires_at.strftime("%b %d, %Y %H:%M") %></td>
+              <td><%= invite.used_by&.name || "-" %></td>
+              <td>
+                <% if invite.used_at.nil? %>
+                  <% if invite.expires_at >= Time.current %>
+                    <button class="btn btn-sm btn-ghost" onclick="copyToClipboard('<%= register_url(token: invite.token) %>', this)">
+                      Copy Link
+                    </button>
+                  <% end %>
+                  <%= button_to "Revoke", admin_invite_path(invite), method: :delete,
+                      class: "btn btn-sm btn-error btn-outline",
+                      form: { data: { turbo_confirm: "Are you sure you want to revoke this invite?" } } %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @invites.empty? %>
+      <div class="text-center py-12">
+        <p class="text-base-content/50 mb-4">No invites yet</p>
+        <%= link_to "Create your first invite", new_admin_invite_path, class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

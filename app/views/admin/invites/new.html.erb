@@ -50,7 +50,7 @@
 
         <div class="form-control mt-6">
           <%= form.submit "Create Invite", class: "btn btn-primary" %>
-          <%= link_to "Cancel", admin_invites_path, class: "btn btn-ghost" %>
+          <%= link_to "Cancel", admin_organization_path(tab: "invites"), class: "btn btn-ghost" %>
         </div>
       <% end %>
     </div>

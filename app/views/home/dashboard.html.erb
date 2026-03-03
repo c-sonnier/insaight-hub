@@ -112,8 +112,7 @@
   <% if Current.user.admin? %>
     <div class="divider">Admin</div>
     <div class="flex gap-4">
-      <%= link_to "Manage Users", admin_users_path, class: "btn btn-outline" %>
-      <%= link_to "Manage Invites", admin_invites_path, class: "btn btn-outline" %>
+      <%= link_to "Organization", admin_organization_path, class: "btn btn-outline" %>
     </div>
   <% end %>
 </div>

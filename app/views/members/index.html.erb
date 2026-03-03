@@ -7,19 +7,10 @@
   <div class="flex justify-between items-center mb-8">
     <div>
       <h1 class="text-3xl font-bold">Team Members</h1>
-      <p class="text-base-content/70 mt-1"><%= pluralize(@members.count, "member") %> in <%= current_account.name %></p>
+      <p class="text-base-content/70 mt-1">
+        <%= pluralize(@members.count, "member") %> in <%= current_account.name %>
+      </p>
     </div>
-    <% if Current.owner? || Current.super_admin? %>
-      <%= link_to admin_invites_path, class: "btn btn-primary btn-sm gap-2" do %>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4">
-          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <line x1="19" y1="8" x2="19" y2="14"></line>
-          <line x1="22" y1="11" x2="16" y2="11"></line>
-        </svg>
-        Invite Member
-      <% end %>
-    <% end %>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -78,8 +78,10 @@ Rails.application.routes.draw do
 
   # Admin
   namespace :admin do
-    resources :users, only: [ :index, :edit, :update, :destroy ]
-    resources :invites, only: [ :index, :new, :create, :destroy ]
+    resource :organization, only: [ :show ], controller: "organization"
+    resource :account, only: [ :edit, :update ]
+    resources :users, only: [ :edit, :update, :destroy ]
+    resources :invites, only: [ :new, :create, :destroy ]
     resources :waitlist_entries, only: [ :index, :destroy ] do
       member do
         post :approve

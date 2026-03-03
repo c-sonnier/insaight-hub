@@ -25,8 +25,8 @@ module ApplicationHelper
           image_tag user.avatar.variant(resize_to_limit: [200, 200]), alt: user.name, class: "rounded-full"
         end
       else
-        content_tag :div, class: "bg-neutral text-neutral-content #{size} rounded-full" do
-          content_tag :span, user&.name&.first&.upcase || ""
+        content_tag :div, class: "#{size} rounded-full" do
+          image_tag "default_avatar.svg", alt: user&.name || "User", class: "rounded-full"
         end
       end
     end

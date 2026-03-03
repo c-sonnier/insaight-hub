@@ -1,9 +1,5 @@
 module Admin
   class InvitesController < BaseController
-    def index
-      @invites = current_account.invites.includes(created_by: :identity, used_by: :identity).order(created_at: :desc)
-    end
-
     def new
       @invite = current_account.invites.build
     end
@@ -15,9 +11,9 @@ module Admin
       if @invite.save
         if params[:send_email] == "1" && @invite.email.present?
           InvitesMailer.with(invite: @invite).invite_email.deliver_later
-          redirect_to admin_invites_path, notice: "Invite created and email sent to #{@invite.email}."
+          redirect_to admin_organization_path(tab: "invites"), notice: "Invite created and email sent to #{@invite.email}."
         else
-          redirect_to admin_invites_path, notice: "Invite created. Share this link: #{register_url(token: @invite.token)}"
+          redirect_to admin_organization_path(tab: "invites"), notice: "Invite created. Share this link: #{register_url(token: @invite.token)}"
         end
       else
         render :new, status: :unprocessable_entity
@@ -28,10 +24,10 @@ module Admin
       @invite = current_account.invites.find(params[:id])
 
       if @invite.used_at.present?
-        redirect_to admin_invites_path, alert: "Cannot delete an invite that has already been used."
+        redirect_to admin_organization_path(tab: "invites"), alert: "Cannot delete an invite that has already been used."
       else
         @invite.destroy
-        redirect_to admin_invites_path, notice: "Invite was successfully revoked."
+        redirect_to admin_organization_path(tab: "invites"), notice: "Invite was successfully revoked."
       end
     end
 

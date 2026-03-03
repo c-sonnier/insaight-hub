@@ -1,0 +1,35 @@
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <h1 class="text-3xl font-bold mb-6">Organization Settings</h1>
+
+  <div class="card bg-base-100 shadow-xl">
+    <div class="card-body">
+      <%= form_with model: @account, url: admin_account_path, method: :patch, class: "space-y-4" do |form| %>
+        <% if @account.errors.any? %>
+          <div class="alert alert-error">
+            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div>
+              <h3 class="font-bold">Please fix the following errors:</h3>
+              <ul class="list-disc list-inside">
+                <% @account.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+                <% end %>
+              </ul>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-control">
+          <%= form.label :name, class: "label" do %>
+            <span class="label-text font-medium">Organization Name</span>
+          <% end %>
+          <%= form.text_field :name, class: "input input-bordered w-full", placeholder: "Your organization name" %>
+        </div>
+
+        <div class="form-control mt-6 flex-row gap-2">
+          <%= form.submit "Save", class: "btn btn-primary" %>
+          <%= link_to "Cancel", admin_organization_path, class: "btn btn-ghost" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
