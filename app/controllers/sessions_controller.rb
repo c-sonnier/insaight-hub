@@ -5,6 +5,7 @@ class SessionsController < ApplicationController
   before_action :redirect_to_onboarding_if_no_users, only: %i[ new create ]
 
   def new
+    redirect_to dashboard_path if authenticated?
   end
 
   def create
