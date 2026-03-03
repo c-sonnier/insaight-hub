@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UpdateInsightTool < MCP::Tool
-  description "Update an existing insight's metadata and/or files"
+  description "Update an existing insight's metadata and/or files. Use this to add files in batches when creating multi-file insights. Files are upserted: existing filenames are updated, new filenames are added."
 
   input_schema(
     properties: {

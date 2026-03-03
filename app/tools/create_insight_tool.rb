@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateInsightTool < MCP::Tool
-  description "Create a new insight. Use 'content' for single-file insights or 'files' for multi-file insights"
+  description "Create a new insight. Use 'content' for single-file insights or 'files' for multi-file insights. IMPORTANT: For multi-file insights with more than 3 files, create the insight with only the entry file first, then use update_insight to add remaining files in batches of 2-3 files at a time to avoid request size limits."
 
   input_schema(
     properties: {
