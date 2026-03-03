@@ -1,17 +1,19 @@
-<h1>Welcome to insAIght Hub!</h1>
+<h1 style="margin: 0 0 16px; font-size: 22px; color: #183c67;">Welcome to insAIght Hub!</h1>
 
-<p>Hi <%= @identity.name %>,</p>
+<p style="margin: 0 0 16px;">Hi <%= @identity.name %>,</p>
 
-<p>Great news! Your request to join insAIght Hub has been approved.</p>
+<p style="margin: 0 0 16px;">Great news! Your request to join insAIght Hub has been approved.</p>
 
-<p>Your organization <strong><%= @account.name %></strong> has been created and you've been set up as the administrator.</p>
+<p style="margin: 0 0 24px;">Your organization <strong><%= @account.name %></strong> has been created and you've been set up as the administrator.</p>
 
-<p>insAIght Hub helps teams extract insights from documents using AI-powered analysis.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin: 0 0 24px;">
+  <tr>
+    <td style="background-color: #33b8ed; border-radius: 6px;">
+      <%= link_to "Set Up Your Password", edit_account_setup_url(@identity.generate_token_for(:account_setup)), style: "display: inline-block; padding: 14px 32px; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none;" %>
+    </td>
+  </tr>
+</table>
 
-<p>
-  <%= link_to "Set up your password", edit_account_setup_url(@identity.generate_token_for(:account_setup)) %>
-</p>
+<p style="margin: 0 0 16px; color: #888888; font-size: 14px;">This link will expire in 7 days. If you need a new link, you can use the password reset feature on the sign-in page.</p>
 
-<p>This link will expire in 7 days. If you need a new link, you can use the password reset feature on the sign-in page.</p>
-
-<p>Welcome aboard!</p>
+<p style="margin: 0;">Welcome aboard!</p>
