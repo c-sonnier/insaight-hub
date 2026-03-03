@@ -73,7 +73,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@company.com", value: params[:email_address], class: "w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#183C67] focus:border-transparent transition text-sm" %>
+                <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "you@company.com", value: params[:email_address], class: "w-full pl-12 pr-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#183C67] focus:border-transparent transition text-sm text-[#1e293b] bg-white" %>
               </div>
             </div>
 
@@ -85,7 +85,7 @@
                 </label>
                 <%= link_to "Forgot password?", new_password_path, class: "text-sm text-[#64748b] hover:text-[#183C67] transition" %>
               </div>
-              <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "••••••", maxlength: 72, class: "w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#183C67] focus:border-transparent transition text-sm" %>
+              <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "••••••", maxlength: 72, class: "w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#183C67] focus:border-transparent transition text-sm text-[#1e293b] bg-white" %>
             </div>
 
             <!-- Remember me - better alignment -->
