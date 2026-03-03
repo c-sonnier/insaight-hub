@@ -2,7 +2,7 @@ class HomeController < ApplicationController
   include AccountScoped
 
   allow_unauthenticated_access only: [:index, :how_to]
-  skip_before_action :set_current_account, only: [:index, :how_to]
+  skip_before_action :set_current_account, only: [:index]
   skip_before_action :require_account_membership, only: [:index, :how_to]
 
   def index
