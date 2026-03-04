@@ -27,7 +27,7 @@
           </thead>
           <tbody>
             <tr><td class="font-mono text-sm">list_insights</td><td>List all your insights with optional filtering</td></tr>
-            <tr><td class="font-mono text-sm">get_insight</td><td>Get details of a specific insight by slug</td></tr>
+            <tr><td class="font-mono text-sm">get_insight</td><td>Get details of a specific insight by slug (returns markdown by default, or raw HTML with <code class="bg-base-200 px-1 rounded">format: "html"</code>)</td></tr>
             <tr><td class="font-mono text-sm">create_insight</td><td>Create a new insight with content</td></tr>
             <tr><td class="font-mono text-sm">update_insight</td><td>Update an existing insight's content or metadata</td></tr>
             <tr><td class="font-mono text-sm">publish_insight</td><td>Publish a draft insight</td></tr>
@@ -51,10 +51,15 @@
         Ask your AI assistant to create a new insight. Here's an example prompt you can use:
       </p>
 
-      <div class="mockup-code mb-4">
-        <pre data-prefix=">" class="text-success"><code>Create an insight titled "Docker Best Practices" for developers.</code></pre>
-        <pre data-prefix=">" class="text-success"><code>Include tips about multi-stage builds, layer caching, and security.</code></pre>
-        <pre data-prefix=">" class="text-success"><code>Tag it with "docker", "devops", and "containers".</code></pre>
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-4">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>Create an insight titled "Docker Best Practices" for developers. Include tips about multi-stage builds, layer caching, and security. Tag it with "docker", "devops", and "containers".</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
       </div>
 
       <p class="text-base-content/70 mb-4">
@@ -70,8 +75,15 @@
 
       <div class="divider">Then publish it</div>
 
-      <div class="mockup-code mb-4">
-        <pre data-prefix=">" class="text-success"><code>Now publish the Docker Best Practices insight.</code></pre>
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-4">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>Now publish the Docker Best Practices insight.</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
       </div>
 
       <p class="text-base-content/70">
@@ -80,21 +92,59 @@
     </div>
   </div>
 
-  <!-- Example 2: Update an Insight -->
+  <!-- Example 2: Read and Build From an Insight -->
   <div class="card bg-base-100 shadow-xl mb-8">
     <div class="card-body">
       <h2 class="card-title text-xl">
         <span class="badge badge-secondary badge-lg mr-2">Example 2</span>
+        Reading an Insight to Create a PRD
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        Insights are returned in markdown by default, making them easy for AI to read and build on. Here's an example that reads an existing insight and uses it as the basis for a product requirements document:
+      </p>
+
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-4">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>Read the "api-rate-limiting-research" insight from Insaight Hub, then use it to write a PRD for implementing rate limiting in our API. Include the requirements, acceptance criteria, and technical approach.</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
+      </div>
+
+      <p class="text-base-content/70 mb-4">
+        The AI will use <code class="bg-base-200 px-1 rounded">get_insight</code> to fetch the content as clean markdown, then use that context to draft your PRD. This works great for turning research notes, meeting summaries, or technical spikes into actionable documents.
+      </p>
+
+      <div class="alert mt-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span><strong>Tip:</strong> Insights are returned as markdown by default, so the AI can read and reason about them without parsing raw HTML. Use <code class="bg-base-200 px-1 rounded">format: "html"</code> if you need the original files.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Example 3: Update an Insight -->
+  <div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+      <h2 class="card-title text-xl">
+        <span class="badge badge-accent badge-lg mr-2">Example 3</span>
         Updating an Existing Insight
       </h2>
       <p class="text-base-content/70 mb-4">
         You can ask your AI to modify existing insights. Here's an example:
       </p>
 
-      <div class="mockup-code mb-4">
-        <pre data-prefix=">" class="text-success"><code>Update my "docker-best-practices" insight to add a section</code></pre>
-        <pre data-prefix=">" class="text-success"><code>about Docker Compose best practices. Also add the "docker-compose"</code></pre>
-        <pre data-prefix=">" class="text-success"><code>tag to it.</code></pre>
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-4">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>Update my "docker-best-practices" insight to add a section about Docker Compose best practices. Also add the "docker-compose" tag to it.</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
       </div>
 
       <p class="text-base-content/70 mb-4">
@@ -106,34 +156,39 @@
         <li><strong>tags</strong>: ["docker", "devops", "containers", "docker-compose"]</li>
         <li><strong>files</strong>: Updated content with the new section</li>
       </ul>
-
-      <div class="alert mt-4">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        <span><strong>Tip:</strong> You can reference insights by their slug (the URL-friendly version of the title) or ask the AI to list your insights first.</span>
-      </div>
     </div>
   </div>
 
-  <!-- Example 3: Multi-file Insight -->
+  <!-- Example 4: Multi-file Insight -->
   <div class="card bg-base-100 shadow-xl mb-8">
     <div class="card-body">
       <h2 class="card-title text-xl">
-        <span class="badge badge-accent badge-lg mr-2">Example 3</span>
+        <span class="badge badge-neutral badge-lg mr-2">Example 4</span>
         Creating a Multi-File Insight
       </h2>
       <p class="text-base-content/70 mb-4">
         For more complex insights, you can include multiple files like HTML, CSS, and JavaScript:
       </p>
 
-      <div class="mockup-code mb-4">
-        <pre data-prefix=">" class="text-success"><code>Create an interactive insight called "CSS Grid Playground" for</code></pre>
-        <pre data-prefix=">" class="text-success"><code>developers. Include an HTML file with examples, a CSS file with</code></pre>
-        <pre data-prefix=">" class="text-success"><code>the grid styles, and a JavaScript file for interactivity.</code></pre>
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-4">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>Create an interactive insight called "CSS Grid Playground" for developers. Include an HTML file with examples, a CSS file with the grid styles, and a JavaScript file for interactivity.</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
       </div>
 
-      <p class="text-base-content/70">
+      <p class="text-base-content/70 mb-4">
         The AI will create the insight with multiple files, all bundled together and viewable as an interactive page.
       </p>
+
+      <div class="alert mt-4">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span><strong>Tip:</strong> For larger multi-file insights (more than 3 files), the AI will automatically create the entry file first, then add remaining files in batches to stay within request size limits.</span>
+      </div>
     </div>
   </div>
 
