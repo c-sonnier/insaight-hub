@@ -7,7 +7,8 @@ class AccountSetupController < ApplicationController
 
   def update
     if @identity.update(params.permit(:password, :password_confirmation))
-      redirect_to new_session_path, notice: "Your account is ready. Please sign in."
+      start_new_session_for(@identity)
+      redirect_to after_authentication_url, notice: "Welcome to insAIght Hub!"
     else
       redirect_to edit_account_setup_path(params[:token]), alert: "Passwords did not match."
     end
