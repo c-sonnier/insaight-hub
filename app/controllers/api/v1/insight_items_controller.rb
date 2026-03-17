@@ -1,8 +1,8 @@
 module Api
   module V1
     class InsightItemsController < BaseController
-      before_action :set_insight_item, only: [:show, :update, :destroy, :publish, :unpublish]
-      before_action :authorize_owner, only: [:update, :destroy, :publish, :unpublish]
+      before_action :set_insight_item, only: [:show, :update, :destroy, :publish, :unpublish, :move]
+      before_action :authorize_owner, only: [:update, :destroy, :publish, :unpublish, :move]
 
       def index
         # Scope to current user's insights within this account
@@ -67,6 +67,26 @@ module Api
 
       def unpublish
         @insight_item.unpublish!
+        render json: insight_item_json(@insight_item)
+      end
+
+      def move
+        target_account = Account.find_by(external_id: params[:target_account_id])
+
+        unless target_account
+          render json: { error: "Target organization not found" }, status: :not_found
+          return
+        end
+
+        # Verify the identity has membership in the target account
+        target_user = current_identity.users.find_by(account: target_account)
+
+        unless target_user
+          render json: { error: "You don't have access to the target organization" }, status: :forbidden
+          return
+        end
+
+        @insight_item.update!(account: target_account, user: target_user)
         render json: insight_item_json(@insight_item)
       end
 

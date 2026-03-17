@@ -7,7 +7,27 @@
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
     <div>
       <p class="font-semibold">First time setup?</p>
-      <p>Visit your <%= link_to "Profile", profile_path, class: "link link-primary" %> to get your personalized MCP configuration snippet. Insaight Hub supports OAuth authentication &mdash; your MCP client will prompt you to sign in via your browser on first use. No API token needed.</p>
+      <p>Visit your <%= link_to "Profile", profile_path, class: "link link-primary" %> to get your personalized MCP configuration snippet. One config works for all your organizations &mdash; the AI will ask which org to use. Insaight Hub supports OAuth authentication, so your MCP client will prompt you to sign in via your browser on first use.</p>
+    </div>
+  </div>
+
+  <!-- Claude Code Auto-Setup -->
+  <div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+      <h2 class="card-title text-xl">Quick Setup for Claude Code</h2>
+      <p class="text-base-content/70 mb-4">Copy this prompt and paste it into Claude Code to set up the MCP connection automatically:</p>
+
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-2">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>Add an MCP server called "insaight-hub" to my project settings. The URL is <%= request.base_url %>/mcp and the transport is http. Use the OAuth configuration (no API token needed).</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
+      </div>
+      <p class="text-xs text-base-content/50">For Cursor or manual setup, visit your <%= link_to "Profile", profile_path, class: "link link-primary" %> for JSON config snippets.</p>
     </div>
   </div>
 
@@ -26,14 +46,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr><td class="font-mono text-sm">list_insights</td><td>List all your insights with optional filtering</td></tr>
+            <tr><td class="font-mono text-sm">list_organizations</td><td>List all organizations you belong to</td></tr>
+            <tr><td class="font-mono text-sm">list_insights</td><td>List insights with optional filtering (accepts <code class="bg-base-200 px-1 rounded">organization</code> param)</td></tr>
             <tr><td class="font-mono text-sm">get_insight</td><td>Get details of a specific insight by slug (returns markdown by default, or raw HTML with <code class="bg-base-200 px-1 rounded">format: "html"</code>)</td></tr>
-            <tr><td class="font-mono text-sm">create_insight</td><td>Create a new insight with content</td></tr>
+            <tr><td class="font-mono text-sm">create_insight</td><td>Create a new insight with content (accepts <code class="bg-base-200 px-1 rounded">organization</code> param)</td></tr>
             <tr><td class="font-mono text-sm">update_insight</td><td>Update an existing insight's content or metadata</td></tr>
             <tr><td class="font-mono text-sm">publish_insight</td><td>Publish a draft insight</td></tr>
             <tr><td class="font-mono text-sm">unpublish_insight</td><td>Unpublish an insight back to draft</td></tr>
             <tr><td class="font-mono text-sm">delete_insight</td><td>Delete an insight</td></tr>
-            <tr><td class="font-mono text-sm">get_tags</td><td>Get all available tags</td></tr>
+            <tr><td class="font-mono text-sm">move_insight</td><td>Move an insight from one organization to another</td></tr>
+            <tr><td class="font-mono text-sm">get_tags</td><td>Get all available tags for an organization</td></tr>
           </tbody>
         </table>
       </div>
@@ -192,6 +214,60 @@
     </div>
   </div>
 
+  <!-- Example 5: Multi-Organization -->
+  <div class="card bg-base-100 shadow-xl mb-8">
+    <div class="card-body">
+      <h2 class="card-title text-xl">
+        <span class="badge badge-info badge-lg mr-2">Example 5</span>
+        Working with Multiple Organizations
+      </h2>
+      <p class="text-base-content/70 mb-4">
+        If you belong to multiple organizations, the AI will ask which one to use. You can also specify it directly:
+      </p>
+
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-4">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>List my organizations in Insaight Hub.</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
+      </div>
+
+      <p class="text-base-content/70 mb-4">Then create an insight in a specific org:</p>
+
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-4">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>Create an insight titled "Q1 Roadmap" for stakeholders in the "Acme Corp" organization.</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="divider">Moving insights between organizations</div>
+
+      <div class="relative" data-controller="clipboard">
+        <div class="mockup-code mb-4">
+          <pre data-prefix=">" class="text-success" data-clipboard-target="source"><code>Move the "docker-best-practices" insight from "Personal" to "Acme Corp".</code></pre>
+        </div>
+        <button type="button" class="btn btn-xs absolute top-2 right-2 bg-neutral border-none shadow-none text-neutral-content hover:bg-white hover:text-primary" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+        </button>
+      </div>
+
+      <p class="text-base-content/70">
+        The AI uses <code class="bg-base-200 px-1 rounded">list_organizations</code> to discover your orgs, then passes the organization name to tools like <code class="bg-base-200 px-1 rounded">create_insight</code> and <code class="bg-base-200 px-1 rounded">move_insight</code>.
+      </p>
+    </div>
+  </div>
+
   <!-- Tips Section -->
   <div class="card bg-base-100 shadow-xl">
     <div class="card-body">
@@ -224,6 +300,13 @@
           <div>
             <strong>Review before publishing</strong>
             <p class="text-sm text-base-content/70">Insights are created as drafts by default. Review them before publishing.</p>
+          </div>
+        </li>
+        <li class="flex gap-3">
+          <span class="text-primary font-bold">5.</span>
+          <div>
+            <strong>One MCP config for all organizations</strong>
+            <p class="text-sm text-base-content/70">You don't need separate MCP configs per org. The AI will ask which organization to use, or you can specify it in your prompt.</p>
           </div>
         </li>
       </ul>

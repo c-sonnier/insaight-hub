@@ -20,6 +20,8 @@ module AccountSlug
       /how-to
       /oauth
       /.well-known
+      /accounts
+      /mcp
     ].freeze
 
     def initialize(app)

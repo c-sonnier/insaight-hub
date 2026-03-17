@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class UpdateInsightTool < MCP::Tool
+  extend OrganizationResolvable
+
   description "Update an existing insight's metadata and/or files. Use this to add files in batches when creating multi-file insights. Files are upserted: existing filenames are updated, new filenames are added."
 
   input_schema(
     properties: {
+      organization: { type: "string", description: "Organization name or ID (use list_organizations to find)" },
       slug: { type: "string", description: "The insight slug to update" },
       title: { type: "string", description: "New title" },
       description: { type: "string", description: "New description" },
@@ -17,9 +20,10 @@ class UpdateInsightTool < MCP::Tool
   )
 
   class << self
-    def call(slug:, title: nil, description: nil, audience: nil, tags: nil, entry_file: nil, files: nil, server_context:)
-      user = server_context[:user]
-      account = server_context[:account]
+    def call(slug:, organization: nil, title: nil, description: nil, audience: nil, tags: nil, entry_file: nil, files: nil, server_context:)
+      account, user, error = resolve_organization(organization: organization, server_context: server_context)
+      return error if error
+
       insight = account.insight_items.find_by(slug: slug)
 
       unless insight
@@ -77,6 +81,7 @@ class UpdateInsightTool < MCP::Tool
       if insight.save
         result = {
           success: true,
+          organization: account.name,
           insight: {
             id: insight.id,
             title: insight.title,

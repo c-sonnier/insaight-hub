@@ -35,6 +35,9 @@ Rails.application.routes.draw do
   get  "register/:token", to: "registrations#new", as: :register
   post "register/:token", to: "registrations#create"
 
+  # Organization creation (global, no account prefix)
+  resources :accounts, only: [:new, :create]
+
   # Landing page (public) and Dashboard (authenticated)
   root "home#index"
   get "dashboard", to: "home#dashboard", as: :dashboard
@@ -98,6 +101,7 @@ Rails.application.routes.draw do
         member do
           post :publish
           post :unpublish
+          post :move
         end
         resources :files, only: [:destroy], controller: "insight_item_files"
       end

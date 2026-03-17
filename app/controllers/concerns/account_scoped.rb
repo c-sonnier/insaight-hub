@@ -14,8 +14,8 @@ module AccountScoped
   private
 
   def set_current_account
-    # Account is set by middleware from URL path
     Current.account = request.env["insaight.account"]
+    track_last_account
   end
 
   def require_account_membership
@@ -40,5 +40,12 @@ module AccountScoped
     unless Current.owner?
       redirect_to root_path, alert: "This action requires owner permissions."
     end
+  end
+
+  def track_last_account
+    return unless Current.account && Current.identity
+    return if Current.identity.last_account_id == Current.account.id
+
+    Current.identity.update_column(:last_account_id, Current.account.id)
   end
 end

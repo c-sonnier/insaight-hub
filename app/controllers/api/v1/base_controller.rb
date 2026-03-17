@@ -4,7 +4,7 @@ module Api
       include Pagy::Backend
 
       before_action :set_current_account
-      before_action :authenticate_api_identity
+      before_action :authenticate_api_user
       before_action :require_account_membership
 
       private
@@ -14,7 +14,7 @@ module Api
         Current.account = request.env["insaight.account"]
       end
 
-      def authenticate_api_identity
+      def authenticate_api_user
         token = request.headers["Authorization"]&.gsub(/^Bearer\s+/, "")
 
         if token.blank?
@@ -22,12 +22,15 @@ module Api
           return
         end
 
-        # API token is now on Identity
-        @current_identity = Identity.find_by(api_token: token)
+        # Find the User (membership) that owns this token
+        @token_user = User.find_by(api_token: token)
 
-        if @current_identity.nil?
+        if @token_user.nil?
           render json: { error: "Invalid API token" }, status: :unauthorized
+          return
         end
+
+        @current_identity = @token_user.identity
       end
 
       def require_account_membership
@@ -36,7 +39,7 @@ module Api
         # Super admins can access any account
         return if @current_identity&.admin?
 
-        # Regular users need membership in the account
+        # Token grants cross-account access for the same identity
         @current_user = @current_identity&.users&.find_by(account: Current.account)
 
         unless @current_user

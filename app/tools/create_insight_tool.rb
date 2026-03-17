@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class CreateInsightTool < MCP::Tool
+  extend OrganizationResolvable
+
   description "Create a new insight. Use 'content' for single-file insights or 'files' for multi-file insights. IMPORTANT: For multi-file insights with more than 3 files, create the insight with only the entry file first, then use update_insight to add remaining files in batches of 2-3 files at a time to avoid request size limits."
 
   input_schema(
     properties: {
+      organization: { type: "string", description: "Organization name or ID (use list_organizations to find)" },
       title: { type: "string", description: "The insight title" },
       slug: { type: "string", description: "URL-friendly slug (auto-generated if not provided)" },
       description: { type: "string", description: "Brief description of the insight" },
@@ -19,9 +22,9 @@ class CreateInsightTool < MCP::Tool
   )
 
   class << self
-    def call(title:, audience:, slug: nil, description: nil, tags: nil, content: nil, files: nil, entry_file: nil, publish: false, server_context:)
-      user = server_context[:user]
-      account = server_context[:account]
+    def call(title:, audience:, organization: nil, slug: nil, description: nil, tags: nil, content: nil, files: nil, entry_file: nil, publish: false, server_context:)
+      account, user, error = resolve_organization(organization: organization, server_context: server_context)
+      return error if error
 
       # Validate audience
       unless InsightItem.audiences.keys.include?(audience)
@@ -80,6 +83,7 @@ class CreateInsightTool < MCP::Tool
 
         result = {
           success: true,
+          organization: account.name,
           insight: {
             id: insight.id,
             title: insight.title,

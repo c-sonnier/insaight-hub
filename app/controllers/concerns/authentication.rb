@@ -43,13 +43,11 @@ module Authentication
       return_url = session.delete(:return_to_after_authenticating)
       return return_url if return_url.present?
 
-      # Redirect to user's default account dashboard
-      if Current.identity&.accounts&.any?
-        account = Current.identity.accounts.first
+      account = Current.identity&.last_account || Current.identity&.accounts&.first
+      if account
         "/#{account.external_id}/dashboard"
       else
-        # No accounts - shouldn't happen normally, but fallback to root
-        root_url
+        new_account_path
       end
     end
 

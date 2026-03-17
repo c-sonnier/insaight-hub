@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class ListInsightsTool < MCP::Tool
+  extend OrganizationResolvable
+
   description "List insights with optional filtering by status, audience, tag, or search query"
 
   input_schema(
     properties: {
+      organization: { type: "string", description: "Organization name or ID (use list_organizations to find)" },
       status: { type: "string", description: "Filter by status: draft or published" },
       audience: { type: "string", description: "Filter by audience: developer, stakeholder, or end_user" },
       tag: { type: "string", description: "Filter by tag" },
@@ -16,8 +19,10 @@ class ListInsightsTool < MCP::Tool
   )
 
   class << self
-    def call(status: nil, audience: nil, tag: nil, search: nil, page: 1, per_page: 20, server_context:)
-      account = server_context[:account]
+    def call(organization: nil, status: nil, audience: nil, tag: nil, search: nil, page: 1, per_page: 20, server_context:)
+      account, _user, error = resolve_organization(organization: organization, server_context: server_context)
+      return error if error
+
       insights = account.insight_items.includes(user: :identity)
 
       # Apply filters
@@ -41,6 +46,7 @@ class ListInsightsTool < MCP::Tool
       insights = insights.offset(offset).limit(items_per_page)
 
       result = {
+        organization: account.name,
         insights: insights.map { |i| insight_summary(i) },
         meta: {
           current_page: current_page,
