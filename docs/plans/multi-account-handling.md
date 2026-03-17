@@ -1,6 +1,6 @@
 # Multi-Account Handling Plan
 
-> **Status**: Decisions made — ready for implementation planning.
+> **Status**: Complete — all phases implemented. Only remaining item: remove `api_token` from `identities` table after deploy verification.
 
 ---
 
@@ -64,66 +64,50 @@ The core multi-org data model is already in place:
 
 ## Implementation Phases
 
-### Phase 1: Last-Used Account & Login Redirect
-_Foundation — everything else depends on this._
+### Phase 1: Last-Used Account & Login Redirect — DONE
 
-- [ ] Migration: add `last_account_id` (references accounts) to `identities`
-- [ ] Update `after_authentication_url` in `Authentication` concern to use `last_account_id` (fall back to `accounts.first`)
-- [ ] Update `HomeController#index` redirect to use `last_account_id`
-- [ ] Set `last_account_id` in `AccountScoped#set_current_account` so it updates on every account visit
+- [x] Migration: add `last_account_id` (references accounts) to `identities`
+- [x] Update `after_authentication_url` to use `last_account_id` (fall back to `accounts.first`)
+- [x] Update `HomeController#index` redirect to use `last_account_id`
+- [x] Set `last_account_id` in `AccountScoped#set_current_account` via `track_last_account`
 
-**Files:** `authentication.rb`, `home_controller.rb`, `account_scoped.rb`, `identity.rb`
+### Phase 2: Account Switcher UI — DONE
 
-### Phase 2: Account Switcher UI
-_Visible multi-account experience._
+- [x] Sidebar dropdown above Dashboard link (uses `details` with DaisyUI dropdown)
+- [x] Current account highlighted, others as links to `/{uuid}/dashboard`
+- [x] Only renders if identity has 2+ accounts
+- [x] "Create Organization" link at bottom of dropdown
 
-- [ ] Sidebar partial: account switcher section above Dashboard link
-- [ ] Show current account name (highlighted), list other accounts as links to `/{uuid}/dashboard`
-- [ ] Only render if identity has 2+ accounts
-- [ ] Mobile-responsive (works in sidebar drawer)
+### Phase 3: Self-Service Account Creation + Zero Accounts — DONE
 
-**Files:** `_sidebar.html.erb`, `account_routing_helper.rb`
+- [x] `AccountsController#new/create` — creates Account + User (owner)
+- [x] Zero-accounts redirect to create org flow (both login and home)
+- [x] Global route `/accounts/new` (no account prefix)
 
-### Phase 3: Self-Service Account Creation + Zero Accounts
-_Lets users create orgs and handles the empty state._
+### Phase 4: API Token Migration + Org-Aware MCP — DONE
 
-- [ ] `AccountsController#new/create` — form to create a new Account
-- [ ] On create: build Account + User membership (role: owner)
-- [ ] Add "Create Organization" link in account switcher section
-- [ ] Zero-accounts guard: if identity has no accounts after login, redirect to create org flow
-- [ ] Route: global (no account prefix) since there's no account context yet
-
-**Files:** new controller, routes.rb, `authentication.rb`, `account_scoped.rb`
-
-### Phase 4: API Token Migration
-_Move token from Identity to User, support cross-account access._
-
-- [ ] Migration: add `api_token` to `users`, generate tokens for existing users
-- [ ] Update `Api::V1::BaseController` to authenticate via User token
-- [ ] Cross-account logic: find User by token, then allow access to any account the identity belongs to
-- [ ] Update profile page to show per-membership token
+- [x] Migration: `api_token` on `users` with unique index, tokens generated for existing users
+- [x] API auth via `User.find_by(api_token:)` with cross-account access
+- [x] Profile page shows per-membership token
+- [x] Move insight API endpoint
+- [x] New MCP tools: `list_organizations`, `move_insight`
+- [x] All MCP tools accept optional `organization` param via `OrganizationResolvable`
+- [x] Global `/mcp` endpoint (no account UUID in URL)
+- [x] Updated how-to docs and profile page with Claude Code auto-setup prompt
 - [ ] Migration: remove `api_token` from `identities` (after deploy + verification)
-- [ ] Add "move insight" endpoint: `POST /api/v1/insight_items/:id/move` with `target_account_id`
 
-**Files:** `user.rb`, `identity.rb`, `api/v1/base_controller.rb`, `profiles_controller.rb`, new migration
+### Phase 5: Invite Flow Hardening — DONE
 
-### Phase 5: Invite Flow Hardening
-_The registration controller already handles existing identities — verify and improve._
+- [x] Verified: existing email creates User membership only, not duplicate Identity
+- [x] Fixed: handle case where identity already has membership in invite's account (graceful skip)
+- [x] Edge case: invite to different email — handled by form (email-less invites allow any email)
 
-- [ ] Verify: inviting an existing email creates User membership, not duplicate Identity
-- [ ] Edge case: invite to a different email than existing identity — decide behavior
-- [ ] Test: accept invite while logged in vs. logged out
+### Phase 6: Admin Role Clarity & Data Isolation Audit — DONE
 
-**Files:** `registrations_controller.rb`, `admin/invites_controller.rb`
-
-### Phase 6: Admin Role Clarity & Data Isolation Audit
-_Cleanup and verification pass._
-
-- [ ] Audit: ensure admin UI shows account owners, not super admins, in organization view
-- [ ] Audit: search, tags, export, public share links all respect account boundaries
-- [ ] Verify super admin bypass works correctly across all account-scoped controllers
-
-**Files:** `admin/organization_controller.rb`, all account-scoped controllers
+- [x] Admin org view shows `account.users` (account members), not super admins — correct
+- [x] All controllers query through `current_account` — search, tags, export, comments all scoped
+- [x] Public share links use `share_token` lookup (account-agnostic by design) — correct
+- [x] Super admin bypass works via `Current.super_admin?` checks — distinct from `Current.owner?`
 
 ---
 

@@ -34,12 +34,17 @@ class RegistrationsController < ApplicationController
         end
       end
 
-      # Create membership in the invite's account
-      @user = User.create!(
-        identity: @identity,
-        account: @invite.account,
-        role: :member
-      )
+      # Create membership in the invite's account (or find existing)
+      @user = @identity.users.find_by(account: @invite.account)
+      if @user
+        # Already a member — just use the invite
+      else
+        @user = User.create!(
+          identity: @identity,
+          account: @invite.account,
+          role: :member
+        )
+      end
 
       @invite.use!(@user)
       start_new_session_for(@identity)
