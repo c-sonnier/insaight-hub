@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
   create_table "accounts", force: :cascade do |t|
     t.string "external_id"
     t.string "name"
@@ -160,8 +160,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
     t.string "theme", default: "light"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "last_account_id"
     t.index ["api_token"], name: "index_identities_on_api_token", unique: true
     t.index ["email_address"], name: "index_identities_on_email_address", unique: true
+    t.index ["last_account_id"], name: "index_identities_on_last_account_id"
   end
 
   create_table "insight_item_files", force: :cascade do |t|
@@ -309,8 +311,10 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
     t.integer "account_id", null: false
     t.integer "identity_id", null: false
     t.string "role", default: "member", null: false
+    t.string "api_token"
     t.index ["account_id", "identity_id"], name: "index_users_on_account_id_and_identity_id", unique: true
     t.index ["account_id"], name: "index_users_on_account_id"
+    t.index ["api_token"], name: "index_users_on_api_token", unique: true
     t.index ["identity_id"], name: "index_users_on_identity_id"
   end
 
@@ -333,6 +337,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_20_000002) do
   add_foreign_key "engagements", "accounts"
   add_foreign_key "engagements", "insight_items"
   add_foreign_key "engagements", "users"
+  add_foreign_key "identities", "accounts", column: "last_account_id"
   add_foreign_key "insight_item_files", "insight_items"
   add_foreign_key "insight_items", "accounts"
   add_foreign_key "insight_items", "users"

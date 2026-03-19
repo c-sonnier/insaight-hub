@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
 class PublishInsightTool < MCP::Tool
+  extend OrganizationResolvable
+
   description "Publish a draft insight to make it visible to all users"
 
   input_schema(
     properties: {
+      organization: { type: "string", description: "Organization name or ID (use list_organizations to find)" },
       slug: { type: "string", description: "The insight slug to publish" }
     },
     required: ["slug"]
   )
 
   class << self
-    def call(slug:, server_context:)
-      user = server_context[:user]
-      account = server_context[:account]
+    def call(slug:, organization: nil, server_context:)
+      account, user, error = resolve_organization(organization: organization, server_context: server_context)
+      return error if error
+
       insight = account.insight_items.find_by(slug: slug)
 
       unless insight
@@ -42,6 +46,7 @@ class PublishInsightTool < MCP::Tool
 
       result = {
         success: true,
+        organization: account.name,
         insight: {
           id: insight.id,
           title: insight.title,

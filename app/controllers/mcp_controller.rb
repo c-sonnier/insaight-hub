@@ -3,7 +3,7 @@
 class McpController < ActionController::API
   before_action :set_current_account, only: :handle
   before_action :authenticate_identity, only: :handle
-  before_action :require_account_membership, only: :handle
+  before_action :require_account_membership, only: :handle, if: -> { @current_account.present? }
 
   # GET /mcp — SSE stream (not supported, return 405 per spec)
   def stream
@@ -22,6 +22,7 @@ class McpController < ActionController::API
       version: "1.0.0",
       instructions: "Digest Hub MCP server for managing insights. Use these tools to create, read, update, and delete insights.",
       tools: [
+        ListOrganizationsTool,
         ListInsightsTool,
         GetInsightTool,
         CreateInsightTool,
@@ -29,6 +30,7 @@ class McpController < ActionController::API
         PublishInsightTool,
         UnpublishInsightTool,
         DeleteInsightTool,
+        MoveInsightTool,
         GetTagsTool
       ],
       server_context: {
@@ -58,8 +60,8 @@ class McpController < ActionController::API
       return
     end
 
-    # Try OAuth token first, fall back to API token (temporary — remove once clients have migrated)
-    @current_identity = authenticate_via_oauth(token) || Identity.find_by(api_token: token)
+    # Try OAuth token first, fall back to API token
+    @current_identity = authenticate_via_oauth(token) || Identity.find_by(api_token: token) || User.find_by(api_token: token)&.identity
 
     if @current_identity.nil?
       response.set_header("WWW-Authenticate", www_authenticate_header)

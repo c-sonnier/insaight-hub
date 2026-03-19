@@ -45,7 +45,7 @@ class ProfilesController < ApplicationController
   end
 
   def regenerate_token
-    Current.identity.regenerate_api_token!
+    Current.user.regenerate_api_token!
     redirect_to profile_path, notice: "API token regenerated successfully."
   end
 

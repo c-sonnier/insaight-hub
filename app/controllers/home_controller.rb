@@ -7,12 +7,11 @@ class HomeController < ApplicationController
 
   def index
     if authenticated?
-      # Redirect to first account's dashboard
-      if Current.identity&.accounts&.any?
-        account = Current.identity.accounts.first
+      account = Current.identity&.last_account || Current.identity&.accounts&.first
+      if account
         redirect_to "/#{account.external_id}/dashboard"
       else
-        redirect_to root_path
+        redirect_to new_account_path
       end
     else
       render :landing

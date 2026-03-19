@@ -10,6 +10,7 @@ class Identity < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :users, dependent: :destroy
   has_many :accounts, through: :users
+  belongs_to :last_account, class_name: "Account", optional: true
   has_one_attached :avatar
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }

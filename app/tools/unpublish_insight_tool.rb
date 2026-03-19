@@ -1,19 +1,23 @@
 # frozen_string_literal: true
 
 class UnpublishInsightTool < MCP::Tool
+  extend OrganizationResolvable
+
   description "Revert a published insight back to draft status"
 
   input_schema(
     properties: {
+      organization: { type: "string", description: "Organization name or ID (use list_organizations to find)" },
       slug: { type: "string", description: "The insight slug to unpublish" }
     },
     required: ["slug"]
   )
 
   class << self
-    def call(slug:, server_context:)
-      user = server_context[:user]
-      account = server_context[:account]
+    def call(slug:, organization: nil, server_context:)
+      account, user, error = resolve_organization(organization: organization, server_context: server_context)
+      return error if error
+
       insight = account.insight_items.find_by(slug: slug)
 
       unless insight
@@ -42,6 +46,7 @@ class UnpublishInsightTool < MCP::Tool
 
       result = {
         success: true,
+        organization: account.name,
         insight: {
           id: insight.id,
           title: insight.title,

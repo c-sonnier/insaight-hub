@@ -5,7 +5,8 @@
 
 /* Allow dropdown menus in sidebar to overflow when drawer is open on desktop */
 @media (min-width: 1024px) {
-  .drawer-side {
+  .drawer-side,
+  .drawer-side > aside {
     overflow: visible;
   }
 }

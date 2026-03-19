@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
 class GetInsightTool < MCP::Tool
+  extend OrganizationResolvable
+
   description "Get a single insight by slug. Returns text content as markdown by default (use format: 'html' for all raw files)"
 
   input_schema(
     properties: {
+      organization: { type: "string", description: "Organization name or ID (use list_organizations to find)" },
       slug: { type: "string", description: "The insight slug" },
       format: {
         type: "string",
@@ -16,8 +19,10 @@ class GetInsightTool < MCP::Tool
   )
 
   class << self
-    def call(slug:, format: "markdown", server_context:)
-      account = server_context[:account]
+    def call(slug:, organization: nil, format: "markdown", server_context:)
+      account, _user, error = resolve_organization(organization: organization, server_context: server_context)
+      return error if error
+
       insight = account.insight_items.includes(user: :identity).includes(:insight_item_files).find_by(slug: slug)
 
       unless insight
@@ -50,6 +55,7 @@ class GetInsightTool < MCP::Tool
           status: insight.status,
           tags: insight.tags,
           entry_file: insight.entry_file,
+          organization: account.name,
           format: format,
           author: {
             id: insight.user.id,

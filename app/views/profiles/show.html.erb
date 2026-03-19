@@ -107,13 +107,31 @@
 
             <% mcp_oauth_config = {
               "insaight-hub" => {
-                "url" => "#{request.base_url}/#{Current.account.external_id}/mcp",
+                "url" => "#{request.base_url}/mcp",
                 "transport" => "http"
               }
             } %>
 
             <div class="relative" data-controller="clipboard">
               <pre class="bg-base-200 p-4 rounded-lg text-sm overflow-x-auto font-mono" data-clipboard-target="source"><%= JSON.pretty_generate(mcp_oauth_config) %></pre>
+              <button type="button" class="btn btn-ghost btn-xs absolute top-2 right-2" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <input type="radio" name="mcp_tabs" role="tab" class="tab" aria-label="Claude Code Prompt" />
+          <div role="tabpanel" class="tab-content pt-4 space-y-2">
+            <p class="text-sm text-base-content/70">
+              Copy this prompt and paste it into Claude Code. Claude will set up the MCP server for you automatically.
+            </p>
+
+            <% claude_prompt = "Add an MCP server called \"insaight-hub\" to my project settings. The URL is #{request.base_url}/mcp and the transport is http. Use the OAuth configuration (no API token needed)." %>
+
+            <div class="relative" data-controller="clipboard">
+              <pre class="bg-base-200 p-4 rounded-lg text-sm overflow-x-auto font-mono whitespace-pre-wrap" data-clipboard-target="source"><%= claude_prompt %></pre>
               <button type="button" class="btn btn-ghost btn-xs absolute top-2 right-2" data-action="clipboard#copy" data-clipboard-target="button" title="Copy to clipboard">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -130,7 +148,7 @@
 
             <% mcp_token_config = {
               "insaight-hub" => {
-                "url" => "#{request.base_url}/#{Current.account.external_id}/mcp",
+                "url" => "#{request.base_url}/mcp",
                 "transport" => "http",
                 "headers" => {
                   "Authorization" => "Bearer #{@user.api_token}"
