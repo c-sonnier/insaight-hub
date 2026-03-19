@@ -25,10 +25,17 @@ module OrganizationResolvable
       # Fall back to URL-based account context
       [server_context[:account], server_context[:user], nil]
     else
-      [nil, nil, MCP::Tool::Response.new([{
-        type: "text",
-        text: { error: "Organization is required. Use list_organizations to see your available organizations." }.to_json
-      }])]
+      # No URL context — default to sole account or require param
+      accounts = identity.accounts
+      if accounts.one?
+        user = identity.users.find_by(account: accounts.first)
+        [accounts.first, user, nil]
+      else
+        [nil, nil, MCP::Tool::Response.new([{
+          type: "text",
+          text: { error: "Organization is required. Use list_organizations to see your available organizations." }.to_json
+        }])]
+      end
     end
   end
 end

@@ -21,9 +21,17 @@ class ListInsightsTool < MCP::Tool
   class << self
     def call(organization: nil, status: nil, audience: nil, tag: nil, search: nil, page: 1, per_page: 20, server_context:)
       account, _user, error = resolve_organization(organization: organization, server_context: server_context)
-      return error if error
 
-      insights = account.insight_items.includes(user: :identity)
+      if error
+        # No org specified, multiple orgs — list across all
+        identity = server_context[:identity]
+        account_ids = identity.accounts.pluck(:id)
+        insights = InsightItem.where(account_id: account_ids).includes({ user: :identity }, :account)
+        all_orgs = true
+      else
+        insights = account.insight_items.includes(user: :identity)
+        all_orgs = false
+      end
 
       # Apply filters
       insights = insights.where(status: status) if status.present?
@@ -46,8 +54,8 @@ class ListInsightsTool < MCP::Tool
       insights = insights.offset(offset).limit(items_per_page)
 
       result = {
-        organization: account.name,
-        insights: insights.map { |i| insight_summary(i) },
+        organization: all_orgs ? "all" : account.name,
+        insights: insights.map { |i| insight_summary(i, include_org: all_orgs) },
         meta: {
           current_page: current_page,
           total_pages: total_pages,
@@ -61,8 +69,8 @@ class ListInsightsTool < MCP::Tool
 
     private
 
-    def insight_summary(insight)
-      {
+    def insight_summary(insight, include_org: false)
+      summary = {
         id: insight.id,
         title: insight.title,
         slug: insight.slug,
@@ -79,6 +87,8 @@ class ListInsightsTool < MCP::Tool
         created_at: insight.created_at.iso8601,
         updated_at: insight.updated_at.iso8601
       }
+      summary[:organization] = insight.account.name if include_org
+      summary
     end
   end
 end

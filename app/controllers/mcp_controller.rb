@@ -60,8 +60,8 @@ class McpController < ActionController::API
       return
     end
 
-    # Try OAuth token first, fall back to API token on User
-    @current_identity = authenticate_via_oauth(token) || User.find_by(api_token: token)&.identity
+    # Try OAuth token first, fall back to API token
+    @current_identity = authenticate_via_oauth(token) || Identity.find_by(api_token: token) || User.find_by(api_token: token)&.identity
 
     if @current_identity.nil?
       response.set_header("WWW-Authenticate", www_authenticate_header)
