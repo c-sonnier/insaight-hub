@@ -5,9 +5,24 @@ class AddApiTokenToUsers < ActiveRecord::Migration[8.0]
 
     reversible do |dir|
       dir.up do
-        User.find_each do |user|
-          user.update_column(:api_token, SecureRandom.hex(32))
-        end
+        # Copy Identity's api_token to the first User membership per identity
+        # Additional memberships get new tokens (unique constraint)
+        execute <<-SQL
+          UPDATE users
+          SET api_token = (
+            SELECT identities.api_token
+            FROM identities
+            WHERE identities.id = users.identity_id
+          )
+          WHERE id IN (
+            SELECT MIN(id) FROM users GROUP BY identity_id
+          )
+          AND (SELECT api_token FROM identities WHERE identities.id = users.identity_id) IS NOT NULL
+        SQL
+
+        execute <<-SQL
+          UPDATE users SET api_token = hex(randomblob(32)) WHERE api_token IS NULL
+        SQL
       end
     end
   end

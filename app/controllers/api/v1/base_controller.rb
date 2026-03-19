@@ -22,8 +22,9 @@ module Api
           return
         end
 
-        # Find the User (membership) that owns this token
+        # Find the User (membership) that owns this token, fall back to Identity token
         @token_user = User.find_by(api_token: token)
+        @token_user ||= Identity.find_by(api_token: token)&.users&.first
 
         if @token_user.nil?
           render json: { error: "Invalid API token" }, status: :unauthorized
