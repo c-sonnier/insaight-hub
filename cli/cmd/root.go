@@ -29,6 +29,7 @@ func init() {
 	rootCmd.AddCommand(loginCmd)
 	rootCmd.AddCommand(logoutCmd)
 	rootCmd.AddCommand(organizationsCmd)
+	rootCmd.AddCommand(insightsCmd)
 }
 
 func Execute() error {

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"strings"
 	"time"
 )
@@ -36,10 +35,10 @@ func (c *Client) do(method, path string, body io.Reader) ([]byte, error) {
 		return nil, fmt.Errorf("no token configured; run `ih login`")
 	}
 
-	endpoint, err := url.JoinPath(c.URL, path)
-	if err != nil {
-		return nil, err
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
 	}
+	endpoint := c.URL + path
 
 	req, err := http.NewRequest(method, endpoint, body)
 	if err != nil {
