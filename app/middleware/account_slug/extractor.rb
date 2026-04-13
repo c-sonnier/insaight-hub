@@ -22,6 +22,7 @@ module AccountSlug
       /.well-known
       /accounts
       /mcp
+      /api/v1/organizations
     ].freeze
 
     def initialize(app)

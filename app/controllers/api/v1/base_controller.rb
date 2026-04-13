@@ -24,14 +24,13 @@ module Api
 
         # Find the User (membership) that owns this token, fall back to Identity token
         @token_user = User.find_by(api_token: token)
-        @token_user ||= Identity.find_by(api_token: token)&.users&.first
+        @current_identity = @token_user&.identity || Identity.find_by(api_token: token)
+        @token_user ||= @current_identity&.users&.first
 
-        if @token_user.nil?
+        if @current_identity.nil?
           render json: { error: "Invalid API token" }, status: :unauthorized
           return
         end
-
-        @current_identity = @token_user.identity
       end
 
       def require_account_membership

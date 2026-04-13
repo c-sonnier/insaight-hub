@@ -96,6 +96,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resource :me, only: [:show], controller: "me"
+      resources :organizations, only: [:index]
       resources :tags, only: [:index]
       resources :insight_items, param: :id do
         member do

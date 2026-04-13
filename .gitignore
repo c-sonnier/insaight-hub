@@ -135,3 +135,7 @@ CLAUDE.md
 /docs/PRD.md
 /.mcp.json
 /.playwright-mcp
+
+# === Go CLI ===
+/cli/ih
+/cli/ih.exe
