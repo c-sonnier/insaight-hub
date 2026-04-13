@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -27,7 +28,35 @@ func (c *Client) Get(path string) ([]byte, error) {
 	return c.do(http.MethodGet, path, nil)
 }
 
+func (c *Client) PostJSON(path string, payload any) ([]byte, error) {
+	return c.doJSON(http.MethodPost, path, payload)
+}
+
+func (c *Client) PatchJSON(path string, payload any) ([]byte, error) {
+	return c.doJSON(http.MethodPatch, path, payload)
+}
+
+func (c *Client) Delete(path string) ([]byte, error) {
+	return c.do(http.MethodDelete, path, nil)
+}
+
+func (c *Client) doJSON(method, path string, payload any) ([]byte, error) {
+	var body io.Reader
+	if payload != nil {
+		raw, err := json.Marshal(payload)
+		if err != nil {
+			return nil, err
+		}
+		body = bytes.NewReader(raw)
+	}
+	return c.doWithContentType(method, path, body, "application/json")
+}
+
 func (c *Client) do(method, path string, body io.Reader) ([]byte, error) {
+	return c.doWithContentType(method, path, body, "")
+}
+
+func (c *Client) doWithContentType(method, path string, body io.Reader, contentType string) ([]byte, error) {
 	if c.URL == "" {
 		return nil, fmt.Errorf("no hub URL configured; run `ih login`")
 	}
@@ -46,6 +75,9 @@ func (c *Client) do(method, path string, body io.Reader) ([]byte, error) {
 	}
 	req.Header.Set("Authorization", "Bearer "+c.Token)
 	req.Header.Set("Accept", "application/json")
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
+	}
 
 	resp, err := c.HTTP.Do(req)
 	if err != nil {

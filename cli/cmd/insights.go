@@ -2,9 +2,11 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/c-sonnier/insaight-hub/cli/internal/client"
+	"github.com/c-sonnier/insaight-hub/cli/internal/fileinput"
 	"github.com/c-sonnier/insaight-hub/cli/internal/org"
 	"github.com/c-sonnier/insaight-hub/cli/internal/output"
 	"github.com/spf13/cobra"
@@ -95,6 +97,144 @@ func printInsightContent(cmd *cobra.Command, detail *client.InsightDetail) error
 	return nil
 }
 
+var (
+	insightsCreateTitle       string
+	insightsCreateAudience    string
+	insightsCreateDescription string
+	insightsCreateTags        []string
+	insightsCreateEntryFile   string
+	insightsCreateFiles       []string
+	insightsCreateContent     string
+	insightsCreateFilename    string
+	insightsCreatePublish     bool
+)
+
+var insightsCreateCmd = &cobra.Command{
+	Use:   "create",
+	Short: "Create a new insight",
+	RunE: func(cmd *cobra.Command, _ []string) error {
+		cfg, err := loadConfig()
+		if err != nil {
+			return err
+		}
+		c := client.New(cfg.URL, cfg.Token)
+		orgID, err := org.Resolve(c, flagOrg, cfg.DefaultOrg)
+		if err != nil {
+			return err
+		}
+
+		files, err := collectCreateFiles(cmd)
+		if err != nil {
+			return err
+		}
+
+		detail, err := c.CreateInsight(orgID, client.CreateInsightReq{
+			Title:       insightsCreateTitle,
+			Audience:    insightsCreateAudience,
+			Description: insightsCreateDescription,
+			Tags:        insightsCreateTags,
+			EntryFile:   insightsCreateEntryFile,
+			Files:       files,
+			Publish:     insightsCreatePublish,
+		})
+		if err != nil {
+			return err
+		}
+		return output.Render(detail, outputMode())
+	},
+}
+
+func collectCreateFiles(cmd *cobra.Command) ([]fileinput.FileInput, error) {
+	var files []fileinput.FileInput
+	for _, spec := range insightsCreateFiles {
+		fi, err := fileinput.Load(spec)
+		if err != nil {
+			return nil, err
+		}
+		files = append(files, fi)
+	}
+	if insightsCreateContent != "" {
+		stdin := cmd.InOrStdin()
+		if stdin == nil {
+			stdin = os.Stdin
+		}
+		content, err := fileinput.ReadContent(insightsCreateContent, stdin)
+		if err != nil {
+			return nil, err
+		}
+		filename := insightsCreateFilename
+		if filename == "" {
+			filename = "index.html"
+		}
+		files = append(files, fileinput.FileInput{
+			Filename:    filename,
+			Content:     content,
+			ContentType: fileinput.ContentTypeFor(filename),
+		})
+	}
+	return files, nil
+}
+
+var (
+	insightsUpdateTitle       string
+	insightsUpdateDescription string
+	insightsUpdateAudience    string
+	insightsUpdateEntryFile   string
+	insightsUpdateTags        []string
+)
+
+var insightsUpdateCmd = &cobra.Command{
+	Use:   "update <slug>",
+	Short: "Update an existing insight",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cfg, err := loadConfig()
+		if err != nil {
+			return err
+		}
+		c := client.New(cfg.URL, cfg.Token)
+		orgID, err := org.Resolve(c, flagOrg, cfg.DefaultOrg)
+		if err != nil {
+			return err
+		}
+
+		detail, err := c.UpdateInsight(orgID, args[0], client.UpdateInsightReq{
+			Title:       insightsUpdateTitle,
+			Description: insightsUpdateDescription,
+			Audience:    insightsUpdateAudience,
+			EntryFile:   insightsUpdateEntryFile,
+			Tags:        insightsUpdateTags,
+		})
+		if err != nil {
+			return err
+		}
+		return output.Render(detail, outputMode())
+	},
+}
+
+var insightsDeleteCmd = &cobra.Command{
+	Use:   "delete <slug>",
+	Short: "Delete an insight",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cfg, err := loadConfig()
+		if err != nil {
+			return err
+		}
+		c := client.New(cfg.URL, cfg.Token)
+		orgID, err := org.Resolve(c, flagOrg, cfg.DefaultOrg)
+		if err != nil {
+			return err
+		}
+
+		if err := c.DeleteInsight(orgID, args[0]); err != nil {
+			return err
+		}
+		fmt.Fprintf(cmd.OutOrStdout(), "Deleted %s\n", args[0])
+		return nil
+	},
+}
+
 func init() {
 	insightsListCmd.Flags().StringVar(&insightsListStatus, "status", "", "filter by status (draft|published)")
 	insightsListCmd.Flags().StringVar(&insightsListAudience, "audience", "", "filter by audience")
@@ -105,5 +245,23 @@ func init() {
 
 	insightsGetCmd.Flags().StringVar(&insightsGetFormat, "format", "markdown", "content format: markdown|html")
 
-	insightsCmd.AddCommand(insightsListCmd, insightsGetCmd)
+	insightsCreateCmd.Flags().StringVar(&insightsCreateTitle, "title", "", "insight title (required)")
+	insightsCreateCmd.Flags().StringVar(&insightsCreateAudience, "audience", "", "audience (e.g. developer, stakeholder) (required)")
+	insightsCreateCmd.Flags().StringVar(&insightsCreateDescription, "description", "", "short description")
+	insightsCreateCmd.Flags().StringSliceVar(&insightsCreateTags, "tag", nil, "tag (repeatable)")
+	insightsCreateCmd.Flags().StringVar(&insightsCreateEntryFile, "entry-file", "", "entry filename among --file uploads")
+	insightsCreateCmd.Flags().StringArrayVar(&insightsCreateFiles, "file", nil, "file upload as name=path (repeatable)")
+	insightsCreateCmd.Flags().StringVar(&insightsCreateContent, "content", "", "single-file content path (or - for stdin)")
+	insightsCreateCmd.Flags().StringVar(&insightsCreateFilename, "filename", "", "filename for --content (default index.html)")
+	insightsCreateCmd.Flags().BoolVar(&insightsCreatePublish, "publish", false, "publish immediately after create")
+	_ = insightsCreateCmd.MarkFlagRequired("title")
+	_ = insightsCreateCmd.MarkFlagRequired("audience")
+
+	insightsUpdateCmd.Flags().StringVar(&insightsUpdateTitle, "title", "", "new title")
+	insightsUpdateCmd.Flags().StringVar(&insightsUpdateDescription, "description", "", "new description")
+	insightsUpdateCmd.Flags().StringVar(&insightsUpdateAudience, "audience", "", "new audience")
+	insightsUpdateCmd.Flags().StringVar(&insightsUpdateEntryFile, "entry-file", "", "new entry filename")
+	insightsUpdateCmd.Flags().StringSliceVar(&insightsUpdateTags, "tag", nil, "replace tags (repeatable)")
+
+	insightsCmd.AddCommand(insightsListCmd, insightsGetCmd, insightsCreateCmd, insightsUpdateCmd, insightsDeleteCmd)
 }

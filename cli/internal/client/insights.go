@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+
+	"github.com/c-sonnier/insaight-hub/cli/internal/fileinput"
 )
 
 type Insight struct {
@@ -109,4 +111,71 @@ func (c *Client) GetInsight(orgID, slug, format string) (*InsightDetail, error) 
 		return nil, err
 	}
 	return &detail, nil
+}
+
+type CreateInsightReq struct {
+	Title       string               `json:"title"`
+	Audience    string               `json:"audience"`
+	Description string               `json:"description,omitempty"`
+	Tags        []string             `json:"tags,omitempty"`
+	EntryFile   string               `json:"entry_file,omitempty"`
+	Files       []fileinput.FileInput `json:"files,omitempty"`
+	// Publish is a CLI-level concern: when true, CreateInsight calls the
+	// publish endpoint after the create succeeds. Not serialized.
+	Publish bool `json:"-"`
+}
+
+type UpdateInsightReq struct {
+	Title       string                `json:"title,omitempty"`
+	Description string                `json:"description,omitempty"`
+	Audience    string                `json:"audience,omitempty"`
+	EntryFile   string                `json:"entry_file,omitempty"`
+	Tags        []string              `json:"tags,omitempty"`
+	Files       []fileinput.FileInput `json:"files,omitempty"`
+}
+
+func (c *Client) CreateInsight(orgID string, req CreateInsightReq) (*InsightDetail, error) {
+	path := fmt.Sprintf("/%s/api/v1/insight_items", orgID)
+	body, err := c.PostJSON(path, req)
+	if err != nil {
+		return nil, err
+	}
+
+	var detail InsightDetail
+	if err := json.Unmarshal(body, &detail); err != nil {
+		return nil, err
+	}
+
+	if req.Publish {
+		pubPath := fmt.Sprintf("/%s/api/v1/insight_items/%s/publish", orgID, detail.Slug)
+		pubBody, err := c.PostJSON(pubPath, nil)
+		if err != nil {
+			return &detail, err
+		}
+		if err := json.Unmarshal(pubBody, &detail); err != nil {
+			return &detail, err
+		}
+	}
+
+	return &detail, nil
+}
+
+func (c *Client) UpdateInsight(orgID, slug string, req UpdateInsightReq) (*InsightDetail, error) {
+	path := fmt.Sprintf("/%s/api/v1/insight_items/%s", orgID, slug)
+	body, err := c.PatchJSON(path, req)
+	if err != nil {
+		return nil, err
+	}
+
+	var detail InsightDetail
+	if err := json.Unmarshal(body, &detail); err != nil {
+		return nil, err
+	}
+	return &detail, nil
+}
+
+func (c *Client) DeleteInsight(orgID, slug string) error {
+	path := fmt.Sprintf("/%s/api/v1/insight_items/%s", orgID, slug)
+	_, err := c.Delete(path)
+	return err
 }
