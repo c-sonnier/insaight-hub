@@ -37,7 +37,6 @@
 
 # === Node / JavaScript ===
 /node_modules/
-/package-lock.json
 
 # Yarn
 .yarn-integrity
