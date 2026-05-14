@@ -5,4 +5,3 @@ class MembersController < ApplicationController
     @members = current_account.users.includes(:identity).order(created_at: :asc)
   end
 end
-

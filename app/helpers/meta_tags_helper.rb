@@ -120,4 +120,3 @@ module MetaTagsHelper
     ]
   end
 end
-

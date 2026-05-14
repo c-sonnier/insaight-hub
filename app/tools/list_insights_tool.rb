@@ -43,8 +43,8 @@ class ListInsightsTool < MCP::Tool
       insights = insights.order(created_at: :desc)
 
       # Pagination
-      current_page = [page.to_i, 1].max
-      items_per_page = [[per_page.to_i, 1].max, 100].min
+      current_page = [ page.to_i, 1 ].max
+      items_per_page = [ [ per_page.to_i, 1 ].max, 100 ].min
       items_per_page = 20 if items_per_page == 0
 
       total_count = insights.count
@@ -64,7 +64,7 @@ class ListInsightsTool < MCP::Tool
         }
       }
 
-      MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+      MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
     end
 
     private

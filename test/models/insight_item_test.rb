@@ -55,7 +55,7 @@ class InsightItemTest < ActiveSupport::TestCase
 
   test "files_as_markdown returns empty array when only CSS/JS files" do
     insight = insight_items(:one)
-    insight.insight_item_files.where.not(content_type: ["text/css", "text/javascript"]).destroy_all
+    insight.insight_item_files.where.not(content_type: [ "text/css", "text/javascript" ]).destroy_all
     result = insight.files_as_markdown
     assert_equal [], result
   end

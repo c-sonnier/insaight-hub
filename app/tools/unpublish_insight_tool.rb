@@ -10,7 +10,7 @@ class UnpublishInsightTool < MCP::Tool
       organization: { type: "string", description: "Organization name or ID (use list_organizations to find)" },
       slug: { type: "string", description: "The insight slug to unpublish" }
     },
-    required: ["slug"]
+    required: [ "slug" ]
   )
 
   class << self
@@ -21,25 +21,25 @@ class UnpublishInsightTool < MCP::Tool
       insight = account.insight_items.find_by(slug: slug)
 
       unless insight
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Insight not found", slug: slug }.to_json
-        }])
+        } ])
       end
 
       # Check ownership
       unless insight.user_id == user.id
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "You can only unpublish your own insights" }.to_json
-        }])
+        } ])
       end
 
       if insight.draft?
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { message: "Insight is already a draft", slug: slug }.to_json
-        }])
+        } ])
       end
 
       insight.unpublish!
@@ -54,7 +54,7 @@ class UnpublishInsightTool < MCP::Tool
           status: insight.status
         }
       }
-      MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+      MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
     end
   end
 end

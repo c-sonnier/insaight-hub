@@ -1,8 +1,8 @@
 module Api
   module V1
     class InsightItemsController < BaseController
-      before_action :set_insight_item, only: [:show, :update, :destroy, :publish, :unpublish, :move]
-      before_action :authorize_owner, only: [:update, :destroy, :publish, :unpublish, :move]
+      before_action :set_insight_item, only: [ :show, :update, :destroy, :publish, :unpublish, :move ]
+      before_action :authorize_owner, only: [ :update, :destroy, :publish, :unpublish, :move ]
 
       def index
         # Scope to current user's insights within this account
@@ -106,7 +106,7 @@ module Api
 
       def insight_item_create_params
         params.permit(:title, :description, :audience, :entry_file, tags: [],
-          files: [:filename, :content, :content_type]).tap do |permitted|
+          files: [ :filename, :content, :content_type ]).tap do |permitted|
           # Handle files array for multi-file creation
           if params[:files].present?
             permitted[:insight_item_files_attributes] = params[:files].map do |file|
@@ -128,7 +128,7 @@ module Api
 
       def insight_item_update_params
         params.permit(:title, :description, :audience, :entry_file, tags: [],
-          files: [:id, :filename, :content, :content_type, :_destroy]).tap do |permitted|
+          files: [ :id, :filename, :content, :content_type, :_destroy ]).tap do |permitted|
           if params[:files].present?
             permitted[:insight_item_files_attributes] = params[:files]
           end

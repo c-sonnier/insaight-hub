@@ -8,7 +8,7 @@ class ListCommentsTool < MCP::Tool
       slug: { type: "string", description: "The insight slug" },
       include_replies: { type: "boolean", description: "Include nested replies (default: true)" }
     },
-    required: ["slug"]
+    required: [ "slug" ]
   )
 
   class << self
@@ -16,10 +16,10 @@ class ListCommentsTool < MCP::Tool
       # Find the insight
       insight_item = InsightItem.find_by(slug: slug)
       unless insight_item
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Insight not found with slug: #{slug}" }.to_json
-        }])
+        } ])
       end
 
       # Fetch comments
@@ -40,7 +40,7 @@ class ListCommentsTool < MCP::Tool
         comments: comments
       }
 
-      MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+      MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
     end
 
     private
@@ -70,4 +70,3 @@ class ListCommentsTool < MCP::Tool
     end
   end
 end
-

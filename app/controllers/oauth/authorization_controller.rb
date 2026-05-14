@@ -35,8 +35,8 @@ module Oauth
 
       redirect_uri = URI.parse(authorization_params[:redirect_uri])
       query = URI.decode_www_form(redirect_uri.query || "")
-      query << ["code", code_result[:plaintext_code]]
-      query << ["state", authorization_params[:state]] if authorization_params[:state].present?
+      query << [ "code", code_result[:plaintext_code] ]
+      query << [ "state", authorization_params[:state] ] if authorization_params[:state].present?
       redirect_uri.query = URI.encode_www_form(query)
 
       redirect_to redirect_uri.to_s, allow_other_host: true

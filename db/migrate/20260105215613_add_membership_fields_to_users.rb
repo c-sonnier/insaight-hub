@@ -6,6 +6,6 @@ class AddMembershipFieldsToUsers < ActiveRecord::Migration[8.0]
     add_column :users, :role, :string, default: "member", null: false
 
     # Unique constraint on account + identity pair (one membership per account per identity)
-    add_index :users, [:account_id, :identity_id], unique: true
+    add_index :users, [ :account_id, :identity_id ], unique: true
   end
 end

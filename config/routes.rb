@@ -36,7 +36,7 @@ Rails.application.routes.draw do
   post "register/:token", to: "registrations#create"
 
   # Organization creation (global, no account prefix)
-  resources :accounts, only: [:new, :create]
+  resources :accounts, only: [ :new, :create ]
 
   # Landing page (public) and Dashboard (authenticated)
   root "home#index"
@@ -55,7 +55,7 @@ Rails.application.routes.draw do
   get "s/:token/files/*id", to: "public_insight_files#show", as: :public_insight_file, format: false
 
   # Organization members (read-only for all members)
-  resources :members, only: [:index]
+  resources :members, only: [ :index ]
 
   # Insights
   resources :insight_items, param: :id do
@@ -68,12 +68,12 @@ Rails.application.routes.draw do
       post :regenerate_share_token
     end
     get "files/*id", to: "insight_item_files#show", as: :file, format: false
-    resources :comments, only: [:create, :update, :destroy]
+    resources :comments, only: [ :create, :update, :destroy ]
   end
   get "my-insights", to: "insight_items#my_insights", as: :my_insights
 
   # Profile
-  resource :profile, only: [:show, :edit, :update] do
+  resource :profile, only: [ :show, :edit, :update ] do
     post :regenerate_token
     get :export_all_insights
     post :import_insights
@@ -95,15 +95,15 @@ Rails.application.routes.draw do
   # API
   namespace :api do
     namespace :v1 do
-      resource :me, only: [:show], controller: "me"
-      resources :tags, only: [:index]
+      resource :me, only: [ :show ], controller: "me"
+      resources :tags, only: [ :index ]
       resources :insight_items, param: :id do
         member do
           post :publish
           post :unpublish
           post :move
         end
-        resources :files, only: [:destroy], controller: "insight_item_files"
+        resources :files, only: [ :destroy ], controller: "insight_item_files"
       end
     end
   end

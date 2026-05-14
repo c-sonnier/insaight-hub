@@ -12,10 +12,10 @@ class GetInsightTool < MCP::Tool
       format: {
         type: "string",
         description: "Output format: 'markdown' (default, text content only) or 'html' (all raw files)",
-        enum: ["markdown", "html"]
+        enum: [ "markdown", "html" ]
       }
     },
-    required: ["slug"]
+    required: [ "slug" ]
   )
 
   class << self
@@ -26,10 +26,10 @@ class GetInsightTool < MCP::Tool
       insight = account.insight_items.includes(user: :identity).includes(:insight_item_files).find_by(slug: slug)
 
       unless insight
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Insight not found", slug: slug }.to_json
-        }])
+        } ])
       end
 
       files_data = if format == "markdown"
@@ -68,7 +68,7 @@ class GetInsightTool < MCP::Tool
         }
       }
 
-      MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+      MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
     end
   end
 end

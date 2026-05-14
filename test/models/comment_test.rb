@@ -90,6 +90,6 @@ class CommentTest < ActiveSupport::TestCase
 
     root_comments = Comment.root_comments
     assert_includes root_comments, parent
-    assert_equal 1, root_comments.where(id: [parent.id, parent.replies.first.id]).count
+    assert_equal 1, root_comments.where(id: [ parent.id, parent.replies.first.id ]).count
   end
 end

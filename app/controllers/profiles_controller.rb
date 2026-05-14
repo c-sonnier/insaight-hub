@@ -97,7 +97,7 @@ class ProfilesController < ApplicationController
           description: "[Imported] Please update this description.",
           audience: :developer,
           status: :draft,
-          metadata: { "tags" => ["imported"] }
+          metadata: { "tags" => [ "imported" ] }
         )
 
         entries.each do |entry|
@@ -172,7 +172,7 @@ class ProfilesController < ApplicationController
 
   def stream_insights_zip(insight_items, stream)
     # Use a temp file to build the ZIP, then stream it in chunks
-    Tempfile.create(["insights", ".zip"]) do |tempfile|
+    Tempfile.create([ "insights", ".zip" ]) do |tempfile|
       Zip::OutputStream.open(tempfile.path) do |zio|
         insight_items.each do |insight_item|
           folder_name = insight_item.slug

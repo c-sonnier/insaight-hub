@@ -10,7 +10,7 @@ class PublishInsightTool < MCP::Tool
       organization: { type: "string", description: "Organization name or ID (use list_organizations to find)" },
       slug: { type: "string", description: "The insight slug to publish" }
     },
-    required: ["slug"]
+    required: [ "slug" ]
   )
 
   class << self
@@ -21,25 +21,25 @@ class PublishInsightTool < MCP::Tool
       insight = account.insight_items.find_by(slug: slug)
 
       unless insight
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Insight not found", slug: slug }.to_json
-        }])
+        } ])
       end
 
       # Check ownership
       unless insight.user_id == user.id
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "You can only publish your own insights" }.to_json
-        }])
+        } ])
       end
 
       if insight.published?
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { message: "Insight is already published", slug: slug }.to_json
-        }])
+        } ])
       end
 
       insight.publish!
@@ -55,7 +55,7 @@ class PublishInsightTool < MCP::Tool
           published_at: insight.published_at&.iso8601
         }
       }
-      MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+      MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
     end
   end
 end

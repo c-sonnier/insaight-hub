@@ -76,7 +76,7 @@ class InsightItem < ApplicationRecord
     entry = entry_insight_item_file
     convertible = insight_item_files.select(&:markdown_convertible?)
 
-    convertible.sort_by! { |f| [f == entry ? 0 : 1, f.filename] }
+    convertible.sort_by! { |f| [ f == entry ? 0 : 1, f.filename ] }
 
     convertible.map do |file|
       md = file.to_markdown

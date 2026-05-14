@@ -16,7 +16,7 @@ class UpdateInsightTool < MCP::Tool
       entry_file: { type: "string", description: "New entry file name" },
       files: { type: "array", description: "Files to add or update [{filename: string, content: string}]" }
     },
-    required: ["slug"]
+    required: [ "slug" ]
   )
 
   class << self
@@ -27,18 +27,18 @@ class UpdateInsightTool < MCP::Tool
       insight = account.insight_items.find_by(slug: slug)
 
       unless insight
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Insight not found", slug: slug }.to_json
-        }])
+        } ])
       end
 
       # Check ownership
       unless insight.user_id == user.id
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "You can only update your own insights" }.to_json
-        }])
+        } ])
       end
 
       # Update attributes
@@ -48,10 +48,10 @@ class UpdateInsightTool < MCP::Tool
 
       if audience.present?
         unless InsightItem.audiences.keys.include?(audience)
-          return MCP::Tool::Response.new([{
+          return MCP::Tool::Response.new([ {
             type: "text",
             text: { error: "Invalid audience. Must be: developer, stakeholder, or end_user" }.to_json
-          }])
+          } ])
         end
         insight.audience = audience
       end
@@ -90,12 +90,12 @@ class UpdateInsightTool < MCP::Tool
             file_count: insight.insight_item_files.count
           }
         }
-        MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+        MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
       else
-        MCP::Tool::Response.new([{
+        MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Validation failed", messages: insight.errors.full_messages }.to_json
-        }])
+        } ])
       end
     end
 

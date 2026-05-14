@@ -3,9 +3,9 @@ require "zip"
 class InsightItemsController < ApplicationController
   include AccountScoped
 
-  before_action :set_insight_item, only: [:show, :edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token]
-  before_action :authorize_owner, only: [:edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token]
-  before_action :authorize_published_or_owner, only: [:show]
+  before_action :set_insight_item, only: [ :show, :edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token ]
+  before_action :authorize_owner, only: [ :edit, :update, :destroy, :publish, :unpublish, :export, :enable_share, :disable_share, :regenerate_share_token ]
+  before_action :authorize_published_or_owner, only: [ :show ]
 
   def index
     @insight_items = current_account.insight_items.published.includes(user: :identity)
@@ -209,7 +209,7 @@ class InsightItemsController < ApplicationController
       :audience,
       :entry_file,
       :tags,
-      insight_item_files_attributes: [:id, :filename, :content, :content_type, :_destroy]
+      insight_item_files_attributes: [ :id, :filename, :content, :content_type, :_destroy ]
     )
   end
 end

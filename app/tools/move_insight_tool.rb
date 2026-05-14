@@ -11,7 +11,7 @@ class MoveInsightTool < MCP::Tool
       from_organization: { type: "string", description: "Source organization name or ID" },
       to_organization: { type: "string", description: "Target organization name or ID" }
     },
-    required: ["slug", "from_organization", "to_organization"]
+    required: [ "slug", "from_organization", "to_organization" ]
   )
 
   class << self
@@ -30,18 +30,18 @@ class MoveInsightTool < MCP::Tool
       insight = source_account.insight_items.find_by(slug: slug)
 
       unless insight
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Insight not found in '#{source_account.name}'", slug: slug }.to_json
-        }])
+        } ])
       end
 
       # Check ownership
       unless insight.user_id == source_user.id
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "You can only move your own insights" }.to_json
-        }])
+        } ])
       end
 
       insight.update!(account: target_account, user: target_user)
@@ -54,7 +54,7 @@ class MoveInsightTool < MCP::Tool
           organization: target_account.name
         }
       }
-      MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+      MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
     end
   end
 end

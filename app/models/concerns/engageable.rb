@@ -12,4 +12,3 @@ module Engageable
   # Delegate common methods to the engagement for convenience
   delegate :user, :insight_item, :created_at, to: :engagement, allow_nil: true
 end
-

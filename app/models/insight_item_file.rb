@@ -7,7 +7,7 @@ class InsightItemFile < ApplicationRecord
 
   scope :html_files, -> { where(content_type: "text/html") }
   scope :css_files, -> { where(content_type: "text/css") }
-  scope :js_files, -> { where(content_type: ["text/javascript", "application/javascript"]) }
+  scope :js_files, -> { where(content_type: [ "text/javascript", "application/javascript" ]) }
   scope :markdown_files, -> { where(content_type: "text/markdown") }
 
   def html?
@@ -19,7 +19,7 @@ class InsightItemFile < ApplicationRecord
   end
 
   def javascript?
-    content_type.in?(["text/javascript", "application/javascript"])
+    content_type.in?([ "text/javascript", "application/javascript" ])
   end
 
   def markdown?

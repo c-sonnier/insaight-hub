@@ -28,7 +28,7 @@ class GetTagsTool < MCP::Tool
         .sort
 
       result = { organization: account.name, tags: tags }
-      MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+      MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
     end
   end
 end

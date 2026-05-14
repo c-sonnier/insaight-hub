@@ -5,8 +5,8 @@ class CommentsController < ApplicationController
   include ActionView::RecordIdentifier
 
   before_action :set_insight_item
-  before_action :set_comment, only: [:update, :destroy]
-  before_action :authorize_comment!, only: [:update, :destroy]
+  before_action :set_comment, only: [ :update, :destroy ]
+  before_action :authorize_comment!, only: [ :update, :destroy ]
 
   def create
     @comment = Comment.new(comment_params.merge(account: current_account))

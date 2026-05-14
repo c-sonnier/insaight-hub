@@ -22,7 +22,7 @@ class ListOrganizationsTool < MCP::Tool
       end
 
       result = { organizations: organizations }
-      MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+      MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
     end
   end
 end

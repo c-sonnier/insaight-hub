@@ -9,7 +9,7 @@ class AddCommentTool < MCP::Tool
       body: { type: "string", description: "The comment body text" },
       parent_id: { type: "integer", description: "Parent comment ID for replies (optional)" }
     },
-    required: ["slug", "body"]
+    required: [ "slug", "body" ]
   )
 
   class << self
@@ -19,20 +19,20 @@ class AddCommentTool < MCP::Tool
       # Find the insight
       insight_item = InsightItem.find_by(slug: slug)
       unless insight_item
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Insight not found with slug: #{slug}" }.to_json
-        }])
+        } ])
       end
 
       # Validate parent comment if provided
       if parent_id.present?
         parent_comment = Comment.find_by(id: parent_id)
         unless parent_comment
-          return MCP::Tool::Response.new([{
+          return MCP::Tool::Response.new([ {
             type: "text",
             text: { error: "Parent comment not found with id: #{parent_id}" }.to_json
-          }])
+          } ])
         end
       end
 
@@ -54,15 +54,14 @@ class AddCommentTool < MCP::Tool
             created_at: engagement.created_at.iso8601
           }
         }
-        MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+        MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
       else
         errors = engagement.errors.full_messages + comment.errors.full_messages
-        MCP::Tool::Response.new([{
+        MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Could not create comment", messages: errors }.to_json
-        }])
+        } ])
       end
     end
   end
 end
-

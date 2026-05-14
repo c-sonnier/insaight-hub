@@ -18,7 +18,7 @@ class CreateInsightTool < MCP::Tool
       entry_file: { type: "string", description: "Entry file name for multi-file insights (default: index.html)" },
       publish: { type: "boolean", description: "Publish immediately (default: false)" }
     },
-    required: ["title", "audience"]
+    required: [ "title", "audience" ]
   )
 
   class << self
@@ -28,18 +28,18 @@ class CreateInsightTool < MCP::Tool
 
       # Validate audience
       unless InsightItem.audiences.keys.include?(audience)
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Invalid audience. Must be: developer, stakeholder, or end_user" }.to_json
-        }])
+        } ])
       end
 
       # Validate that either content or files is provided
       if content.blank? && (files.blank? || files.empty?)
-        return MCP::Tool::Response.new([{
+        return MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Either 'content' or 'files' must be provided" }.to_json
-        }])
+        } ])
       end
 
       insight = InsightItem.new(
@@ -92,12 +92,12 @@ class CreateInsightTool < MCP::Tool
             file_count: insight.insight_item_files.count
           }
         }
-        MCP::Tool::Response.new([{ type: "text", text: result.to_json }])
+        MCP::Tool::Response.new([ { type: "text", text: result.to_json } ])
       else
-        MCP::Tool::Response.new([{
+        MCP::Tool::Response.new([ {
           type: "text",
           text: { error: "Validation failed", messages: insight.errors.full_messages }.to_json
-        }])
+        } ])
       end
     end
 

@@ -12,11 +12,11 @@ class CreateEngagementsAndComments < ActiveRecord::Migration[8.0]
     end
 
     # Index for polymorphic lookup
-    add_index :engagements, [:engageable_type, :engageable_id],
+    add_index :engagements, [ :engageable_type, :engageable_id ],
               name: "index_engagements_on_engageable"
 
     # Index for fetching insight engagements efficiently
-    add_index :engagements, [:insight_item_id, :created_at],
+    add_index :engagements, [ :insight_item_id, :created_at ],
               name: "index_engagements_on_insight_and_time"
 
     # The comments specialized table

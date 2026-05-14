@@ -66,16 +66,16 @@ module AccountSlug
       # Path format: /{account_uuid}/rest/of/path
       parts = path.split("/").reject(&:blank?)
 
-      return [nil, path] if parts.empty?
+      return [ nil, path ] if parts.empty?
 
       potential_account_id = parts.first
 
       if potential_account_id.match?(UUID_PATTERN)
         remaining_parts = parts.drop(1)
         remaining_path = remaining_parts.empty? ? "/" : "/#{remaining_parts.join('/')}"
-        [potential_account_id, remaining_path]
+        [ potential_account_id, remaining_path ]
       else
-        [nil, path]
+        [ nil, path ]
       end
     end
   end

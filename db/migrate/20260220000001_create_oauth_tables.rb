@@ -5,7 +5,7 @@ class CreateOauthTables < ActiveRecord::Migration[8.0]
       t.string :client_secret_digest
       t.string :client_name, null: false
       t.json :redirect_uris, default: []
-      t.json :grant_types, default: ["authorization_code"]
+      t.json :grant_types, default: [ "authorization_code" ]
       t.string :token_endpoint_auth_method, default: "none"
       t.string :registration_access_token_digest
 

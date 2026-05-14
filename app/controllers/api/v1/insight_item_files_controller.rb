@@ -2,7 +2,7 @@ module Api
   module V1
     class InsightItemFilesController < BaseController
       before_action :set_insight_item
-      before_action :set_file, only: [:destroy]
+      before_action :set_file, only: [ :destroy ]
 
       def destroy
         @file.destroy

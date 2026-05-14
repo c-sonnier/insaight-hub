@@ -32,7 +32,7 @@ module Oauth
       client = new(
         client_name: params[:client_name],
         redirect_uris: params[:redirect_uris] || [],
-        grant_types: params[:grant_types] || ["authorization_code"],
+        grant_types: params[:grant_types] || [ "authorization_code" ],
         token_endpoint_auth_method: params[:token_endpoint_auth_method] || "none"
       )
 
