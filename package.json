@@ -1,7 +1,7 @@
 {
-  "name": "digest_hub",
+  "name": "insaight_hub",
   "version": "1.0.0",
-  "description": "This README would normally document whatever steps are necessary to get the application up and running.",
+  "description": "Turn scattered AI output into shared understanding.",
   "main": "index.js",
   "directories": {
     "doc": "docs",
@@ -13,7 +13,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "SEE LICENSE IN LICENSE.md",
   "type": "commonjs",
   "dependencies": {
     "daisyui": "^5.5.14"

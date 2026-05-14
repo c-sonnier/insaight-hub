@@ -83,9 +83,7 @@ bin/rails db:create db:migrate db:seed
 bin/dev
 ```
 
-Open `http://localhost:3000` and log in:
-- **Email:** admin@example.com
-- **Password:** admin
+Open `http://localhost:3000` — the onboarding flow will guide you through creating the first account.
 
 ---
 

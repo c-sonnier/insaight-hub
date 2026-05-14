@@ -1,8 +1,8 @@
 # Name of your application. Used to uniquely configure containers.
-service: digest_hub
+service: insaight_hub
 
 # Name of the container image.
-image: your-user/digest_hub
+image: csonnier/insaight-hub
 
 # Deploy to these servers.
 servers:
@@ -25,7 +25,7 @@ proxy:
 registry:
   # Specify the registry server, if you're not using Docker Hub
   # server: registry.digitalocean.com / ghcr.io / ...
-  username: your-user
+  username: csonnier
 
   # Always use an access token rather than real password when possible.
   password:
@@ -65,7 +65,7 @@ aliases:
 # Use a persistent storage volume for sqlite database files and local Active Storage files.
 # Recommended to change this to a mounted volume path that is backed up off server.
 volumes:
-  - "digest_hub_storage:/rails/storage"
+  - "insaight_hub_storage:/rails/storage"
 
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
