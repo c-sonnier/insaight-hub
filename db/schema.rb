@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
+ActiveRecord::Schema[8.0].define(version: 2026_05_14_144937) do
   create_table "accounts", force: :cascade do |t|
     t.string "external_id"
     t.string "name"
@@ -138,17 +138,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
     t.index ["insight_item_id", "created_at"], name: "index_engagements_on_insight_and_time"
     t.index ["insight_item_id"], name: "index_engagements_on_insight_item_id"
     t.index ["user_id"], name: "index_engagements_on_user_id"
-  end
-
-  create_table "highlights", force: :cascade do |t|
-    t.text "text_content", null: false
-    t.integer "start_offset", null: false
-    t.integer "end_offset", null: false
-    t.boolean "archived", default: false, null: false
-    t.text "original_text_content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["archived"], name: "index_highlights_on_archived"
   end
 
   create_table "identities", force: :cascade do |t|
@@ -289,13 +278,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
     t.index ["token_digest"], name: "index_oauth_refresh_tokens_on_token_digest", unique: true
   end
 
-  create_table "pinned_insights", force: :cascade do |t|
-    t.integer "account_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_pinned_insights_on_account_id"
-  end
-
   create_table "sessions", force: :cascade do |t|
     t.string "ip_address"
     t.string "user_agent"
@@ -355,7 +337,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
   add_foreign_key "oauth_refresh_tokens", "identities"
   add_foreign_key "oauth_refresh_tokens", "oauth_clients"
   add_foreign_key "oauth_refresh_tokens", "oauth_refresh_tokens", column: "previous_token_id"
-  add_foreign_key "pinned_insights", "accounts"
   add_foreign_key "sessions", "identities"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "identities"
