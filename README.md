@@ -71,8 +71,8 @@ AI outputs are static. There's no way for teams to discuss, question, or build o
 
 ```bash
 # Clone and install
-git clone <repository-url>
-cd insaight_hub
+git clone https://github.com/c-sonnier/insaight-hub.git
+cd insaight-hub
 bundle install
 npm install
 
@@ -100,11 +100,11 @@ See the [API Documentation](docs/API.md) for REST API reference and examples.
 ### Docker
 
 ```bash
-docker build -t insaight_hub .
+docker build --platform linux/amd64 -t csonnier/insaight-hub:latest .
 docker run -d -p 80:80 \
   -e RAILS_MASTER_KEY=<your-master-key> \
   -e SECRET_KEY_BASE=$(bin/rails secret) \
-  insaight_hub
+  csonnier/insaight-hub:latest
 ```
 
 ### Docker Compose
