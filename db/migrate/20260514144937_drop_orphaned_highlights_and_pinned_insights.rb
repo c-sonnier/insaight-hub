@@ -2,10 +2,10 @@ class DropOrphanedHighlightsAndPinnedInsights < ActiveRecord::Migration[8.0]
   def up
     execute <<~SQL
       DELETE FROM engagements WHERE engageable_type IN ('Highlight', 'PinnedInsight')
-    SQL
+    SQL rescue nil
 
-    drop_table :highlights
-    drop_table :pinned_insights
+    drop_table :highlights, if_exists: true
+    drop_table :pinned_insights, if_exists: true
   end
 
   def down
