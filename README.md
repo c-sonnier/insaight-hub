@@ -150,4 +150,4 @@ bundle exec brakeman
 
 ## License
 
-[Add your license here]
+Licensed under the [O'Saasy License](LICENSE.md) — an MIT-style permissive license that reserves commercial SaaS rights for the copyright holder. See [LICENSE.md](LICENSE.md) for full terms.
