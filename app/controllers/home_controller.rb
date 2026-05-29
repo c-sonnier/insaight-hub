@@ -20,7 +20,7 @@ class HomeController < ApplicationController
 
   def dashboard
     # All queries scoped to current account
-    @recent_insights = current_account.insight_items.published.includes(user: :identity).order(published_at: :desc).limit(6)
+    @recent_insights = current_account.insight_items.published.includes(user: :identity).order(updated_at: :desc).limit(6)
     @total_insights = current_account.insight_items.count
     @published_insights = current_account.insight_items.published.count
     @user_insights = Current.user&.insight_items&.count || 0

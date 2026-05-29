@@ -124,6 +124,10 @@ class InsightItem < ApplicationRecord
     published? && share_enabled? && share_token.present?
   end
 
+  def edited_since_publish?
+    published_at.present? && updated_at - published_at > 1.minute
+  end
+
   def enqueue_thumbnail_generation!
     update!(thumbnail_generating: true)
     GenerateThumbnailJob.perform_later(insight_item_id: id, account_id: account_id)

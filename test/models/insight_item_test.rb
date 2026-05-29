@@ -59,4 +59,25 @@ class InsightItemTest < ActiveSupport::TestCase
     result = insight.files_as_markdown
     assert_equal [], result
   end
+
+  test "edited_since_publish? true when updated well after publish" do
+    insight = insight_items(:one)
+    insight.published_at = 2.days.ago
+    insight.updated_at = 1.hour.ago
+    assert insight.edited_since_publish?
+  end
+
+  test "edited_since_publish? false right after publish" do
+    insight = insight_items(:one)
+    now = Time.current
+    insight.published_at = now
+    insight.updated_at = now + 30.seconds
+    refute insight.edited_since_publish?
+  end
+
+  test "edited_since_publish? false when never published" do
+    insight = insight_items(:two)
+    assert_nil insight.published_at
+    refute insight.edited_since_publish?
+  end
 end
