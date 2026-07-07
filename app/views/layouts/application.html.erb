@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title><%= content_for(:title) || "insAIght Hub" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -19,6 +19,7 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :ruby_native if native_app? %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.1/dist/cropper.min.css">
     <%= javascript_importmap_tags %>
     <script>
@@ -63,7 +64,15 @@
   </head>
 
   <body class="min-h-screen bg-base-200">
-    <% if authenticated? %>
+    <% if authenticated? && native_app? %>
+      <%= turbo_stream_from "notifications_#{Current.user.id}" if Current.user %>
+      <%= native_tabs_tag %>
+      <%= render "shared/flash" %>
+      <main class="flex-1 native-inset">
+        <%= yield %>
+      </main>
+    <% elsif authenticated? %>
+      <%= turbo_stream_from "notifications_#{Current.user.id}" if Current.user %>
       <div class="drawer lg:drawer-open">
         <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
 

@@ -1,0 +1,20 @@
+app:
+  mode: normal
+  entry_path: /dashboard
+
+appearance:
+  tint_color: "#422AD5"
+  background_color:
+    light: "#FFFFFF"
+    dark: "#1D232A"
+
+tabs:
+  - title: Dashboard
+    path: /dashboard
+    icon: house
+  - title: Browse
+    path: /insight_items
+    icon: lightbulb
+  - title: Profile
+    path: /profile
+    icon: person

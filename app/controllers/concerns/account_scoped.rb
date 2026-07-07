@@ -19,7 +19,7 @@ module AccountScoped
   end
 
   def require_account_membership
-    return if Current.account.nil? # Will be handled by routes/404
+    return redirect_to_account_scoped_path if Current.account.nil?
 
     # Super admins can access any account
     return if Current.super_admin?
@@ -39,6 +39,17 @@ module AccountScoped
   def require_owner
     unless Current.owner?
       redirect_to root_path, alert: "This action requires owner permissions."
+    end
+  end
+
+  # Requests without an account prefix (e.g. native tab paths like /dashboard)
+  # get redirected to the same path under the identity's account.
+  def redirect_to_account_scoped_path
+    account = Current.identity&.last_account || Current.identity&.accounts&.first
+    if account
+      redirect_to "/#{account.external_id}#{request.fullpath}"
+    else
+      redirect_to new_account_path
     end
   end
 

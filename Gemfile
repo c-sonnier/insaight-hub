@@ -63,6 +63,9 @@ gem "image_processing", "~> 1.2"
 # Headless Chrome for taking screenshots
 gem "ferrum"
 
+# Native iOS shell [https://rubynative.com]
+gem "ruby_native", "~> 0.10.14"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
