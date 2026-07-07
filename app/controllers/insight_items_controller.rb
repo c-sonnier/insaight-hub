@@ -28,7 +28,7 @@ class InsightItemsController < ApplicationController
       @insight_items.order(published_at: :desc)
     end
 
-    @pagy, @insight_items = pagy(@insight_items, items: 12)
+    @pagy, @insight_items = pagy(@insight_items, limit: 12)
 
     @has_filters = params[:audience].present? || params[:tag].present? || params[:q].present? || params[:member_id].present?
     @user_drafts = Current.user&.insight_items&.draft&.count || 0

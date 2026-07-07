@@ -14,7 +14,7 @@ module Api
         @insight_items = @insight_items.search(params[:q]) if params[:q].present?
 
         @insight_items = @insight_items.order(created_at: :desc)
-        @pagy, @insight_items = pagy(@insight_items, items: params[:per_page] || 20)
+        @pagy, @insight_items = pagy(@insight_items, limit: params[:per_page] || 20)
 
         render json: {
           insight_items: @insight_items.map { |r| insight_item_json(r) },
