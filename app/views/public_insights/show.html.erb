@@ -20,6 +20,7 @@
       <iframe
         src="<%= public_insight_file_path(@insight_item.share_token, @current_file.filename) %>"
         class="w-full h-full border-0"
+        sandbox="allow-scripts allow-forms allow-popups allow-modals allow-same-origin"
       ></iframe>
     <% else %>
       <div class="flex items-center justify-center h-full text-base-content/60">
