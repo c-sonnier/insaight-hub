@@ -50,6 +50,9 @@ Rails.application.routes.draw do
   # How To / Documentation
   get "how-to", to: "home#how_to", as: :how_to
 
+  # Release Notes (public)
+  get "release-notes", to: "home#release_notes", as: :release_notes
+
   # Public share links (unauthenticated access)
   get "s/:token", to: "public_insights#show", as: :public_insight
   get "s/:token/files/*id", to: "public_insight_files#show", as: :public_insight_file, format: false

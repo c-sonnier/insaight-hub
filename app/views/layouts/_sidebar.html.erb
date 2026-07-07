@@ -120,6 +120,16 @@
           <span data-nav-sidebar-target="label">How To</span>
         <% end %>
       </li>
+      <li>
+        <%= link_to release_notes_path, class: "#{current_page?(release_notes_path) ? 'text-primary underline' : ''} tooltip tooltip-right", data: { tip: "Release Notes" } do %>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
+            <path d="M4 11a9 9 0 0 1 9 9"></path>
+            <path d="M4 4a16 16 0 0 1 16 16"></path>
+            <circle cx="5" cy="19" r="1"></circle>
+          </svg>
+          <span data-nav-sidebar-target="label">Release Notes</span>
+        <% end %>
+      </li>
 
       <% if Current.owner? || Current.super_admin? %>
         <li class="menu-title mt-6" data-nav-sidebar-target="menuTitle">

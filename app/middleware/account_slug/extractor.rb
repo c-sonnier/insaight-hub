@@ -18,6 +18,7 @@ module AccountSlug
       /setup
       /register
       /how-to
+      /release-notes
       /oauth
       /.well-known
       /accounts

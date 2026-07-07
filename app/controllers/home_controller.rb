@@ -1,9 +1,9 @@
 class HomeController < ApplicationController
   include AccountScoped
 
-  allow_unauthenticated_access only: [ :index, :how_to ]
+  allow_unauthenticated_access only: [ :index, :how_to, :release_notes ]
   skip_before_action :set_current_account, only: [ :index ]
-  skip_before_action :require_account_membership, only: [ :index, :how_to ]
+  skip_before_action :require_account_membership, only: [ :index, :how_to, :release_notes ]
 
   def index
     if authenticated?
@@ -29,5 +29,8 @@ class HomeController < ApplicationController
   end
 
   def how_to
+  end
+
+  def release_notes
   end
 end
