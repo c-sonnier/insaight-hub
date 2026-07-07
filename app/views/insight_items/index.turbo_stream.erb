@@ -1,0 +1,6 @@
+<%= turbo_stream.append "insights_list" do %>
+  <%= render partial: "insight_items/card", collection: @insight_items, as: :insight_item %>
+<% end %>
+<%= turbo_stream.replace "insights_next_page" do %>
+  <%= render "insight_items/next_page", pagy: @pagy %>
+<% end %>

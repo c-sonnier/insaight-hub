@@ -1,0 +1,9 @@
+<% if pagy.next %>
+  <div id="insights_next_page" class="flex justify-center mt-8"
+       data-controller="infinite-scroll"
+       data-infinite-scroll-url-value="<%= pagy_url_for(pagy, pagy.next) %>">
+    <span class="loading loading-dots loading-md text-base-content/40"></span>
+  </div>
+<% else %>
+  <div id="insights_next_page"></div>
+<% end %>
