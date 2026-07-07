@@ -5,6 +5,8 @@ class InsightItem < ApplicationRecord
   has_many :engagements, dependent: :destroy
   has_many :comments, through: :engagements, source: :engageable, source_type: "Comment"
 
+  has_many :notifications, dependent: :destroy
+
   has_one_attached :thumbnail
 
   accepts_nested_attributes_for :insight_item_files, allow_destroy: true, reject_if: :all_blank
@@ -19,6 +21,10 @@ class InsightItem < ApplicationRecord
   validates :share_token, uniqueness: true, allow_nil: true
 
   before_validation :generate_slug, if: -> { slug.blank? && title.present? }
+
+  after_update_commit :notify_members_of_change
+
+  NOTIFIABLE_CONTENT_ATTRS = %w[title description audience entry_file].freeze
 
   scope :published, -> { where(status: :published) }
   scope :draft, -> { where(status: :draft) }
@@ -138,6 +144,16 @@ class InsightItem < ApplicationRecord
   end
 
   private
+
+  def notify_members_of_change
+    # MCP tools don't set Current.user; they enforce insight ownership, so fall back to the author
+    actor_id = Current.user&.id || user_id
+    if saved_change_to_status? && published?
+      NotifyInsightPublishedJob.perform_later(insight_item_id: id, account_id: account_id, actor_id: actor_id)
+    elsif published? && (saved_changes.keys & NOTIFIABLE_CONTENT_ATTRS).any?
+      NotifyInsightUpdatedJob.perform_later(insight_item_id: id, account_id: account_id, actor_id: actor_id)
+    end
+  end
 
   def generate_slug
     base_slug = title.to_s.parameterize

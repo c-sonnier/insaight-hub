@@ -161,6 +161,9 @@
         <span data-nav-sidebar-target="label">Collapse</span>
       </button>
 
+      <!-- Notifications -->
+      <%= render "notifications/bell" if Current.user %>
+
       <!-- Theme Selector -->
       <div class="dropdown dropdown-top w-full" data-controller="theme" data-theme-current-value="<%= Current.user&.theme || 'light' %>" data-nav-sidebar-target="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost btn-sm w-full justify-start tooltip tooltip-right" data-tip="Theme">

@@ -1,0 +1,24 @@
+<div class="dropdown dropdown-top w-full" data-nav-sidebar-target="dropdown">
+  <div tabindex="0" role="button" class="btn btn-ghost btn-sm w-full justify-start tooltip tooltip-right" data-tip="Notifications">
+    <span class="indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 shrink-0">
+        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
+        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
+      </svg>
+      <%= render "notifications/badge", user: Current.user %>
+    </span>
+    <span data-nav-sidebar-target="label">Notifications</span>
+  </div>
+  <div tabindex="0" class="dropdown-content z-50 bg-base-100 rounded-box shadow-lg w-80 mb-2 p-2">
+    <div class="flex items-center justify-between px-2 pb-2">
+      <span class="text-sm font-semibold">Notifications</span>
+      <%= button_to "Mark all read", read_all_notifications_path, class: "btn btn-ghost btn-xs" %>
+    </div>
+    <div id="notifications_dropdown_list" class="max-h-80 space-y-1 overflow-y-auto">
+      <%= render "notifications/list", user: Current.user %>
+    </div>
+    <div class="border-t border-base-300 pt-2 mt-1">
+      <%= link_to "View all", notifications_path, class: "btn btn-ghost btn-xs w-full" %>
+    </div>
+  </div>
+</div>

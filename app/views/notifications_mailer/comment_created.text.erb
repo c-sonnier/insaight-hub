@@ -1,0 +1,11 @@
+New comment on your insight
+
+<%= actor_name %> commented on "<%= @insight_item.title %>":
+
+<%= truncate(@comment.body, length: 300) %>
+
+View it here:
+<%= insight_url %>
+
+Manage your notification preferences:
+<%= preferences_url %>

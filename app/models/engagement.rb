@@ -18,4 +18,12 @@ class Engagement < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
   scope :by_user, ->(user) { where(user: user) }
   scope :comments, -> { where(engageable_type: "Comment") }
+
+  after_create_commit :notify_insight_owner, if: -> { engageable_type == "Comment" }
+
+  private
+
+  def notify_insight_owner
+    NotifyCommentJob.perform_later(engagement_id: id, account_id: account_id, actor_id: user_id)
+  end
 end

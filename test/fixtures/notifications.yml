@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+unread_published:
+  recipient: member_user
+  actor: owner_user
+  account: default
+  insight_item: one
+  action: insight_published
+
+read_comment:
+  recipient: owner_user
+  actor: member_user
+  account: default
+  insight_item: one
+  comment: two
+  action: comment_created
+  read_at: <%= 1.hour.ago %>

@@ -194,7 +194,7 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:user).permit(:name, :email_address, :theme, :avatar, :password, :password_confirmation, :current_password)
+    params.require(:user).permit(:name, :email_address, :theme, :avatar, :password, :password_confirmation, :current_password, :email_notifications, :in_app_notifications)
   end
 
   # Alias for view compatibility - views can use @user or @identity

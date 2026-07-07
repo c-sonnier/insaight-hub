@@ -1,6 +1,74 @@
 require "test_helper"
 
 class InsightItemTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
+  test "publish! enqueues published notification job only" do
+    insight = insight_items(:two)
+
+    assert_enqueued_with(job: NotifyInsightPublishedJob, args: [ { insight_item_id: insight.id, account_id: insight.account_id, actor_id: insight.user_id } ]) do
+      insight.publish!
+    end
+    assert_no_enqueued_jobs(only: NotifyInsightUpdatedJob)
+  end
+
+  test "updating published insight content enqueues updated notification job" do
+    insight = insight_items(:one)
+
+    assert_enqueued_with(job: NotifyInsightUpdatedJob, args: [ { insight_item_id: insight.id, account_id: insight.account_id, actor_id: insight.user_id } ]) do
+      insight.update!(title: "New Title")
+    end
+  end
+
+  test "updating draft insight enqueues no notification jobs" do
+    insight = insight_items(:two)
+
+    assert_no_enqueued_jobs(only: [ NotifyInsightPublishedJob, NotifyInsightUpdatedJob ]) do
+      insight.update!(title: "Draft Title")
+    end
+  end
+
+  test "non-content update to published insight enqueues no notification jobs" do
+    insight = insight_items(:one)
+
+    assert_no_enqueued_jobs(only: [ NotifyInsightPublishedJob, NotifyInsightUpdatedJob ]) do
+      insight.update!(thumbnail_generating: true)
+    end
+  end
+
+  test "unpublish! enqueues no notification jobs" do
+    insight = insight_items(:one)
+
+    assert_no_enqueued_jobs(only: [ NotifyInsightPublishedJob, NotifyInsightUpdatedJob ]) do
+      insight.unpublish!
+    end
+  end
+
+  test "same slug is allowed across different accounts" do
+    existing = insight_items(:one)
+    other = insight_items(:other_account_insight)
+
+    other.update!(slug: existing.slug)
+
+    assert_equal existing.slug, other.reload.slug
+    refute_equal existing.account_id, other.account_id
+  end
+
+  test "duplicate slug within the same account is rejected" do
+    existing = insight_items(:one)
+    dup = InsightItem.new(
+      account: existing.account,
+      user: existing.user,
+      title: "Dup",
+      slug: existing.slug,
+      audience: :developer,
+      status: :draft
+    )
+
+    refute dup.valid?
+    assert_includes dup.errors[:slug], "has already been taken"
+  end
+
   test "files_as_markdown excludes CSS and JS files" do
     insight = insight_items(:one)
     result = insight.files_as_markdown

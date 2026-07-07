@@ -1,0 +1,24 @@
+<%# Rendered from Turbo Stream broadcasts too, so paths need an explicit script_name %>
+<%= button_to read_notification_path(notification, script_name: "/#{notification.account.external_id}"),
+      class: "flex w-full items-start gap-2 rounded-lg p-2 text-left hover:bg-base-200 #{'bg-base-200/50' unless notification.read?}",
+      id: dom_id(notification) do %>
+  <span class="mt-1.5 size-2 shrink-0 rounded-full <%= notification.read? ? 'bg-transparent' : 'bg-primary' %>"></span>
+  <span class="min-w-0 flex-1">
+    <span class="block text-sm">
+      <strong><%= notification.actor&.name || "Someone" %></strong>
+      <% case notification.action %>
+      <% when "insight_published" %>
+        published
+      <% when "insight_updated" %>
+        updated
+      <% when "comment_created" %>
+        commented on
+      <% end %>
+      <strong class="break-words"><%= notification.insight_item.title %></strong>
+    </span>
+    <% if notification.comment_created? && notification.comment %>
+      <span class="block truncate text-xs text-base-content/60">&ldquo;<%= truncate(notification.comment.body, length: 80) %>&rdquo;</span>
+    <% end %>
+    <span class="block text-xs text-base-content/50"><%= time_ago_in_words(notification.created_at) %> ago</span>
+  </span>
+<% end %>

@@ -1,0 +1,18 @@
+<% content_for :title, "Notifications - insAIght Hub" %>
+
+<div class="mx-auto max-w-2xl p-4 lg:p-8">
+  <div class="mb-6 flex items-center justify-between">
+    <h1 class="text-2xl font-bold">Notifications</h1>
+    <%= button_to "Mark all read", read_all_notifications_path, class: "btn btn-ghost btn-sm", form: { data: { turbo_frame: "_top" } } %>
+  </div>
+
+  <% if @notifications.any? %>
+    <div class="space-y-1 rounded-box bg-base-100 p-2 shadow">
+      <%= render partial: "notifications/notification", collection: @notifications %>
+    </div>
+  <% else %>
+    <div class="rounded-box bg-base-100 p-8 text-center text-base-content/60 shadow">
+      No notifications yet. You'll be notified when insights are published or updated in your organization, and when someone comments on your insights.
+    </div>
+  <% end %>
+</div>

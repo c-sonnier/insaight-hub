@@ -57,6 +57,16 @@ Rails.application.routes.draw do
   # Organization members (read-only for all members)
   resources :members, only: [ :index ]
 
+  # Notifications
+  resources :notifications, only: [ :index ] do
+    member do
+      post :read
+    end
+    collection do
+      post :read_all
+    end
+  end
+
   # Insights
   resources :insight_items, param: :id do
     member do

@@ -1,0 +1,5 @@
+<% notifications = user.notifications.recent.includes(:actor, :insight_item, :comment).limit(10) %>
+<%= render partial: "notifications/notification", collection: notifications %>
+<% if notifications.empty? %>
+  <p class="p-2 text-sm text-base-content/60">No notifications yet.</p>
+<% end %>

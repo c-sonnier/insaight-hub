@@ -7,9 +7,11 @@ class User < ApplicationRecord
   has_many :engagements, dependent: :destroy
   has_many :comments, through: :engagements, source: :engageable, source_type: "Comment"
   has_many :created_invites, class_name: "Invite", foreign_key: "created_by_id"
+  has_many :notifications, foreign_key: :recipient_id, dependent: :destroy
+  has_many :acted_notifications, class_name: "Notification", foreign_key: :actor_id, dependent: :nullify
 
   # Delegations for backward compatibility during transition
-  delegate :email_address, :name, :admin?, :theme, :avatar, to: :identity
+  delegate :email_address, :name, :admin?, :theme, :avatar, :email_notifications, :in_app_notifications, to: :identity
   delegate :external_id, to: :account, prefix: true
 
   enum :role, { member: "member", owner: "owner" }, default: :member

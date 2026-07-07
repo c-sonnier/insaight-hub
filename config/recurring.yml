@@ -16,3 +16,6 @@ production:
   generate_missing_thumbnails:
     command: "InsightItem.left_joins(:thumbnail_attachment).where(active_storage_attachments: { id: nil }).where(thumbnail_generating: false).find_each(&:enqueue_thumbnail_generation!)"
     schedule: every 5 minutes
+  purge_old_read_notifications:
+    command: "Notification.read.where(read_at: ..90.days.ago).delete_all"
+    schedule: at 4am every day

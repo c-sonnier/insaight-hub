@@ -3,6 +3,8 @@
 require "test_helper"
 
 class EngagementTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     @user = users(:owner_user)
     @insight_item = insight_items(:one)
@@ -82,6 +84,15 @@ class EngagementTest < ActiveSupport::TestCase
     )
 
     assert_includes Engagement.comments, engagement
+  end
+
+  test "creating a comment engagement enqueues comment notification job" do
+    comment = Comment.new(body: "Test comment", account: @account)
+    engagement = @insight_item.engagements.build(user: @user, account: @account, engageable: comment)
+
+    assert_enqueued_with(job: NotifyCommentJob) do
+      engagement.save!
+    end
   end
 
   test "delegates engageable methods" do
