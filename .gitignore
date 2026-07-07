@@ -7,6 +7,7 @@
 # Ignore all environment files (except templates).
 /.env*
 !/.env*.erb
+.ralph.env
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -134,3 +135,23 @@ CLAUDE.md
 /docs/PRD.md
 /.mcp.json
 /.playwright-mcp
+
+# Ruby Native
+.ruby_native/
+
+# Ralph / Clavix automation exhaust
+/ralph.sh
+/ralph_adapter.sh
+/prd.json
+/prd.md
+/x.json
+/.last-branch
+/design-prompts/
+/docs/convergence/
+/WARP.md
+
+# Compiled CLI binary (commit source or a build script instead)
+/cli/
+
+# Generated audit/review artifacts
+/artifacts/

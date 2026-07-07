@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
+ActiveRecord::Schema[8.0].define(version: 2026_07_07_000001) do
   create_table "accounts", force: :cascade do |t|
     t.string "external_id"
     t.string "name"
@@ -140,17 +140,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
     t.index ["user_id"], name: "index_engagements_on_user_id"
   end
 
-  create_table "highlights", force: :cascade do |t|
-    t.text "text_content", null: false
-    t.integer "start_offset", null: false
-    t.integer "end_offset", null: false
-    t.boolean "archived", default: false, null: false
-    t.text "original_text_content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["archived"], name: "index_highlights_on_archived"
-  end
-
   create_table "identities", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -161,6 +150,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "last_account_id"
+    t.boolean "email_notifications", default: true, null: false
+    t.boolean "in_app_notifications", default: true, null: false
     t.index ["api_token"], name: "index_identities_on_api_token", unique: true
     t.index ["email_address"], name: "index_identities_on_email_address", unique: true
     t.index ["last_account_id"], name: "index_identities_on_last_account_id"
@@ -193,10 +184,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
     t.boolean "share_enabled", default: false, null: false
     t.integer "account_id", null: false
     t.boolean "thumbnail_generating", default: false, null: false
+    t.datetime "update_emails_sent_at"
+    t.index ["account_id", "slug"], name: "index_insight_items_on_account_id_and_slug", unique: true
     t.index ["account_id"], name: "index_insight_items_on_account_id"
     t.index ["audience"], name: "index_insight_items_on_audience"
     t.index ["share_token"], name: "index_insight_items_on_share_token", unique: true
-    t.index ["slug"], name: "index_insight_items_on_slug", unique: true
     t.index ["status"], name: "index_insight_items_on_status"
     t.index ["user_id"], name: "index_insight_items_on_user_id"
   end
@@ -215,6 +207,25 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
     t.index ["created_by_id"], name: "index_invites_on_created_by_id"
     t.index ["token"], name: "index_invites_on_token", unique: true
     t.index ["used_by_id"], name: "index_invites_on_used_by_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.integer "recipient_id", null: false
+    t.integer "actor_id"
+    t.integer "account_id", null: false
+    t.integer "insight_item_id", null: false
+    t.integer "comment_id"
+    t.string "action", null: false
+    t.datetime "read_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_notifications_on_account_id"
+    t.index ["actor_id"], name: "index_notifications_on_actor_id"
+    t.index ["comment_id"], name: "index_notifications_on_comment_id"
+    t.index ["insight_item_id"], name: "index_notifications_on_insight_item_id"
+    t.index ["recipient_id", "created_at"], name: "index_notifications_on_recipient_id_and_created_at"
+    t.index ["recipient_id", "read_at"], name: "index_notifications_on_recipient_id_and_read_at"
+    t.index ["recipient_id"], name: "index_notifications_on_recipient_id"
   end
 
   create_table "oauth_access_tokens", force: :cascade do |t|
@@ -289,13 +300,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
     t.index ["token_digest"], name: "index_oauth_refresh_tokens_on_token_digest", unique: true
   end
 
-  create_table "pinned_insights", force: :cascade do |t|
-    t.integer "account_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_pinned_insights_on_account_id"
-  end
-
   create_table "sessions", force: :cascade do |t|
     t.string "ip_address"
     t.string "user_agent"
@@ -344,6 +348,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
   add_foreign_key "invites", "accounts"
   add_foreign_key "invites", "users", column: "created_by_id"
   add_foreign_key "invites", "users", column: "used_by_id"
+  add_foreign_key "notifications", "accounts"
+  add_foreign_key "notifications", "comments"
+  add_foreign_key "notifications", "insight_items"
+  add_foreign_key "notifications", "users", column: "actor_id"
+  add_foreign_key "notifications", "users", column: "recipient_id"
   add_foreign_key "oauth_access_tokens", "accounts"
   add_foreign_key "oauth_access_tokens", "identities"
   add_foreign_key "oauth_access_tokens", "oauth_clients"
@@ -355,7 +364,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_03_17_135908) do
   add_foreign_key "oauth_refresh_tokens", "identities"
   add_foreign_key "oauth_refresh_tokens", "oauth_clients"
   add_foreign_key "oauth_refresh_tokens", "oauth_refresh_tokens", column: "previous_token_id"
-  add_foreign_key "pinned_insights", "accounts"
   add_foreign_key "sessions", "identities"
   add_foreign_key "users", "accounts"
   add_foreign_key "users", "identities"
