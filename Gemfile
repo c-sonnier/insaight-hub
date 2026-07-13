@@ -35,7 +35,7 @@ gem "reverse_markdown"
 gem "rubyzip"
 
 # MCP (Model Context Protocol) server for AI agent integration
-gem "mcp", "~> 0.23"
+gem "mcp", "~> 0.24"
 
 # Postmark for transactional email delivery
 gem "postmark-rails"

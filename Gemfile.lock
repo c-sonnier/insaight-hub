@@ -180,7 +180,7 @@ GEM
       net-smtp
     marcel (1.2.1)
     matrix (0.4.3)
-    mcp (0.23.0)
+    mcp (0.24.0)
       json_schemer (>= 2.4)
     mini_mime (1.1.5)
     minitest (5.27.0)
@@ -288,7 +288,7 @@ GEM
       rbs (>= 4.0.0)
       tsort
     redcarpet (3.6.1)
-    regexp_parser (2.11.3)
+    regexp_parser (2.12.0)
     reline (0.6.3)
       io-console (~> 0.5)
     reverse_markdown (3.0.2)
@@ -437,7 +437,7 @@ DEPENDENCIES
   importmap-rails
   jbuilder
   kamal
-  mcp (~> 0.23)
+  mcp (~> 0.24)
   minitest (~> 5.25)
   pagy (~> 9.4)
   postmark-rails
