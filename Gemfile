@@ -65,7 +65,7 @@ gem "ruby-vips", "~> 2.0"
 gem "ferrum"
 
 # Native iOS shell [https://rubynative.com]
-gem "ruby_native", "~> 0.10.14"
+gem "ruby_native", "~> 0.11.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
