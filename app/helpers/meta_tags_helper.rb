@@ -41,6 +41,11 @@ module MetaTagsHelper
     content_for(:page_keywords, keywords) if keywords.present?
   end
 
+  def page_video(video_path)
+    content_for(:page_video, helpers_url_for(video_path, only_path: false)) if video_path.present?
+    content_for(:page_type, "video.other")
+  end
+
   private
 
   def current_page_title
@@ -106,7 +111,21 @@ module MetaTagsHelper
       tag.meta(property: "og:image:alt", content: current_page_title),
       tag.meta(property: "og:image:width", content: "1200"),
       tag.meta(property: "og:image:height", content: "630"),
-      tag.meta(property: "og:image:type", content: "image/png")
+      tag.meta(property: "og:image:type", content: "image/png"),
+      *open_graph_video_tags
+    ]
+  end
+
+  def open_graph_video_tags
+    video = content_for(:page_video).presence
+    return [] unless video
+
+    [
+      tag.meta(property: "og:video", content: video),
+      tag.meta(property: "og:video:secure_url", content: video),
+      tag.meta(property: "og:video:type", content: "video/mp4"),
+      tag.meta(property: "og:video:width", content: "1200"),
+      tag.meta(property: "og:video:height", content: "630")
     ]
   end
 
